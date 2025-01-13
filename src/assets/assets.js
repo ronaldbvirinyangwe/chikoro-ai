@@ -16,10 +16,46 @@ import gemini_icon from './gemini_icon.png'
 import facebook from './facebook.png'
 import discord from './discord.png'
 import twitter from './twitter.png'
-import profile from './profile.png'
+import profile from './scales.png'
+import physics from './physics.png'
+import chemistry from './chemistry.png'
+import biology from './biology.png'
+import science from './science.png'
+import agriculture from './agriculture.png'
+import computers from './computers.png'
+import foods from './foods.png'
+import music from './music.png'
+import history from './history.png'
+import art from './art.png'
+import english from './english.png'
+import accounts from './accounts.png'
+import business from './business.png'
+import home_eco from './home_eco.png'
+import geo from './geo.png'
+import heritage from './heritage.png'
+import fareme from './fareme.png'
+import geography from './geography.png'
+import metal from './metal.png'
+import shona from './shona.png'
+import maths from './maths.png'
+import woodwork from './woodwork.png'
+import technical from './technical.png'
+import economics from './economics.png'
+import pe from './pe.png'
+import commerce from './commerce.png'
+import fashion from './fashion.png'
+import learn from './learn.png'
+
 
 export const assets = {
     history_icon,
+    fashion,
+    fareme,
+    commerce,
+    history,
+    chemistry,
+    biology,
+    physics,
     menu_icon,
     plus_icon,
     question_icon,
@@ -37,5 +73,30 @@ export const assets = {
     facebook,
     twitter,
     discord,
-   profile
+    twitter,
+    discord,
+    profile,
+    agriculture,
+    computers,
+    foods,
+    music,
+    art,
+    english,
+    accounts,
+    business,
+    home_eco,
+    geo,
+    heritage,
+    fareme,
+    geography,
+    metal,
+    shona,
+    maths,
+    woodwork,
+    technical,
+    pe,
+    science,
+    economics,
+    business,
+    learn,
 }
