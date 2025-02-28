@@ -81,82 +81,68 @@ const PaymentPage = () => {
     }
   };
 
- const pollPaymentStatus = async () => {
-  if (!pollUrl || !isAuthenticated) {
-    setError('Token or Poll URL missing');
-    return;
-  }
-
-  try {
-    const response = await axios.post('/check-payment-status', { pollUrl }, {
-      headers: { Authorization: `Bearer ${token}` }, // Correct template literal
-    });
-
-    if (response.data.success) {
-      setPaymentStatus('paid');
-      const expirationDate = new Date().getTime() + THIRTY_DAYS_MS;
-      const paymentToken = { status: 'paid', expirationDate };
-      localStorage.setItem('paymentToken', JSON.stringify(paymentToken));
-      navigate('/'); // Redirect to home after payment success
-    } else {
-      setPaymentStatus('failed');
-      setError('Payment failed. Please try again.');
+  const pollPaymentStatus = async () => {
+    if (!pollUrl || !isAuthenticated) {
+      setError('Token or Poll URL missing');
+      return;
     }
-  } catch (error) {
-    console.error('Error polling payment status:', error);
-    setError('Error checking payment status');
-  }
-};
 
- const handleSuccessfulPayment = () => {
-    // Logic when payment is successful
-    console.log('Payment successful!');
-   setIsAuthenticated(true);
-    navigate('/'); // Redirect to the dashboard or another page
+    try {
+      const response = await axios.post('/check-payment-status', { pollUrl }, {
+        headers: { Authorization: `Bearer ${token}` }, // Correct template literal
+      });
+
+      if (response.data.success) {
+        setPaymentStatus('paid');
+        const expirationDate = new Date().getTime() + THIRTY_DAYS_MS;
+        const paymentToken = { status: 'paid', expirationDate };
+        localStorage.setItem('paymentToken', JSON.stringify(paymentToken));
+        navigate('/enrol'); // Redirect to home after payment success
+      } else {
+        setPaymentStatus('failed');
+        setError('Payment failed. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error polling payment status:', error);
+      setError('Error checking payment status');
+    }
   };
 
-useEffect(() => {
-  if (isAuthenticated) {
-    checkPaymentStatus(); // Check payment status if authenticated
-  } else {
-    navigate('/login'); // Redirect to login if not authenticated
-  }
-}, [isAuthenticated]);
+  const handleSuccessfulPayment = () => {
+    // Logic when payment is successful
+    console.log('Payment successful!');
+    navigate('/enrol'); 
+  };
 
+  useEffect(() => {
+    if (isAuthenticated) {
+      checkPaymentStatus(); // Check payment status if authenticated
+    } else {
+      navigate('/login'); // Redirect to login if not authenticated
+    }
+  }, [isAuthenticated]);
 
-useEffect(() => {
-  // Start polling when payment is initiated and pollUrl is available
-  if (pollUrl && paymentStatus === 'initiated') {
-    const interval = setInterval(() => {
-      pollPaymentStatus(); // Call polling function every 5 seconds
-    }, 5000);
+  useEffect(() => {
+    // Start polling when payment is initiated and pollUrl is available
+    if (pollUrl && paymentStatus === 'initiated') {
+      const interval = setInterval(() => {
+        pollPaymentStatus(); // Call polling function every 5 seconds
+      }, 5000);
 
-    // Cleanup when payment status changes or when the component unmounts
-    return () => clearInterval(interval);
-  }
-}, [pollUrl, paymentStatus]);
+      // Cleanup when payment status changes or when the component unmounts
+      return () => clearInterval(interval);
+    }
+  }, [pollUrl, paymentStatus]);
 
   useEffect(() => {
     if (paymentStatus === 'paid') {
-      navigate('/'); 
+      navigate('/enrol'); 
     }
   }, [paymentStatus, navigate]);
 
   return (
     <div className="content">
-<div className="video-section">
-        <iframe
-          width="100%"
-          height="100%"
-          src="https://www.youtube.com/embed/7v0YwyU0274?start=7"  // Replace with your video URL or ID
-          title="Infomercial Video"
-          frameBorder="0"
-          allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-        ></iframe>
-      </div>
-      <button className="logout-btn" onClick={handleLogout}>Logout</button>
-      <div className="container">
+      <div className="this-container">
         {paymentStatus === 'initiated' ? (
           <div>
             <h2>Payment Instructions</h2>
@@ -176,34 +162,49 @@ useEffect(() => {
             <p>Your payment status has expired. Please make a new payment to continue.</p>
           </div>
         ) : (
-          <form onSubmit={(e) => { e.preventDefault(); handlePayment(); }}>
-            <div className="payment">
-              <h2>USD $10/term</h2> <span>✔</span>
-              <p>Early access to new features</p>
-              <span>✔</span>
-              <p>Access to Chikoro AI genesis</p> <span>✔</span>
-              <p>Assistance with homework, writing, problem solving, and more</p>
+          <div className="payment-container">
+            <header className="payment-header">
+              <button className="logout-btn" onClick={handleLogout}>Logout</button>
+            </header>
+            <div className="plan-selector">
+              <h2>Choose Your Plan</h2>
+              <div className="plan-options">
+                <div className="plan-card selected">
+                  <h3>Term Plan</h3>
+                  <p className="price">USD $10</p>
+                  <p className="duration">1 term</p>
+                  <div className="features">
+                    <p className="feature-item">✔ Includes holidays</p>
+                    <p className="feature-item">✔ Assistance with homework, writing, problem solving</p>
+                    <p className="feature-item">✔ Upload and analyze unlimited pictures per day</p>
+                    <p className="feature-item">✔ Early access to new features</p>
+                    <p className="feature-item">✔ Automatic access to updates</p>
+                  </div>
+                </div>
+              </div>
+              <form className="payment-form" onSubmit={(e) => { e.preventDefault(); handlePayment(); }}>
+                <div className="form-group">
+                  <label htmlFor="phoneNumber">Ecocash Number</label>
+                  <input
+                    id="phoneNumber"
+                    type="tel"
+                    placeholder="0771234567"
+                    value={phoneNumber}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
+                    required
+                  />
+                </div>
+                <button type="submit" className="submit-btn" disabled={loading}>
+                  {loading ? 'Processing...' : 'Subscribe (USD $10)'}
+                </button>
+              </form>
             </div>
-            <label>
-              Phone Number:
-              <input
-                type="tel"
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
-                placeholder="ecocash account e.g., 0771234567"
-                required
-              />
-            </label>
-            <button type="submit" className="submit-btn" disabled={loading}>
-              {loading ? 'Processing...' : 'Subscribe'}
-            </button>
-          </form>
+            {error && <p className="error-message">Error: {error}</p>}
+          </div>
         )}
-        {error && <p className="error-message">Error: {error}</p>}
       </div>
     </div>
   );
 };
 
 export default PaymentPage;
-

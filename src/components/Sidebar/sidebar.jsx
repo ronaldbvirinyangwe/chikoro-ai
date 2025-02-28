@@ -1,113 +1,141 @@
-import React, { useContext, useState } from "react";
-import "./Sidebar.css";
-import { assets } from "../../assets/assets";
-import { Context } from "../../context/Context";
+import React, { useState, useContext } from 'react';
+import { FiHome, FiClipboard, FiFileText, FiTable, FiUser, FiMenu, FiX } from 'react-icons/fi';
+import { assets } from '../../assets/assets';
+import { useTheme } from '../../context/ThemeContext';
+import { useNavigate } from "react-router-dom";
+import { Context } from '../../context/Context';
+import './sidebar.css'
 
 const Sidebar = () => {
-  const [extended, setExtended] = useState(false); // Track if sidebar is extended
-  const [darkMode, setDarkMode] = useState(false); // Dark mode state
-  const [showHelp, setShowHelp] = useState(false);
-  const [showSettings, setShowSettings] = useState(false);
-  const { onSent, prevPrompts, setRecentPrompt, newChat } = useContext(Context);
-
-  const loadPrompt = async (prompt) => {
-    setRecentPrompt(prompt);
-    await onSent(prompt);
-  };
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const { darkMode, setDarkMode } = useTheme();
+  const navigate = useNavigate();
+  const [hoveredButton, setHoveredButton] = useState(null);
+  const { setShowWhiteboard, showWhiteboard, newChat } = useContext(Context);
 
   const toggleDarkMode = () => {
-    setDarkMode((prev) => !prev);
+    setDarkMode(!darkMode);
+    setShowProfileMenu(false);
+  };
+
+  const showMenu = () => {
+    navigate("/subjectselect");
+    newChat();
+  };
+
+  const showReports = () => {
+    navigate("/reports");
+  };
+
+  const showTest = () => {
+    navigate("/test");
+  };
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+    setShowProfileMenu(false);
   };
 
   return (
-    <div className={`Sidebar ${extended ? "extended" : ""} ${darkMode ? "dark-mode" : ""}`}>
-      {/* Menu Icon (Always visible, positioned fixed) */}
-      <img
-        onClick={() => setExtended((prev) => !prev)} // Toggles the extended state
-        className="menu"
-        src={assets.menu_icon}
-        alt="menu"
-      />
+    <>
+      <button 
+        className="mobile-toggle"
+        onClick={toggleSidebar}
+      >
+        {isSidebarOpen ? <FiX className="icon" /> : <FiMenu className="side-icon" />}
+      </button>
 
-      {/* Sidebar content */}
-      {extended && (
-        <>
-          <div className="top">
-            {/* New Chat Button */}
-            <div onClick={() => newChat()} className="new-chat">
-              <img src={assets.plus_icon} alt="plus" />
-              <p>New Chat</p>
-            </div>
+      <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
+        {/* Top Section */}
+        <div className="sidebar-top">
+          <div className="logo-container">
+            <img src={assets.logo} alt="Logo" className="logo" />
+          </div>
+          <div 
+            className="tooltip-container"
+            onMouseEnter={() => setHoveredButton('whiteboard')}
+            onMouseLeave={() => setHoveredButton(null)}
+          >
+            <button 
+              onClick={() => setShowWhiteboard(prev => !prev)} 
+              className={`nav-btn ${showWhiteboard ? 'active' : ''}`}
+            > 
+              <FiClipboard className="icon" />
+            </button>
+            {hoveredButton === 'whiteboard' && (
+              <span className="tooltip">
+                {showWhiteboard ? 'Close Whiteboard' : 'Open Whiteboard'}
+              </span>
+            )}
+          </div>
+        </div>
 
-            {/* Recent Prompts (Only visible when extended) */}
-            <div className="recent">
-              <p className="recent-title">Recent</p>
-              {prevPrompts.map((item, index) => (
-                <div key={index} onClick={() => loadPrompt(item)} className="recent-entry">
-                  <img src={assets.message_icon} alt="message" />
-                  <p>{item.slice(0, 18)} ...</p>
-                </div>
-              ))}
-            </div>
+        {/* Middle Section */}
+        <div className="sidebar-middle">
+          <div 
+            className="tooltip-container"
+            onMouseEnter={() => setHoveredButton('home')}
+            onMouseLeave={() => setHoveredButton(null)}
+          >
+            <button onClick={showMenu} className="nav-btn">
+              <FiHome className="icon" />
+            </button>
+            {hoveredButton === 'home' && <span className="tooltip">Home</span>}
           </div>
 
-          <div className="bottom">
-            {/* Help Section */}
-            <div className="bottom-item recent-entry">
-              <img
-                src={assets.question_icon}
-                alt="question"
-                onClick={() => setShowHelp((prev) => !prev)}
-              />
-              <p>Help</p>
-              {showHelp && (
-                <ul>
-                  <li>
-                    <a href="https://x.com/chikoro_ai" target="_blank" rel="noopener noreferrer">
-                      <img src={assets.twitter} alt="twitter" />
-                    </a>
-                  </li>
-                  <li>
-                    <a href="https://discord.gg/8kf87QZK" target="_blank" rel="noopener noreferrer">
-                      <img src={assets.discord} alt="discord" />
-                    </a>
-                  </li>
-                  <li>
-                    <a href="https://www.facebook.com/groups/846356727459402" target="_blank" rel="noopener noreferrer">
-                      <img src={assets.facebook} alt="facebook" />
-                    </a>
-                  </li>
-                </ul>
-              )}
-            </div>
-
-            {/* Activity Section */}
-            <div className="bottom-item recent-entry">
-              <img src={assets.history_icon} alt="history" />
-              <p>Activity</p>
-            </div>
-
-            {/* Settings Section */}
-            <div className="bottom-item recent-entry">
-              <img
-                src={assets.setting_icon}
-                alt="settings"
-                onClick={() => setShowSettings((prev) => !prev)}
-              />
-              <p>Settings</p>
-              {showSettings && (
-                <label>
-                  <input type="checkbox" checked={darkMode} onChange={toggleDarkMode} />
-                  Dark Mode coming soon
-                </label>
-              )}
-            </div>
+          <div 
+            className="tooltip-container"
+            onMouseEnter={() => setHoveredButton('test')}
+            onMouseLeave={() => setHoveredButton(null)}
+          >
+            <button onClick={showTest} className="nav-btn">
+              <FiFileText className="icon" />
+            </button>
+            {hoveredButton === 'test' && <span className="tooltip">Test</span>}
           </div>
-        </>
-      )}
-    </div>
+
+          <div 
+            className="tooltip-container"
+            onMouseEnter={() => setHoveredButton('reports')}
+            onMouseLeave={() => setHoveredButton(null)}
+          >
+            <button className="nav-btn" onClick={showReports}>
+              <FiTable className="icon" />
+            </button>
+            {hoveredButton === 'reports' && <span className="tooltip">Reports</span>}
+          </div>
+        </div>
+
+        {/* Bottom Section */}
+        <div className="sidebar-bottom">
+          <div 
+            className="tooltip-container"
+            onMouseEnter={() => setHoveredButton('')}
+            onMouseLeave={() => setHoveredButton(null)}
+          >
+            <button 
+              onClick={() => setShowProfileMenu(!showProfileMenu)} 
+              className="profile-btn"
+            >
+              <FiUser className="icon" />
+            </button>
+            {hoveredButton === 'profile' && <span className="tooltip">Profile</span>}
+          </div>
+          {showProfileMenu && (
+            <div className="profile-menu">
+              <div 
+                className="profile-menu-item"
+                onClick={toggleDarkMode}
+              >
+                {darkMode ? 'Light Mode' : 'Dark Mode'}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </>
   );
 };
 
 export default Sidebar;
-

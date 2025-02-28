@@ -1,0 +1,348 @@
+:root {
+    --header-height: 3rem; /* Height of the header */
+    --font-semi: 600; /* Semi-bold font weight */
+    --first-color: green; /* Main accent color */
+    --second-color: greenyellow; /* Secondary accent color */
+    --z-fixed: 999; /* Z-index for fixed elements */
+    --mb-2: 1rem; /* Margin bottom value */
+    --mb-4: 2rem; /* Margin bottom value for nav items */
+}
+.dark {
+    --background: #1a1a1a;
+    --card-bg: #2d2d2d;
+    --text-primary: #ffffff;
+    --text-secondary: #95a5a6;
+    --shadow: 0 4px 6px rgba(0,0,0,0.2);
+    --primary: #3cc210;
+    --primary-dark: #1f5a08;
+}
+
+.dark .mainwindow-container{
+    background-color: var(--background);
+}
+.dark .card{
+    background-color: var(--card-bg);
+}
+
+.dark .card:hover{
+    background-color: var(--background);
+}
+
+.dark .nav{
+    background-color: var(--card-bg);
+}
+
+.dark .nav__link{
+    color: var(--text-primary);
+}
+
+.dark .nav__menu.show{
+    background-color: var(--primary-dark);
+}
+
+h1{
+    font-size: 2rem;
+}
+
+
+.mainwindow-container {
+    flex: 1;
+    min-height: 100vh;
+    padding-bottom: 15vh;
+    position: relative;
+}
+
+.l-header {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: var(--z-fixed);
+    background-color: #fff;
+    box-shadow: 0 1px 4px rgba(146, 161, 176, 0.15);
+}
+
+.l-header.scrolled {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* NAVIGATION */
+.nav {
+    height: var(--header-height);
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Align items vertically */
+    font-weight: var(--font-semi);
+    padding: 0 var(--mb-4);
+}
+
+.nav__logo {
+    color: var(--first-color);
+    font-size: 1.5rem; /* Adjust the size of the logo if needed */
+}
+
+/* Initially, the menu is hidden on mobile */
+.nav__menu {
+    display: flex;
+    gap: 1rem;
+    position: fixed;
+    top: var(--header-height);
+    right: -100%;  /* Initially off-screen on small screens */
+    width: 50%;
+    height: 100%;
+    padding: 2rem;
+    background-color: var(--second-color);
+    transition: right 0.5s ease; /* Smooth sliding transition */
+  }
+  
+  /* When the 'show' class is applied, slide the menu into view */
+  .nav__menu.show {
+    right: 0; /* Slide the menu into view */
+  }
+  
+  /* Desktop - Show nav__menu normally and hide nav__toggle (the icon) */
+  @media screen and (min-width: 768px) {
+    .nav__menu {
+      position: static; /* Make the menu static on larger screens */
+      right: auto; /* Remove the 'right' positioning */
+      display: flex; /* Always show the menu on desktop */
+      gap: 3rem; /* Adjust gap between menu items */
+      padding: 0;
+      background-color: transparent; /* No background on desktop */
+    }
+  
+    /* Hide the nav toggle icon on desktop */
+    .nav__toggle {
+      display: none;
+    }
+  
+    .nav__list {
+      flex-direction: row; /* Display menu items in a row */
+      gap: 3rem; /* Adjust gap between nav items */
+    }
+  }
+  
+  /* Mobile - Show the nav__toggle (menu icon) */
+  @media screen and (max-width: 768px) {
+    .nav__toggle {
+      display: block; /* Show the toggle icon */
+    }
+    .nav__list {
+        display: flex;
+        gap: 3rem;
+        padding-top: 0;
+        height: 100%; /* Add this */
+        align-items: center; /* Add this */
+    }
+  
+    .nav__item {
+      margin-bottom: 0;
+    }
+  }
+  
+  /* Styling for the menu toggle button */
+  .nav__toggle {
+    color: var(--first-color);
+    font-size: 2rem;
+    cursor: pointer;
+  }
+  
+  .nav__toggle i {
+    font-size: 2rem; /* Adjust the size of the icon */
+  }
+  
+.nav__item {
+    list-style: none;
+    margin-bottom: 0;
+}
+
+.nav__link {
+    position: relative;
+    color: #000;
+    display: flex; /* Add this */
+    align-items: center; /* Add this */
+    height: 100%; /* Add this */
+    padding: 0 0.5rem; /* Add this for spacing */
+}
+
+.nav__link:hover {
+    position: relative;
+}
+
+.nav__link:hover::after {
+    position: absolute;
+    content: "";
+    width: 100%;
+    height: 0.18rem;
+    left: 0;
+    top: calc(var(--header-height) - 2px); /* Adjust this value */
+    background-color: var(--first-color);
+}
+
+.active-link::after {
+    position: absolute;
+    content: "";
+    width: 100%;
+    height: 0.18rem;
+    left: 0;
+    top: calc(var(--header-height) - 2px); /* Match hover position */
+    background-color: var(--first-color);
+}
+
+.nav__toggle {
+    color: var(--first-color);
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+a {
+    text-decoration: none;
+}
+
+
+/* Active menu */
+.active-link::after {
+    position: absolute;
+    content: "";
+    width: 100%;
+    height: 0.18rem;
+    left: 0;
+    top: 2rem;
+    background-color: var(--first-color);
+}
+
+/* Show menu */
+.show {
+    right: 0;
+}
+
+.nav__list {
+    display: flex;
+    gap: 3rem; /* Adjust gap between nav items */
+    padding-top: 0;
+}
+
+@media screen and (max-width: 768px) {
+    .nav__menu {
+        position: fixed;
+        top: var(--header-height);
+        right: -100%;
+        width: 80%;
+        height: 100%;
+        padding: 2rem;
+        background-color: var(--second-color);
+        transition: 0.5s;
+    }
+
+    .nav__menu.show {
+        right: 0;
+    }
+
+    .nav__list {
+        flex-direction: column; /* Stack items vertically on smaller screens */
+        gap: 2rem;
+    }
+
+    .nav__item {
+        margin-bottom: 0;
+    }
+}
+
+/* Layout for cards */
+.cards {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(300px, 1fr));
+    gap: 30px;
+    padding: 20px;
+    position: relative;
+    z-index: 0;
+    margin-top: 120px;
+}
+
+.card {
+    height: 250px;
+    padding: 20px;
+    background-color: #f0f4f9;
+    border-radius: 10px;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.card img {
+    width: 80px;
+    padding: 5px;
+    position: absolute;
+    background-color: white;
+    border-radius: 20px;
+    bottom: 10px;
+    right: 100px;
+}
+
+.card p {
+    color: #585858;
+    font-size: 17px;
+}
+
+.card:hover {
+    background-color: #dfe4ea;
+}
+
+
+@media (max-width: 480px) {
+    .cards {
+        grid-template-columns: 1fr;
+        padding: 0px;
+    }
+    .card {
+       width: 270px;
+    }
+}
+@media (min-width: 768px) {
+    .chat-container .cards {
+        grid-template-columns: repeat(2, minmax(100px, 1fr));
+        gap: 10px;
+        margin: 100px 0px;
+    }
+}
+@media (min-width: 820px) {
+    .cards {
+        grid-template-columns: repeat(2, minmax(100px, 1fr));
+        gap: 10px;
+        margin: 100px 0px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .cards {
+        grid-template-columns: repeat(2, minmax(200px, 1fr));
+        gap: 20px;
+        padding: 5px;
+    }
+   
+}
+@media (min-width: 540px) {
+    .cards {
+        grid-template-columns: repeat(2, minmax(200px, 1fr));
+        padding: 0px;
+    }
+/*.chat-container .card {
+       width: 200px;
+    }*/
+}
+@media (min-width: 1280px) {
+    .cards {
+        grid-template-columns: repeat(3, minmax(300px, 1fr));
+        padding: 1px;
+    }
+    .chat-container .card {
+        width: 300px;
+     }
+}
+@media (min-width: 1368px) {
+    .cards {
+        grid-template-columns: repeat(4, minmax(300px, 1fr));
+        padding: 1px;
+    }
+}
+

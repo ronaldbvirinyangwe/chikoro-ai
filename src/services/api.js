@@ -1,12 +1,23 @@
 import axios from 'axios';
 
-const API_URL = 'api/auth'; // Update with your backend URL
+const API_URL =  'https://chikoro-ai.com/api';
 
-export const signup = async (userData) => {
-  return axios.post(`${API_URL}/`, userData);
-};
+const api = axios.create({
+  baseURL: API_URL,
+  headers: {
+    'Content-Type': 'application/json'
+  }
+});
+
+// Add token to requests if it exists
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
 
 export const login = async (credentials) => {
-  return axios.post(`${API_URL}/`, credentials);
+  return api.post('/auth', credentials);
 };
-

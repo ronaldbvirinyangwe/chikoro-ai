@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
 
 
@@ -11,12 +12,7 @@
   min-height: 100vh;
   display: flex;
   animation: fadeIn 1.5s;
-background-color:#f8fafc;
 }
-.dark #root{
-background-color:#1a1a1a;
-}
-
 @keyframes fadeIn {
   0%{
     opacity: 0;
@@ -25,3 +21,4 @@ background-color:#1a1a1a;
     opacity: 1;
   }
 }
+.dark #root{

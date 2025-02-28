@@ -45,7 +45,7 @@ import pe from './pe.png'
 import commerce from './commerce.png'
 import fashion from './fashion.png'
 import learn from './learn.png'
-
+import logo from './logo.png'
 
 export const assets = {
     history_icon,
@@ -63,6 +63,7 @@ export const assets = {
     bulb_icon,
     compass_icon,
     gallery_icon,
+    logo,
     mic_icon,
     user_icon,
     youtube_icon,

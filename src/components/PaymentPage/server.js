@@ -42,7 +42,7 @@ app.post('/bhadhara', async (req, res) => {
     const payment = paynow.createPayment(`Order-${Date.now()}`, "ronaldbvirinyangwe@icloud.com");
 
     // Add items to the payment (amount in USD)
-    payment.add("Chikoro AI Subscription", 10.00);
+    payment.add("Chikoro AI Subscription", 0.50);
 
     // Send mobile money payment
     const response = await paynow.sendMobile(payment, phoneNumber, 'ecocash');
@@ -137,4 +137,3 @@ app.post('/check-payment-status', async (req, res) => {
 app.listen(3080, () => {
   console.log('Server listening on port 3080');
 });
-

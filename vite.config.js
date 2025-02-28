@@ -16,6 +16,8 @@ export default defineConfig({
     sourcemap: false, // Disable source maps to make reverse engineering harder
   },
   server: {
+    host: '0.0.0.0', 
+    port: 5173, 
     proxy: {
       '/bhadhara': {
         target: 'http://localhost:3080',

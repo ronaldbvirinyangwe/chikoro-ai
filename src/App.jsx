@@ -5,9 +5,17 @@ import Main from './components/Main/Main';
 import Login from './components/Login/Login';
 import Signup from './components/Signup/Signup';
 import PaymentPage from './components/PaymentPage/PaymentPage';
-import PaymentSuccessPage from './components/PaymentSuccessPage/PaymentSuccessPage';
 import { AuthProvider } from './context/AuthContext';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
+import Enrol from './components/Enrol/Enrol.jsx';
+import SubjectSelect from './components/SubjectSelect/subjectselect.jsx';
+import Discover from './components/Discover/discover.jsx';
+import Test from './components/Test/test.jsx';
+import Exercise from './components/Exercise/exercise.jsx';
+import Reports from './components/Reports/reports.jsx';
+import MainWindow from './components/MainWindow/mainwindow.jsx';
+
+
 
 const App = () => {
   return (
@@ -17,8 +25,14 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route element={<PrivateRoute />}>
-            <Route path="/" element={<><Sidebar /><Main /></>} />
+            <Route path="/" element={<><Sidebar /><MainWindow /></>} />
             <Route path="/payment" element={<PaymentPage />} />
+  <Route path="/enrol" element={<Enrol />} />
+            <Route path="/discover" element={<Discover />} />
+            <Route path="/test" element={<Test />} />
+            <Route path="/exercise" element={<Exercise />} />
+            <Route path="/reports" element={<Reports />} />
+            <Route path="/subjectselect" element={<SubjectSelect />} />
           </Route>
         </Routes>
       </BrowserRouter>
@@ -27,4 +41,3 @@ const App = () => {
 };
 
 export default App;
-

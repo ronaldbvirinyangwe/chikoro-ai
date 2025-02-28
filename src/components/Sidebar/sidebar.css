@@ -1,0 +1,276 @@
+.sidebar {
+  position: fixed;
+  left: 0;
+  height: 100%;
+  width: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 40px 24px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5.7px);
+  background-color: #64748b;
+}
+
+/* Top Section Styles */
+.sidebar-top {
+  display: flex;
+  flex-direction: column;
+  gap: 230px;
+  align-items: center;
+  width: 100%;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  border: none;
+}
+
+.logo {
+  width: 80px;
+  height: 80px;
+  cursor: pointer;
+}
+
+.new-chat-btn {
+  width: 100%;
+  padding: 8px;
+  background: #2f82ef;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.new-chat-btn:hover {
+  background: rgba(47, 130, 239, 0.9);
+}
+
+/* Middle Section Styles */
+.sidebar-middle {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  width: 100%;
+}
+
+.nav-btn {
+  width: 100%;
+  padding: 8px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+  background: #64748b;
+}
+
+.nav-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Bottom Section Styles */
+.sidebar-bottom {
+  position: relative;
+}
+
+.profile-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.profile-btn:hover {
+  background: #3cc210;
+}
+
+/* Profile Menu Styles */
+.profile-menu {
+  position: absolute;
+  left: 0;
+  margin-top: -88px;
+  margin-left: 50px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border:none;
+
+  width: 101px;
+}
+
+.profile-menu-item {
+  width: 100%;
+  padding: 8px 6px;
+  text-align: left;
+  background-color: #3cc210;;
+  font-size: 14px;
+  transition: background-color 0.2s;
+  border: none;
+  cursor: pointer;
+margin-top:-90px;
+}
+
+.profile-menu-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Icon Styles */
+.icon {
+  width: 24px;
+  height: 24px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.dark .nav-btn{
+ background: transparent;
+}
+
+.dark .nav-btn:hover{
+  background: #333;
+}
+
+.profile-btn .icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* Dark Mode Styles */
+.dark .sidebar {
+  background: rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 255, 255, 0.05);
+}
+.tooltip-container {
+  position: relative; 
+  display: inline-block; 
+}
+
+.tooltip {
+  visibility: hidden;
+  width: 80px;
+  background-color: #f8fafc;
+  color: #000;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5x 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%; 
+  left: 50%;
+  margin-left: -60px;
+  opacity: 0; 
+  transition: opacity 0.3s; 
+}
+
+.tooltip-container:hover .tooltip {
+  visibility: visible; 
+  opacity: 1; 
+}
+/* For dark mode compatibility */
+.dark-mode .tooltip {
+  background: rgba(255, 255, 255, 0.9);
+  color: #333;
+}
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 80px;
+    padding: 32px 16px;
+  }
+
+  .profile-menu {
+    width: 120px;
+    left: -40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .sidebar {
+    width: 60px;
+    padding: 24px 8px;
+  }
+
+  .nav-btn {
+    padding: 6px;
+  }
+
+  .profile-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+  .profile-menu {
+    width: 100px;
+    left: -35px;
+  }
+}
+.mobile-toggle {
+  display: none;
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
+  background:transparent;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  .side-icon{
+    color:#000;
+  }
+}@media (max-width: 768px) {
+  .mobile-toggle {
+    display: flex;
+  }
+
+  .sidebar {
+    transform: translateX(-100%);
+    z-index: 999;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .profile-menu {
+    width: 120px;
+    left: -40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .sidebar {
+    width: 60px;
+    padding: 24px 8px;
+  }
+
+  .nav-btn {
+    padding: 6px;
+  }
+
+  .profile-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+  .profile-menu {
+    width: 100px;
+    left: -35px;
+  }
+
+  .logo {
+    width: 40px;
+    height: 40px;
+  }
+}
