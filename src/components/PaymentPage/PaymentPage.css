@@ -1,6 +1,22 @@
 .this-container{
   padding: 0;
 }
+.trial-counter {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  z-index: 1000;
+}
+
+.dark .trial-counter {
+  background: rgba(255, 255, 255, 0.9);
+  color: #000;
+}
 .payment-container {
   max-width: 1200px;
   margin: 0 auto;
@@ -59,11 +75,13 @@
 
 .features {
   margin-top: 1rem;
+ color:#000;
 }
 
 .feature-item {
   margin: 0.5rem 0;
   font-size: 0.95rem;
+  color:#000;
 }
 
 .payment-form {
@@ -112,6 +130,7 @@
   border-radius: 10px;
   max-width: 600px;
   margin: 2rem auto;
+  color:#000;
 }
 
 .status-message {

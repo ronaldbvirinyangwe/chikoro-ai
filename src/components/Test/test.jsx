@@ -159,6 +159,10 @@ const Test = () => {
             <option value="Mathematics">Mathematics</option>
             <option value="Science">Science</option>
             <option value="English">English</option>
+ <option value="History">History</option>
+ <option value="Geography">Geography</option>
+ <option value="Heritage">Heritage</option>
+ <option value="Computer Science">Computer Science</option>
           </select>
 
           <button

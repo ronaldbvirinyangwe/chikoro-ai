@@ -67,8 +67,14 @@ app.post('/students', async (req, res) => {
     });
     
   } catch (error) {
-    console.error("Error saving student:", error);
-    res.status(500).json({ error: 'Failed to save student' });
+    if (error.code === 11000) { // MongoDB duplicate key error
+      res.status(409).json({
+        error: 'Student name exists. Add a number or middle initial (e.g., "John2" or "John Smith")'
+      });
+    } else {
+      console.error("Error saving student:", error);
+      res.status(500).json({ error: 'Failed to save student' });
+    }
   } finally {
     await client.close();
   }

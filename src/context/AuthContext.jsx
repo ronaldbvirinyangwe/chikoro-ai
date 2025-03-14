@@ -12,24 +12,40 @@ const SUBSCRIPTION_STATUS = {
   NONE: 'none'
 };
 
+// Free trial constants
+const FREE_TRIAL_LIMIT = 5;
+
 // Utility functions for subscription management
 const isDateValid = (date) => {
   return date && new Date(date) > new Date();
 };
 
-const getSubscriptionStatus = (expiryDate, gracePeriodDays = 3) => {
+const getSubscriptionStatus = (expiryDate) => {
   if (!expiryDate) return SUBSCRIPTION_STATUS.NONE;
   
   const currentDate = new Date();
-  const expiryDateTime = new Date(expiryDate);
-  const gracePeriodEnd = new Date(expiryDateTime.getTime() + (gracePeriodDays * 24 * 60 * 60 * 1000));
+  const expirationDate = new Date(expiryDate);
   
-  if (expiryDateTime > currentDate) {
-    return SUBSCRIPTION_STATUS.ACTIVE;
-  } else if (gracePeriodEnd > currentDate) {
-    return SUBSCRIPTION_STATUS.GRACE_PERIOD;
+  if (expirationDate.getMonth() === 4 && expirationDate.getDate() === 12) {
+    const nextMay12 = getNextMay12Expiration();
+    return currentDate.getTime() > nextMay12 
+      ? SUBSCRIPTION_STATUS.EXPIRED
+      : currentDate.getTime() > expirationDate.getTime() 
+        ? SUBSCRIPTION_STATUS.GRACE_PERIOD
+        : SUBSCRIPTION_STATUS.ACTIVE;
   }
-  return SUBSCRIPTION_STATUS.EXPIRED;
+  return isDateValid(expiryDate) 
+    ? SUBSCRIPTION_STATUS.ACTIVE
+    : SUBSCRIPTION_STATUS.EXPIRED;
+};
+
+
+// Helper function to get next May 12th expiration date
+const getNextMay12Expiration = () => {
+  const now = new Date();
+  const currentYear = now.getFullYear();
+  const may12 = new Date(currentYear, 4, 12);
+  return now > may12 ? may12.setFullYear(currentYear + 1) : may12.getTime();
 };
 
 export const AuthProvider = ({ children }) => {
@@ -192,6 +208,37 @@ export const AuthProvider = ({ children }) => {
     setState(prev => ({ ...prev, paymentStatus: status }));
   }, []);
 
+  const [freeTrialMessages, setFreeTrialMessages] = useState(() => {
+    const saved = localStorage.getItem('freeTrialMessages');
+    return saved ? parseInt(saved) : 0;
+  });
+
+  const incrementTrialMessage = useCallback(() => {
+  // Add subscription check
+  if (state.hasActiveSubscription) return;
+
+  setFreeTrialMessages(prev => {
+    const newCount = prev + 1;
+    localStorage.setItem('freeTrialMessages', newCount.toString());
+    return newCount;
+  });
+}, [state.hasActiveSubscription]); // Add dependency
+
+  const resetTrialMessages = useCallback(() => {
+    setFreeTrialMessages(0);
+    localStorage.removeItem('freeTrialMessages');
+  }, []);
+
+  // New function to check if user can send messages
+  const canSendMessage = useCallback(() => {
+    // Subscribed users can always send messages
+    if (state.hasActiveSubscription) {
+      return true;
+    }
+    // Non-subscribed users are limited by free trial count
+    return freeTrialMessages < FREE_TRIAL_LIMIT;
+  }, [state.hasActiveSubscription, freeTrialMessages]);
+
   const value = {
     ...state,
     login,
@@ -201,7 +248,17 @@ export const AuthProvider = ({ children }) => {
     isAuthenticated: Boolean(state.user),
     token: localStorage.getItem('token'),
     subscriptionStatus: state.subscriptionDetails?.status || SUBSCRIPTION_STATUS.NONE,
-    SUBSCRIPTION_STATUS
+    SUBSCRIPTION_STATUS,
+    freeTrialMessages,
+    incrementTrialMessage,
+    resetTrialMessages,
+    canSendMessage,
+    FREE_TRIAL_LIMIT,
+shouldShowPaymentPrompt: () => {
+    return state.user && 
+           !state.hasActiveSubscription && 
+           freeTrialMessages >= 5;
+  }
   };
 
   return (

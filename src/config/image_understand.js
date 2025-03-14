@@ -51,9 +51,7 @@ async function authenticateStudent(name) {
     
     // Store the studentId (you can save it in state or localStorage)
     const studentId = studentData._id;
-    console.log('Authenticated student:', studentData);
 
-    // Optionally save to localStorage/sessionStorage if you need it across sessions
     localStorage.setItem('studentId', studentId);
 
     return studentId; // Return studentId for further use
@@ -67,7 +65,7 @@ async function authenticateStudent(name) {
 async function fetchSearchResults(prompt, subject) { 
   try {
     const studentId = localStorage.getItem('studentId');
-    const selectedSubject = localStorage.getItem('selectedSubject'); // Get selected subject
+    const selectedSubject = localStorage.getItem('selectedSubject'); 
 
     if (!studentId) {
       throw new Error("Student not authenticated.");
@@ -76,12 +74,6 @@ async function fetchSearchResults(prompt, subject) {
     if (!subject && !selectedSubject) {
       throw new Error("No subject selected.");
     }
-
-    console.log('Sending request with:', { 
-      query: prompt, 
-      studentId, 
-      subject: subject || selectedSubject 
-    });
 
     const response = await fetch(`/search/`, {
       method: 'POST',
@@ -116,13 +108,11 @@ export async function runMulti(prompt, file = null) {
     const grade = localStorage.getItem('studentGrade') || 'unknown grade';
     const currentSubject = localStorage.getItem('selectedSubject');
 
-    // Create model instance with current grade
     const currentModel = genAI.getGenerativeModel({
       model: "gemini-1.5-flash",
       systemInstruction: `
-        You are Chikoro AI, a personalized tutor for Zimbabwean students.
+        You are Chikoro AI, a personalised tutor for Zimbabwean students.
         Current Student Grade: ${grade}
-        
         Teaching Guidelines:
         1. Adapt explanations to ${grade} curriculum
         2. Use examples relevant to Zimbabwean context
@@ -176,6 +166,7 @@ export async function runMulti(prompt, file = null) {
       ${searchSummary}
       
       Required:
+      - You are Chikoro AI
       - Use ${grade}-appropriate vocabulary
       - Include local examples
     `;
@@ -234,7 +225,6 @@ function clearHistoryIfExpired() {
   const minutesElapsed = (currentTime - timestamp) / (1000 * 60); 
   
   if (minutesElapsed >= 5) {
-    console.log("5 minutes have passed, clearing history...");
     localStorage.removeItem('conversationHistory'); // Clear history if 5 minutes have passed
   }
 }
@@ -250,7 +240,7 @@ export async function fetchDynamicCards(subject) {
       - Questions a ${grade} student would ask
       - Use simple language
       - No numbering or bullet points
-      
+      - Only show the questions, don't say here are topics formatted
       Example format:
       "How do I solve basic fractions?"
       "What causes the seasons to change?"
@@ -538,7 +528,6 @@ export async function gradeStudentResponses(test, studentAnswers) {
       const result = await model.generateContent(gradingPrompt);
       const responseText = await result.response.text();
 
-      // Enhanced cleaning process
       let cleanedResponse = responseText
         .replace(/```json\s*|\s*```/g, "") // Remove code blocks
         .replace(/\/\/.*$/gm, "")          // Remove single-line comments
@@ -607,7 +596,7 @@ export async function gradeStudentResponses(test, studentAnswers) {
 }
 
 async function generateTestSummary(gradingResults) {
-  const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+  const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-thinking-exp-01-21" });
 
   // Improved prompt to enforce pure JSON
   const summaryPrompt = `
@@ -637,7 +626,6 @@ async function generateTestSummary(gradingResults) {
     const result = await model.generateContent(summaryPrompt);
     const responseText = await result.response.text();
 
-    // Enhanced cleaning process
     let cleanedResponse = responseText
       .replace(/```json\s*|\s*```/g, "") // Remove code blocks
       .replace(/\/\/.*$/gm, "")          // Remove single-line comments

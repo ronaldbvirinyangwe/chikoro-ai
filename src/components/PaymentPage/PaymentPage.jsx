@@ -12,10 +12,28 @@ const PaymentPage = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [paymentStatus, setPaymentStatus] = useState('');
   const navigate = useNavigate();
-  const { token, isAuthenticated } = useAuth(); // Use the token and authentication state from context
+  const { token, isAuthenticated,updateSubscriptionStatus, resetTrialMessages  } = useAuth(); // Use the token and authentication state from context
+
+
 
   const ONE_DAY_MS = 24 * 60 * 60 * 1000; // Milliseconds in a day
   const THIRTY_DAYS_MS = 150 * ONE_DAY_MS; // 150 days in milliseconds
+
+// In PaymentPage.js
+const getNextMay12Expiration = () => {
+  const now = new Date();
+  const currentYear = now.getFullYear();
+  
+  // Create May 12th of current year
+  const may12 = new Date(currentYear, 4, 12); // Months are 0-indexed (4 = May)
+  
+  // If current date is after May 12th, use next year
+  if (now > may12) {
+    may12.setFullYear(currentYear + 1);
+  }
+  
+  return may12.getTime();
+};
 
   // Check if payment status token exists and is not expired
   const checkPaymentStatus = () => {
@@ -82,37 +100,35 @@ const PaymentPage = () => {
   };
 
   const pollPaymentStatus = async () => {
-    if (!pollUrl || !isAuthenticated) {
-      setError('Token or Poll URL missing');
-      return;
+  if (!pollUrl || !isAuthenticated) {
+    setError('Token or Poll URL missing');
+    return;
+  }
+
+  try {
+    const response = await axios.post('/check-payment-status', { pollUrl }, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (response.data.success) {
+      setPaymentStatus('paid');
+      const expirationDate = getNextMay12Expiration();
+
+ updateSubscriptionStatus(expirationDate);
+      const paymentToken = { status: 'paid', expirationDate };
+      localStorage.setItem('paymentToken', JSON.stringify(paymentToken));
+      resetTrialMessages(); 
+      navigate('/'); // Redirect to root route
+    } else {
+      setPaymentStatus('failed');
+      setError('Payment failed. Please try again.');
     }
+  } catch (error) {
+    console.error('Error polling payment status:', error);
+    setError('Error checking payment status');
+  }
+};
 
-    try {
-      const response = await axios.post('/check-payment-status', { pollUrl }, {
-        headers: { Authorization: `Bearer ${token}` }, // Correct template literal
-      });
-
-      if (response.data.success) {
-        setPaymentStatus('paid');
-        const expirationDate = new Date().getTime() + THIRTY_DAYS_MS;
-        const paymentToken = { status: 'paid', expirationDate };
-        localStorage.setItem('paymentToken', JSON.stringify(paymentToken));
-        navigate('/enrol'); // Redirect to home after payment success
-      } else {
-        setPaymentStatus('failed');
-        setError('Payment failed. Please try again.');
-      }
-    } catch (error) {
-      console.error('Error polling payment status:', error);
-      setError('Error checking payment status');
-    }
-  };
-
-  const handleSuccessfulPayment = () => {
-    // Logic when payment is successful
-    console.log('Payment successful!');
-    navigate('/enrol'); 
-  };
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -135,10 +151,12 @@ const PaymentPage = () => {
   }, [pollUrl, paymentStatus]);
 
   useEffect(() => {
-    if (paymentStatus === 'paid') {
-      navigate('/enrol'); 
-    }
-  }, [paymentStatus, navigate]);
+  if (paymentStatus === 'paid') {
+    resetTrialMessages(); // Ensure counter is cleared
+    navigate('/'); // Redirect to root route
+    localStorage.removeItem('freeTrialMessages'); // Remove from storage
+  }
+}, [paymentStatus, navigate, resetTrialMessages]);
 
   return (
     <div className="content">
@@ -171,7 +189,7 @@ const PaymentPage = () => {
               <div className="plan-options">
                 <div className="plan-card selected">
                   <h3>Term Plan</h3>
-                  <p className="price">USD $10</p>
+                  <p className="price">USD $15</p>
                   <p className="duration">1 term</p>
                   <div className="features">
                     <p className="feature-item">✔ Includes holidays</p>
@@ -195,7 +213,7 @@ const PaymentPage = () => {
                   />
                 </div>
                 <button type="submit" className="submit-btn" disabled={loading}>
-                  {loading ? 'Processing...' : 'Subscribe (USD $10)'}
+                  {loading ? 'Processing...' : 'Subscribe (USD $15)'}
                 </button>
               </form>
             </div>

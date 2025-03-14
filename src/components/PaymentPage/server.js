@@ -42,7 +42,7 @@ app.post('/bhadhara', async (req, res) => {
     const payment = paynow.createPayment(`Order-${Date.now()}`, "ronaldbvirinyangwe@icloud.com");
 
     // Add items to the payment (amount in USD)
-    payment.add("Chikoro AI Subscription", 0.50);
+    payment.add("Chikoro AI Subscription", 15.00);
 
     // Send mobile money payment
     const response = await paynow.sendMobile(payment, phoneNumber, 'ecocash');

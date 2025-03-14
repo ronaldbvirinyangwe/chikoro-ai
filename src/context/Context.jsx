@@ -9,6 +9,19 @@ hljs.configure({
   ignoreUnescapedHTML: true
 });
 
+const emojiMap = {
+  ':smile:': '😊',
+  ':laugh:': '😂',
+  ':thumbsup:': '👍',
+  ':heart:': '❤️',
+  ':check:': '✅',
+  ':x:': '❌',
+  ':warning:': '⚠️',
+  ':bulb:': '💡',
+  ':rocket:': '🚀',
+  ':star:': '⭐',
+};
+
 // Global styles injection
 const injectStyles = () => {
   const style = document.createElement('style');
@@ -112,6 +125,7 @@ const injectStyles = () => {
       border: 1px solid #e0e0e0;
       text-align: left;
       vertical-align: top;
+      color:#000;
     }
     th {
       background-color: #f8f9fa;

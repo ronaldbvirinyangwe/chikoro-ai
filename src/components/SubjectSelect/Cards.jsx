@@ -53,7 +53,7 @@ const navigate = useNavigate();
               <li className="nav__item">
                 <a className="nav__link" onClick={() => navigate('/test')}>Test</a> {/* Use navigate */}
               </li>
-              <li className="nav__item">
+             <li className="nav__item">
                 <a className="nav__link" onClick={() => navigate('/exercise')}>Exercise</a> {/* Use navigate */}
               </li>
               <li className="nav__item">

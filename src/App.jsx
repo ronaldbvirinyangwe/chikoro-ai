@@ -14,7 +14,7 @@ import Test from './components/Test/test.jsx';
 import Exercise from './components/Exercise/exercise.jsx';
 import Reports from './components/Reports/reports.jsx';
 import MainWindow from './components/MainWindow/mainwindow.jsx';
-
+import LandingPage from './components/LandingPage/LandingPage.jsx';
 
 
 const App = () => {
@@ -24,6 +24,7 @@ const App = () => {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/home" element={<LandingPage />} />
           <Route element={<PrivateRoute />}>
             <Route path="/" element={<><Sidebar /><MainWindow /></>} />
             <Route path="/payment" element={<PaymentPage />} />

@@ -48,25 +48,14 @@ const Signup = React.memo(() => {
     const { id, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [id]:value
+      [id]: id === 'password' ? value : value.trim()
     }));
   }, []);
 
  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-       const url = `${BASE_API_URL}/users`;
-      const { data: res } = await axios.post(url, formData);
-      navigate('/login');
-      console.log(res.message);
-    } catch (error) {
-      if (error.response && error.response.status >= 400 && error.response.status <= 500) {
-        setError(error.response.data.message);
-      } else {
-        alert("Error creating user. Please try again.");
-      }
-    }
-  };
+       const url = `${BASE_
   
   const togglePasswordVisibility = useCallback(() => {
     setShowPassword(prev => !prev);

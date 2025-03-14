@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../../context/ThemeContext';
 import MathWhiteboard from '../MathWhiteboard/MathWhiteboard';
 import { submitDrawing, analyzeMathDrawing } from '../../config/image_understand';
+import { useAuth } from '../../context/AuthContext';
 
 const MainWindow = () => {
     const { onSent, recentPrompt, showResult, loading, resultData, setInput, input } = useContext(Context);
@@ -21,6 +22,14 @@ const MainWindow = () => {
     const textareaRef = useRef(null);
     const [cardsLoaded, setCardsLoaded] = useState(false);
     const { chatContainerRef } = useContext(Context);
+ const { 
+    hasActiveSubscription, 
+    freeTrialMessages, 
+    incrementTrialMessage,
+    subscriptionStatus,
+    SUBSCRIPTION_STATUS
+  } = useAuth();
+const { canSendMessage, FREE_TRIAL_LIMIT } = useAuth();
 
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const { darkMode, setDarkMode } = useTheme();
@@ -28,12 +37,26 @@ const MainWindow = () => {
     const {setShowWhiteboard, showWhiteboard } = useContext(Context);
 
     const handleWhiteboardSubmit = async (imageData, studentId, subject) => {
-        const submitResult = await submitDrawing(imageData, localStorage.getItem('studentId'), selectedSubject);
+         try {
+        // Submit the drawing and get analysis
         const analysis = await analyzeMathDrawing(imageData);
-
-        setInput('');
+        
+        // Set the analyzed text as input
+        setInput(analysis.result);
+        
+        // Convert DataURL to File object if needed by your API
+        const blob = await fetch(imageData).then(r => r.blob());
+        const file = new File([blob], "whiteboard.png", { type: "image/png" });
+        
+        // Set file and preview
+        setFile(file);
+        setFilePreview(imageData);
+        
+        // Hide whiteboard
         setShowWhiteboard(false);
-        onSent('Analyze', null, analysis);
+    } catch (error) {
+        console.error('Error processing whiteboard image:', error);
+    }
     };
 
     const toggleDarkMode = () => {
@@ -52,13 +75,11 @@ const MainWindow = () => {
     }, []);
 
     const scrollToBottom = () => {
-        if (chatContainerRef.current) {
-          const isAtBottom = chatContainerRef.current.scrollHeight - chatContainerRef.current.scrollTop === chatContainerRef.current.clientHeight;
-          if (isAtBottom) {
-            chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
-          }
-        }
-    };
+    if (chatContainerRef.current) {
+        chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+};
+
 
     useEffect(() => {
         scrollToBottom();
@@ -88,9 +109,14 @@ const MainWindow = () => {
         }
     }, [selectedSubject, cardsLoaded]);
 
-    const handleKeyDown = (event) => {
-        if (event.key === 'Enter' && input) onSent(input, file);
-    };
+const handleKeyDown = (event) => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault(); // Prevent default Enter behavior
+        if (input) {
+            handleSend(); 
+        }
+    }
+};    
 
     const handleInput = (event) => {
         setInput(event.target.value);
@@ -137,10 +163,35 @@ const MainWindow = () => {
         visible: { opacity: 1, y: 0 },
     };
 
+const handleSend = () => {
+    if (!hasActiveSubscription && freeTrialMessages >= 5) {
+      navigate('/payment');
+      return;
+    }
+    
+    if (!hasActiveSubscription) {
+      incrementTrialMessage();
+    }
+    
+    onSent(input, file);
+     setInput(''); 
+
+     requestAnimationFrame(() => {
+        textareaRef.current.style.height = 'auto';
+    });
+  };
+
+
     return (
 
         <div className="mainwindow">
 
+{!hasActiveSubscription && (
+        <div className="trial-counter">
+          Free messages remaining: {5 - freeTrialMessages}
+        </div>
+      )}
+      
             <div className="mains-container   ml-[120px]">
                 {showWhiteboard ? (
                     <MathWhiteboard
@@ -246,7 +297,7 @@ const MainWindow = () => {
                                         {input && (
                                             <motion.button
                                                 className="send-button"
-                                                onClick={() => onSent(input, file)}
+                                                onClick={handleSend}
                                                 whileHover={{ scale: 1.1 }}
                                                 whileTap={{ scale: 0.95 }}
                                             >

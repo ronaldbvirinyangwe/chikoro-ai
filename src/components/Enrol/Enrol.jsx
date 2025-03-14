@@ -29,23 +29,38 @@ const Enrol = () => {
 const BASE_API_URL = 'https://chikoro-ai.com';
 
  useEffect(() => {
-    const checkExistingStudent = async () => {
-      const studentName = localStorage.getItem('studentName');
-      if (studentName) {
-        try {
-          const response = await axios.get(`${BASE_API_URL}/students/authenticate/${studentName}`);
-          if (response.data) {
-            localStorage.setItem('studentId', response.data._id);
-            localStorage.setItem('studentName', response.data.name);
-            navigate('/subjectselect');
-          }
-        } catch (error) {
-          console.error('Student not found:', error);
+  const checkExistingStudent = async () => {
+    const studentName = localStorage.getItem('studentName');
+    const storedStudentId = localStorage.getItem('studentId');
+
+    if (studentName && storedStudentId) {
+      try {
+        // Verify both name and ID match
+        const response = await axios.get(`${BASE_API_URL}/students/${storedStudentId}`);
+        
+        if (response.data.name === studentName) {
+          // Valid credentials, proceed to dashboard
+          navigate('/subjectselect');
+        } else {
+          // Name/ID mismatch, clear storage
+          localStorage.clear();
+          setError('Session expired. Please register again.');
+        }
+      } catch (error) {
+        if (error.response?.status === 404) {
+          // Student not found, clear invalid credentials
+          localStorage.clear();
+          setError('Session expired. Please register again.');
         }
       }
-    };
-    checkExistingStudent();
-  }, [navigate]);  
+    } else if (studentName) {
+      // Clean up legacy storage format
+      localStorage.removeItem('studentName');
+    }
+  };
+
+  checkExistingStudent();
+}, [navigate]);
 
   const handleAcademicLevelChange = (e) => {
     const { value } = e.target;
@@ -59,33 +74,20 @@ const BASE_API_URL = 'https://chikoro-ai.com';
  const handleSubmit = async (e) => {
   e.preventDefault();
   try {
-    const response = await axios.get(`${BASE_API_URL}/students/authenticate/${formData.name}`);
-    if (response.data) {
-      if (!response.data.name) {
-        throw new Error('Student name not found in response');
-      }
-      localStorage.setItem('studentId', response.data._id);
-      localStorage.setItem('studentName', response.data.name);
-      localStorage.setItem('studentGrade', formData.grade);
-      navigate('/subjectselect');
-      return;
-    }
+    // Try to create new student directly
+    const response = await axios.post(`${BASE_API_URL}/students`, formData);
+    
+    // Handle success
+    localStorage.setItem('studentId', response.data._id);
+    localStorage.setItem('studentName', response.data.name);
+    localStorage.setItem('studentGrade', formData.grade);
+    navigate('/subjectselect');
+    
   } catch (error) {
-    if (error.response?.status === 404) {
-      try {
-        const response = await axios.post(`${BASE_API_URL}/students`, formData);
-        if (!response.data.name) {
-          throw new Error('Student name not found in response');
-        }
-        localStorage.setItem('studentId', response.data._id);
-        localStorage.setItem('studentName', response.data.name);
-        localStorage.setItem('studentGrade', formData.grade);
-        navigate('/subjectselect');
-      } catch (error) {
-        setError('Error saving student!');
-      }
+    if (error.response?.status === 409) {
+      setError(error.response.data.error);
     } else {
-      setError('Error checking student existence!');
+      setError('Error saving student. Please try again.');
     }
   }
 };
@@ -226,7 +228,15 @@ const BASE_API_URL = 'https://chikoro-ai.com';
           </button>
         </form>
 
-        {error && <div className="error-message">{error}</div>}
+        {error && (
+  <div className="error-message">
+    {error}
+    <p className="error-suggestion">
+      Try adding a number, middle initial, or last name (e.g., "{formData.name}2" 
+      or "{formData.name} Smith")
+    </p>
+  </div>
+)}
       </div>
     </div>
   );

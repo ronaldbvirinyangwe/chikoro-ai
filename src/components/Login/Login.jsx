@@ -1,10 +1,12 @@
-import React, { useState, useCallback,useEffect } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { login as apiLogin } from "../../services/api";
+import axios from "axios";
 import { useAuth } from '../../context/AuthContext.jsx';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FaEnvelope, FaLock, FaSignInAlt, FaUserPlus, FaEye, FaEyeSlash } from 'react-icons/fa';
 import './login.css';
+
+const BASE_API_URL = 'https://chikoro-ai.com/api';
 
 const Login = React.memo(() => {
   const [formData, setFormData] = useState({
@@ -16,78 +18,49 @@ const Login = React.memo(() => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, login, loading: authLoading } = useAuth();
-const [validationErrors, setValidationErrors] = useState({});
+  const { login } = useAuth();
 
- 
- const validateForm = () => {
-    const errors = {};
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    if (!formData.email) {
-      errors.email = "Email is required";
-    } else if (!emailRegex.test(formData.email)) {
-      errors.email = "Please enter a valid email address";
-    }
-
-    if (!formData.password) {
-      errors.password = "Password is required";
-    } else if (formData.password.length < 8) {
-      errors.password = "Password must be at least 8 characters";
-    }
-
-    setValidationErrors(errors);
-    return Object.keys(errors).length === 0;
-  };
+  useEffect(() => {
+    // Clean up any previous errors when component mounts
+    setError('');
+  }, []);
 
   const handleChange = useCallback((e) => {
     const { id, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [id]: value
+      [id]: id === 'password' ? value : value.trim()
     }));
   }, []);
 
   const handleSubmit = useCallback(async (e) => {
     e.preventDefault();
-    
-    if (!validateForm()) {
-      return;
-    }
-
     setLoading(true);
-    setError("");
-
+    setError('');
+  
     try {
-      const response = await apiLogin({
-        email: formData.email,
-        password: formData.password
-      });
-      
-      // Correctly access the nested data structure
-      const { token, user: userData } = response.data.data;
-      
-      if (token && userData) {
-        await login(userData, token);
-        navigate("/enrol", { replace: true });
+      const response = await axios.post(`${BASE_API_URL}/auth`, formData);
+  
+      if (response.data.success) {
+        // Use the login function from AuthContext
+        await login(response.data.user, response.data.accessToken);
+        
+        // After successful login, redirect to /payment
+        navigate('/enrol', { replace: true });
       } else {
-        setError("Invalid response from server");
+        setError('Invalid login credentials');
       }
     } catch (error) {
-      console.error("Login Error:", error);
-      
-      if (error.response?.status === 429) {
-        setError("Too many login attempts. Please try again later.");
-      } else if (error.response?.status === 401) {
-        setError("Invalid email or password.");
+      console.error('Login Error:', error);
+      if (error.response && error.response.status >= 400 && error.response.status <= 500) {
+        setError(error.response.data.message || 'Invalid credentials');
       } else {
-        setError(error.response?.data?.message || "Unable to connect to the server.");
+        setError('Unable to connect to the server. Please try again later.');
       }
     } finally {
       setLoading(false);
     }
-}, [formData, login, navigate]);
-
+  }, [formData, login, navigate]);
 
   const togglePasswordVisibility = useCallback(() => {
     setShowPassword(prev => !prev);
@@ -106,6 +79,7 @@ const [validationErrors, setValidationErrors] = useState({});
             <div className="form-group">
               <label htmlFor="email">Email</label>
               <div className="input-with-icon">
+          
                 <input
                   type="email"
                   id="email"
@@ -116,8 +90,10 @@ const [validationErrors, setValidationErrors] = useState({});
                   autoComplete="username"
                   required
                   onBlur={() => {
-                    if (!/\S+@\S+\.\S+/.test(formData.email)) {
+                    if (formData.email && !/\S+@\S+\.\S+/.test(formData.email)) {
                       setError('Please enter a valid email address');
+                    } else {
+                      setError('');
                     }
                   }}
                 />
@@ -140,7 +116,7 @@ const [validationErrors, setValidationErrors] = useState({});
                   minLength="8"
                 />
                 <div className="password-strength">
-</div>
+                </div>
                 <button
                   type="button"
                   className="password-toggle"
@@ -157,7 +133,6 @@ const [validationErrors, setValidationErrors] = useState({});
                 {error}
               </div>
             )}
-
 
             <button 
               type="submit" 

@@ -29,7 +29,6 @@ const SubjectSelect = () => {
   useEffect(() => {
     const fetchChatHistory = async () => {
       if (!studentId || !selectedSubject) {
-        console.error("Missing studentId or selectedSubject");
         return; // Don't fetch data if either is missing
       }
       
