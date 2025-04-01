@@ -101,46 +101,78 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // Initialize auth state with enhanced subscription checking
-  useEffect(() => {
-    const initializeAuth = async () => {
-      const token = localStorage.getItem('token');
-      const storedUser = localStorage.getItem('user');
-      
-      if (token && storedUser) {
-        try {
-          const user = JSON.parse(storedUser);
-          const { subscriptionDetails } = user;
+  // Modify the useEffect for initialization to be more thorough
+useEffect(() => {
+  const initializeAuth = async () => {
+    const token = localStorage.getItem('token');
+    const storedUser = localStorage.getItem('user');
+    
+    if (token && storedUser) {
+      try {
+        const user = JSON.parse(storedUser);
+        const { subscriptionDetails } = user;
+        
+        // Do a single thorough verification on app load
+        const subscriptionStatus = getSubscriptionStatus(subscriptionDetails?.expiryDate);
+        const isActive = [SUBSCRIPTION_STATUS.ACTIVE, SUBSCRIPTION_STATUS.GRACE_PERIOD].includes(subscriptionStatus);
+        
+        // Set initial state based on stored data
+        setState(prev => ({
+          ...prev,
+          user,
+          loading: false,
+          subscriptionDetails: {
+            ...subscriptionDetails,
+            status: subscriptionStatus
+          },
+          hasActiveSubscription: isActive
+        }));
+        
+        // Only verify with server if needed (expired or close to expiration)
+        const shouldVerifyWithServer = !subscriptionDetails?.lastVerified || 
+          new Date(subscriptionDetails.lastVerified).getTime() + (24 * 60 * 60 * 1000) < Date.now() ||
+          !isActive;
           
-          // Check if we need to verify subscription with server
-          const needsVerification = !subscriptionDetails?.lastVerified || 
-            new Date(subscriptionDetails.lastVerified).getTime() + (12 * 60 * 60 * 1000) < Date.now();
-
-          if (needsVerification) {
-            await verifySubscription(token, user.id);
-          } else {
-            const subscriptionStatus = getSubscriptionStatus(subscriptionDetails?.expiryDate);
-            setState(prev => ({
-              ...prev,
-              user,
-              subscriptionDetails: {
-                ...subscriptionDetails,
-                status: subscriptionStatus
-              },
-              hasActiveSubscription: [SUBSCRIPTION_STATUS.ACTIVE, SUBSCRIPTION_STATUS.GRACE_PERIOD].includes(subscriptionStatus)
-            }));
-          }
-        } catch (e) {
-          console.error('Error initializing auth state:', e);
-          localStorage.removeItem('token');
-          localStorage.removeItem('user');
+        if (shouldVerifyWithServer) {
+          await verifySubscription(token, user.id);
         }
+      } catch (e) {
+        console.error('Error initializing auth state:', e);
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        setState(prev => ({ ...prev, loading: false }));
       }
+    } else {
       setState(prev => ({ ...prev, loading: false }));
-    };
+    }
+  };
 
-    initializeAuth();
-  }, [verifySubscription]);
+  initializeAuth();
+}, [verifySubscription]);
+
+// Replace the frequent polling interval with a much less aggressive approach
+useEffect(() => {
+  const token = localStorage.getItem('token');
+  const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
+  
+  if (token && storedUser?.id) {
+    // For active subscribers, check once per day
+    // For free users, check once per hour
+    const subscriptionStatus = getSubscriptionStatus(storedUser?.subscriptionDetails?.expiryDate);
+    const isActive = [SUBSCRIPTION_STATUS.ACTIVE, SUBSCRIPTION_STATUS.GRACE_PERIOD].includes(subscriptionStatus);
+    
+    const pollingInterval = isActive ? 
+      24 * 60 * 60 * 1000 : // 24 hours for paid users
+      60 * 60 * 1000;      // 1 hour for free users
+    
+    const intervalId = setInterval(() => {
+      verifySubscription(token, storedUser.id);
+    }, pollingInterval);
+    
+    return () => clearInterval(intervalId);
+  }
+}, [verifySubscription]);
+
 
   const updateSubscriptionStatus = useCallback(async (expirationDate) => {
     const token = localStorage.getItem('token');
@@ -231,13 +263,18 @@ export const AuthProvider = ({ children }) => {
 
   // New function to check if user can send messages
   const canSendMessage = useCallback(() => {
-    // Subscribed users can always send messages
-    if (state.hasActiveSubscription) {
-      return true;
-    }
-    // Non-subscribed users are limited by free trial count
-    return freeTrialMessages < FREE_TRIAL_LIMIT;
-  }, [state.hasActiveSubscription, freeTrialMessages]);
+  // Subscribed users can always send messages, check this first
+  if (state.hasActiveSubscription) {
+    return true;
+  }
+  // Non-subscribed users are limited by free trial count
+  return freeTrialMessages < FREE_TRIAL_LIMIT;
+}, [state.hasActiveSubscription, freeTrialMessages]);
+
+// Also consider adding this helper function to make status checks easier
+const isPaidUser = useCallback(() => {
+  return state.hasActiveSubscription === true;
+}, [state.hasActiveSubscription]);
 
   const value = {
     ...state,

@@ -15,7 +15,7 @@ import Exercise from './components/Exercise/exercise.jsx';
 import Reports from './components/Reports/reports.jsx';
 import MainWindow from './components/MainWindow/mainwindow.jsx';
 import LandingPage from './components/LandingPage/LandingPage.jsx';
-
+import PaperSelector from './components/PaperSelector/PaperSelector.jsx'
 
 const App = () => {
   return (
@@ -34,6 +34,7 @@ const App = () => {
             <Route path="/exercise" element={<Exercise />} />
             <Route path="/reports" element={<Reports />} />
             <Route path="/subjectselect" element={<SubjectSelect />} />
+<Route path="/papers" element={<PaperSelector />} />
           </Route>
         </Routes>
       </BrowserRouter>

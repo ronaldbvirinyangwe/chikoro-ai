@@ -24,7 +24,6 @@ const paynow = new Paynow("19208", "1569d49f-67e7-4e3b-9b7c-168c7d37e312");
 paynow.resultUrl = "http://example.com/gateways/paynow/update"; // Should be your backend callback URL
 paynow.returnUrl = "https://www.chikoro-ai.com"; // Ensure this is a full URL
 
-
 // Utility function to check if the user token has expired
 const checkTokenValidity = (expirationDate) => {
   const currentDate = new Date().getTime();
@@ -34,15 +33,20 @@ const checkTokenValidity = (expirationDate) => {
 // Endpoint to initiate payment
 app.post('/bhadhara', async (req, res) => {
   try {
-    const { phoneNumber, token } = req.body;
+    const { phoneNumber, plan = 'premium' } = req.body;
     if (!phoneNumber) {
       return res.status(400).json({ success: false, error: 'Phone number is required' });
     }
+    
+    // Set amount based on selected plan
+    const amount = plan === 'basic' ? 10.00 : 15.00;
+    const planName = plan === 'basic' ? 'Basic' : 'Premium';
+    
     // Create payment with a unique reference
     const payment = paynow.createPayment(`Order-${Date.now()}`, "ronaldbvirinyangwe@icloud.com");
 
     // Add items to the payment (amount in USD)
-    payment.add("Chikoro AI Subscription", 15.00);
+    payment.add(`Chikoro AI ${planName} Subscription`, amount);
 
     // Send mobile money payment
     const response = await paynow.sendMobile(payment, phoneNumber, 'ecocash');
@@ -55,6 +59,7 @@ app.post('/bhadhara', async (req, res) => {
         success: true,
         pollUrl,
         instructions,
+        plan
       });
 
     } else {
@@ -97,7 +102,7 @@ const checkPaymentStatusWithRetry = async (pollUrl, retries = 5, delay = 5000) =
 
 // Endpoint to check payment status
 app.post('/check-payment-status', async (req, res) => {
-  const { pollUrl } = req.body;
+  const { pollUrl, plan = 'premium' } = req.body;
 
   if (!pollUrl) {
     return res.status(400).json({ success: false, error: 'pollUrl is required.' });
@@ -113,6 +118,7 @@ app.post('/check-payment-status', async (req, res) => {
       const paymentToken = {
         status: 'paid',
         expirationDate,
+        plan
       };
 
       res.status(200).json({
@@ -120,6 +126,7 @@ app.post('/check-payment-status', async (req, res) => {
         message: 'Payment completed successfully',
         status: 'paid',
         expirationDate,
+        plan
       });
     } else {
       return res.status(200).json({
@@ -132,7 +139,6 @@ app.post('/check-payment-status', async (req, res) => {
     return res.status(500).json({ success: false, error: error.message });
   }
 });
-
 
 app.listen(3080, () => {
   console.log('Server listening on port 3080');

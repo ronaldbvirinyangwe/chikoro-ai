@@ -54,7 +54,7 @@ const navigate = useNavigate();
                 <a className="nav__link" onClick={() => navigate('/test')}>Test</a> {/* Use navigate */}
               </li>
              <li className="nav__item">
-                <a className="nav__link" onClick={() => navigate('/exercise')}>Exercise</a> {/* Use navigate */}
+                <a className="nav__link" onClick={() => navigate('/papers')}>Exam Papers</a> {/* Use navigate */}
               </li>
               <li className="nav__item">
                 <a className="nav__link" onClick={() => navigate('/reports')}>Reports</a> {/* Use navigate */}

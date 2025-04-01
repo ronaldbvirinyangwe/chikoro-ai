@@ -11,38 +11,37 @@ const PaymentPage = () => {
   const [loading, setLoading] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState('');
   const [paymentStatus, setPaymentStatus] = useState('');
+  const [selectedPlan, setSelectedPlan] = useState('premium'); // Default to premium plan
   const navigate = useNavigate();
-  const { token, isAuthenticated,updateSubscriptionStatus, resetTrialMessages  } = useAuth(); // Use the token and authentication state from context
-
-
+  const { token, isAuthenticated, updateSubscriptionStatus, resetTrialMessages } = useAuth();
 
   const ONE_DAY_MS = 24 * 60 * 60 * 1000; // Milliseconds in a day
   const THIRTY_DAYS_MS = 150 * ONE_DAY_MS; // 150 days in milliseconds
 
-// In PaymentPage.js
-const getNextMay12Expiration = () => {
-  const now = new Date();
-  const currentYear = now.getFullYear();
-  
-  // Create May 12th of current year
-  const may12 = new Date(currentYear, 4, 12); // Months are 0-indexed (4 = May)
-  
-  // If current date is after May 12th, use next year
-  if (now > may12) {
-    may12.setFullYear(currentYear + 1);
-  }
-  
-  return may12.getTime();
-};
+  const getNextMay12Expiration = () => {
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    
+    // Create May 12th of current year
+    const may12 = new Date(currentYear, 4, 12); // Months are 0-indexed (4 = May)
+    
+    // If current date is after May 12th, use next year
+    if (now > may12) {
+      may12.setFullYear(currentYear + 1);
+    }
+    
+    return may12.getTime();
+  };
 
   // Check if payment status token exists and is not expired
   const checkPaymentStatus = () => {
     const storedToken = localStorage.getItem('paymentToken');
     if (storedToken) {
-      const { status, expirationDate } = JSON.parse(storedToken);
+      const { status, expirationDate, plan } = JSON.parse(storedToken);
       const currentDate = new Date().getTime();
       if (currentDate < expirationDate) {
         setPaymentStatus(status);
+        setSelectedPlan(plan || 'premium'); // Default to premium if no plan stored
         return;
       } else {
         setPaymentStatus('expired');
@@ -78,8 +77,11 @@ const getNextMay12Expiration = () => {
     setError('');
 
     try {
-      const response = await axios.post('/bhadhara', { phoneNumber }, {
-        headers: { Authorization: `Bearer ${token}` }, // Use the token from context
+      const response = await axios.post('/bhadhara', { 
+        phoneNumber, 
+        plan: selectedPlan 
+      }, {
+        headers: { Authorization: `Bearer ${token}` },
       });
 
       if (response.data && response.data.instructions) {
@@ -100,35 +102,41 @@ const getNextMay12Expiration = () => {
   };
 
   const pollPaymentStatus = async () => {
-  if (!pollUrl || !isAuthenticated) {
-    setError('Token or Poll URL missing');
-    return;
-  }
-
-  try {
-    const response = await axios.post('/check-payment-status', { pollUrl }, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-
-    if (response.data.success) {
-      setPaymentStatus('paid');
-      const expirationDate = getNextMay12Expiration();
-
- updateSubscriptionStatus(expirationDate);
-      const paymentToken = { status: 'paid', expirationDate };
-      localStorage.setItem('paymentToken', JSON.stringify(paymentToken));
-      resetTrialMessages(); 
-      navigate('/'); // Redirect to root route
-    } else {
-      setPaymentStatus('failed');
-      setError('Payment failed. Please try again.');
+    if (!pollUrl || !isAuthenticated) {
+      setError('Token or Poll URL missing');
+      return;
     }
-  } catch (error) {
-    console.error('Error polling payment status:', error);
-    setError('Error checking payment status');
-  }
-};
 
+    try {
+      const response = await axios.post('/check-payment-status', { 
+        pollUrl,
+        plan: selectedPlan 
+      }, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (response.data.success) {
+        setPaymentStatus('paid');
+        const expirationDate = getNextMay12Expiration();
+
+        updateSubscriptionStatus(expirationDate, selectedPlan);
+        const paymentToken = { 
+          status: 'paid', 
+          expirationDate,
+          plan: selectedPlan
+        };
+        localStorage.setItem('paymentToken', JSON.stringify(paymentToken));
+        resetTrialMessages(); 
+        navigate('/'); // Redirect to root route
+      } else {
+        setPaymentStatus('failed');
+        setError('Payment failed. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error polling payment status:', error);
+      setError('Error checking payment status');
+    }
+  };
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -151,12 +159,12 @@ const getNextMay12Expiration = () => {
   }, [pollUrl, paymentStatus]);
 
   useEffect(() => {
-  if (paymentStatus === 'paid') {
-    resetTrialMessages(); // Ensure counter is cleared
-    navigate('/'); // Redirect to root route
-    localStorage.removeItem('freeTrialMessages'); // Remove from storage
-  }
-}, [paymentStatus, navigate, resetTrialMessages]);
+    if (paymentStatus === 'paid') {
+      resetTrialMessages(); // Ensure counter is cleared
+      navigate('/'); // Redirect to root route
+      localStorage.removeItem('freeTrialMessages'); // Remove from storage
+    }
+  }, [paymentStatus, navigate, resetTrialMessages]);
 
   return (
     <div className="content">
@@ -187,8 +195,27 @@ const getNextMay12Expiration = () => {
             <div className="plan-selector">
               <h2>Choose Your Plan</h2>
               <div className="plan-options">
-                <div className="plan-card selected">
-                  <h3>Term Plan</h3>
+                <div 
+                  className={`plan-card ${selectedPlan === 'basic' ? 'selected' : ''}`}
+                  onClick={() => setSelectedPlan('basic')}
+                >
+                  <h3>Basic Plan</h3>
+                  <p className="price">USD $10</p>
+                  <p className="duration">1 term</p>
+                  <div className="features">
+                    <p className="feature-item">✔ Includes holidays</p>
+                    <p className="feature-item">✔ Assistance with homework and writing</p>
+                    <p className="feature-item">✔ Limited image uploads (5 per day)</p>
+                    <p className="feature-item">✖ No advanced problem solving</p>
+                    <p className="feature-item">✖ Standard features only</p>
+                  </div>
+                </div>
+                
+                <div 
+                  className={`plan-card ${selectedPlan === 'premium' ? 'selected' : ''}`}
+                  onClick={() => setSelectedPlan('premium')}
+                >
+                  <h3>Premium Plan</h3>
                   <p className="price">USD $15</p>
                   <p className="duration">1 term</p>
                   <div className="features">
@@ -213,7 +240,7 @@ const getNextMay12Expiration = () => {
                   />
                 </div>
                 <button type="submit" className="submit-btn" disabled={loading}>
-                  {loading ? 'Processing...' : 'Subscribe (USD $15)'}
+                  {loading ? 'Processing...' : `Subscribe (USD $${selectedPlan === 'premium' ? '15' : '10'})`}
                 </button>
               </form>
             </div>
