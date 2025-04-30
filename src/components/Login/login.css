@@ -1,0 +1,213 @@
+
+.dark .login-container {
+  background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+}
+.dark .auth-wrapper {
+  background: var(--card-bg);
+  box-shadow: var(--shadow);
+}
+.dark .auth-form {
+  color: var(--text-primary);
+}
+.dark .form-header h2 {
+  color: var(--text-primary);
+}
+.dark .form-header p {
+  color: var(--text-secondary);
+}
+.dark .form-group label {
+  color: var(--text-primary);
+}
+.dark .form-control {
+  background: #ffffff;
+  color:#000;
+  border-color: var(--text-secondary);
+}
+.dark .form-control:focus {
+  border-color: var(--primary);
+}
+.dark .btn-primary {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+}
+.dark .btn-primary:hover {
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+}
+.dark .form-footer p {
+  color: var(--text-secondary);
+}
+.dark .auth-graphics {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+}
+
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    padding: 2rem;
+  }
+  
+  .auth-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    overflow: hidden;
+  }
+  
+  .auth-form {
+    padding: 4rem 3rem;
+  }
+  
+  .form-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+  
+  .form-header h2 {
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+  }
+  
+  .form-header p {
+    color: #7f8c8d;
+  }
+  
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-group label {
+    display: block;
+    color: #34495e;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+  
+  .input-with-icon {
+    position: relative;
+  }
+  
+  .input-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #7f8c8d;
+    font-size: 1rem;
+  }
+  
+  .form-control {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 40px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+  }
+  
+  .form-control:focus {
+    border-color: #3498db;
+    box-shadow: none;
+    outline: none;
+  }
+  
+  .btn-primary {
+    background: linear-gradient(135deg, #45dc0e, #2980b9);
+    border: none;
+    padding: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+  }
+  
+  .btn-block {
+    width: 100%;
+    margin-top: 1.5rem;
+  }
+  
+  .btn-icon {
+    margin-right: 8px;
+  }
+  
+  .form-footer {
+    margin-top: 1.5rem;
+    text-align: center;
+    color: #7f8c8d;
+  }
+  
+  .form-footer p {
+    margin-bottom: 0.5rem;
+  }
+  
+  .text-link {
+    color: #3498db;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+  }
+  
+  .text-link:hover {
+    color: #2980b9;
+  }
+  
+  .auth-graphics {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    padding: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+  }
+  
+  .graphics-content h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .graphics-content p {
+    margin-bottom: 2rem;
+    opacity: 0.9;
+  }
+
+  .alert.alert-danger {
+    margin-top: 8px; /* Adjust the margin to control space below the password field */
+    font-size: 0.875rem;
+    color: #e74c3c;  /* You can tweak the color if needed */
+    padding: 0.75rem;
+  }
+  
+  @media (max-width: 992px) {
+    .auth-wrapper {
+      grid-template-columns: 1fr;
+      width:380px
+    }
+    
+    .auth-graphics {
+      display: none;
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .login-container {
+      padding: 1rem;
+    }
+    
+    .auth-form {
+      padding: 2rem 1.5rem;
+    }
+  }
+  
+  .spinner-border {
+    vertical-align: middle;
+  }
