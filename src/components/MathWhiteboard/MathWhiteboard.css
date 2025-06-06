@@ -1,18 +1,21 @@
 .math-whiteboard-container {
-    height: 100vh; 
-   display: flex;
+    height: 100vh;
+    display: flex;
     flex-direction: column;
     background-color: #f7f9fc;
     border-radius: 12px;
     box-sizing: border-box;
     padding: 16px;
-    margin: 30px 0;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08), 0 5px 10px rgba(0, 0, 0, 0.04);
     transition: all 0.4s ease;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     overflow: hidden;
-margin-left:120px;
-  }
+    margin-left: 72px; /* Default for whiteboard, already set */
+    padding-bottom: 120px;
+    padding-top: 0;
+    /* Ensure it takes full available width when active */
+    width: 95%; /* Or could be calc(100% - x padding) */
+}
   
   .math-whiteboard-container.dark {
     background-color: #1e2433;
@@ -612,16 +615,14 @@ margin-left:120px;
   }
   
   .export-options {
-    position: absolute;
-    bottom: 100%;
+    bottom: 100%; 
     left: 0;
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     padding: 8px;
     margin-bottom: 8px;
-    display: none;
-    flex-direction: column;
+
     min-width: 120px;
     z-index: 10;
   }
@@ -629,10 +630,6 @@ margin-left:120px;
   .math-whiteboard-container.dark .export-options {
     background-color: #2d3748;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-  }
-  
-  .export-dropdown:hover .export-options {
-    display: flex;
   }
   
   .export-options button {

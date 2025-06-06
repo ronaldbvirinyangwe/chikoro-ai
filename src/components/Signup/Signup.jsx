@@ -6,7 +6,7 @@ import { useAuth } from '../../context/AuthContext.jsx';
 import { login as apiLogin } from "../../services/api";
 import './signup.css';
 
-const BASE_API_URL = 'https://chikoro-ai.com/api';
+const BASE_API_URL = 'https://atqtuew6syxese-8080.proxy.runpod.net/api'; // Adjusted to match your API endpoint
 
 const Signup = React.memo(() => {
   const [formData, setFormData] = useState({

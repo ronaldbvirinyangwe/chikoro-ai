@@ -6,6 +6,7 @@ import { useTheme } from '../../context/ThemeContext';
 import './MathWhiteboard.css';
 import { debounce } from 'lodash'; // Import debounce
 
+
 // Constants for keyboard shortcuts
 const KEYBOARD_SHORTCUTS = {
     UNDO: ['z', 'ctrlKey'],
@@ -30,6 +31,7 @@ const loadImage = (ctx, dataURL, callback) => {
 
 const MathWhiteboard = ({ onSubmitDrawing, studentId, subject }) => {
     const canvasRef = useRef(null);
+    const exportMenuRef = useRef(null);
     const [isDrawing, setIsDrawing] = useState(false);
     const [color, setColor] = useState('#000000');
     const [brushSize, setBrushSize] = useState(5);
@@ -49,6 +51,9 @@ const MathWhiteboard = ({ onSubmitDrawing, studentId, subject }) => {
     const [draggedSymbol, setDraggedSymbol] = useState(null);
     const [isDragging, setIsDragging] = useState(false);
     const [dropPosition, setDropPosition] = useState({ x: 0, y: 0 });
+     const [showExportMenu, setShowExportMenu] = useState(false); // <--- Add this
+
+
 
 useEffect(() => {
   const resizeCanvas = () => {
@@ -655,7 +660,7 @@ const addSymbol = (symbol, position) => {
             role="application"
         >
             <div className="whiteboard-header">
-                <h2>Math Whiteboard</h2>
+                <h2>Whiteboard</h2>
                 <div className="whiteboard-toolbar">
                     <div className="tool-controls" role="toolbar" aria-label="Drawing Tools">
                         <button
@@ -934,7 +939,7 @@ const addSymbol = (symbol, position) => {
                     <FiTrash /> Clear
                 </motion.button>
 
-                <div className="export-dropdown">
+                <div className="export-dropdown" ref={exportMenuRef}> {/* <--- Add ref */}
                     <motion.button
                         className="control-btn"
                         whileHover={{ scale: 1.1 }}
@@ -942,15 +947,27 @@ const addSymbol = (symbol, position) => {
                         aria-label="Export options"
                         aria-haspopup="true"
                         title="Export Options"
+                        onClick={() => setShowExportMenu(!showExportMenu)} // <--- Add onClick
                     >
                         <FiDownload /> Export
                     </motion.button>
-                    <div className="export-options">
-                        <button onClick={downloadCanvas} aria-label="Save as PNG">PNG</button>
-                        <button onClick={exportAsPDF} aria-label="Save as PDF">PDF</button>
-                    </div>
+                    {showExportMenu && ( // <--- Add conditional rendering
+                        <div className="export-options">
+                            <button 
+                                onClick={() => { downloadCanvas(); setShowExportMenu(false); }} // Close on click
+                                aria-label="Save as PNG"
+                            >
+                                PNG
+                            </button>
+                            <button 
+                                onClick={() => { exportAsPDF(); setShowExportMenu(false); }} // Close on click
+                                aria-label="Save as PDF"
+                            >
+                                PDF
+                            </button>
+                        </div>
+                    )} {/* <--- End conditional rendering */}
                 </div>
-
                 <label className="control-btn upload">
                     <FiUpload /> Upload
                     <input

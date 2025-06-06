@@ -1,384 +1,542 @@
+/* sidebar.css */
+
+/* Base Sidebar Styles */
 .sidebar {
-    position: fixed;
-    left: 0;
-    height: 100%;
-    width: 120px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    padding: 40px 24px;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(5.7px);
-    background-color: #64748b;
-  }
-  
-  /* Top Section Styles */
-  .sidebar-top {
-    display: flex;
-    flex-direction: column;
-    gap: 230px;
-    align-items: center;
-    width: 100%;
-  }
-  
-  .logo-container {
-    display: flex;
-    align-items: center;
-    border: none;
-  }
-  
-  .logo {
-    width: 80px;
-    height: 80px;
-    cursor: pointer;
-  }
-  
-  .new-chat-btn {
-    width: 100%;
-    padding: 8px;
-    background: #2f82ef;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.2s;
-  }
-  
-  .new-chat-btn:hover {
-    background: rgba(47, 130, 239, 0.9);
-  }
-  
-  /* Middle Section Styles */
-  .sidebar-middle {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    align-items: center;
-    width: 100%;
-  }
-  
-  .nav-btn {
-    width: 100%;
-    padding: 8px;
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.2s;
-    background: #64748b;
-  }
-  
-  .nav-btn:hover {
-    background: rgba(255, 255, 255, 0.05);
-  }
-  
-  /* Bottom Section Styles */
-  .sidebar-bottom {
-    position: relative;
-  }
-  
-  .profile-btn {
-    width: 40px;
-    height: 40px;
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.2s;
-  }
-  
-  .profile-btn:hover {
-    background: #3cc210;
-  }
-  
-  /* Profile Menu Styles */
-  .profile-menu {
-    position: absolute;
-    left: 0;
-    margin-top: -88px;
-    margin-left: 50px;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border:none;
-  
-    width: 101px;
-  }
-  
-  .profile-menu-item {
-    width: 100%;
-    padding: 8px 6px;
-    text-align: left;
-    background-color: #3cc210;;
-    font-size: 14px;
-    transition: background-color 0.2s;
-    border: none;
-    cursor: pointer;
-  margin-top:-90px;
-  }
-  
-  .profile-menu-item:hover {
-    background: rgba(255, 255, 255, 0.1);
-  }
-  
-  /* Icon Styles */
-  .icon {
-    width: 24px;
-    height: 24px;
-    color: rgba(255, 255, 255, 0.7);
-  }
-  
-  .dark .nav-btn{
-   background: transparent;
-  }
-  
-  .dark .nav-btn:hover{
-    background: #333;
-  }
-  
-  .profile-btn .icon {
-    width: 20px;
-    height: 20px;
-  }
-  
-  /* Dark Mode Styles */
-  .dark .sidebar {
-    background: rgba(0, 0, 0, 0.2);
-    border-color: rgba(255, 255, 255, 0.05);
-  }
-  .tooltip-container {
-    position: relative; 
-    display: inline-block; 
-  }
-  
-  .tooltip {
-    visibility: hidden;
-    width: 80px;
-    background-color: #f8fafc;
-    color: #000;
-    text-align: center;
-    border-radius: 6px;
-    padding: 5x 0;
-    position: absolute;
-    z-index: 1;
-    bottom: 125%; 
-    left: 50%;
-    margin-left: -60px;
-    opacity: 0; 
-    transition: opacity 0.3s; 
-  }
-  
-  .tooltip-container:hover .tooltip {
-    visibility: visible; 
-    opacity: 1; 
-  }
-  /* For dark mode compatibility */
-  .dark-mode .tooltip {
-    background: rgba(255, 255, 255, 0.9);
-    color: #333;
-  }
-  /* Recent Prompts Panel Styles */
-.recent-prompts-panel {
-  position: absolute;
-  left: 70px; /* Adjust based on your sidebar width */
-  top: 50%;
-  transform: translateY(-50%);
-  width: 250px;
-  max-height: 400px;
-  overflow-y: auto;
-  background-color: var(--bg-color, #fff);
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 260px; /* Default (expanded) width */
+  display: flex;
+  flex-direction: column;
+  padding: 20px 15px;
+  background: rgba(255, 255, 255, 0.04);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5.7px);
+  background-color: #64748b;
+  transition: width 0.3s ease-in-out, transform 0.3s ease-in-out, padding 0.3s ease-in-out; /* Add width and padding to transition */
+  overflow-y: auto; /* Allow sidebar content to scroll if it overflows */
+  z-index: 999; /* Ensure it's below mobile toggle but above content */
+}
+
+.dark .sidebar {
+  background: rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Collapsed State Styles (Desktop) */
+.sidebar.collapsed {
+  width: 70px; /* Narrower width when collapsed */
+  padding: 20px 0px; /* Reduce horizontal padding to centralize icons */
+  align-items: center; /* Center items for collapsed view */
+}
+
+.sidebar.collapsed .sidebar-header {
+  margin-bottom: 25px; /* Adjust spacing as needed */
+}
+
+.sidebar.collapsed .new-conversation-btn,
+.sidebar.collapsed .nav-item,
+.sidebar.collapsed .utility-btn,
+.sidebar.collapsed .profile-btn {
+  justify-content: center; /* Center icons */
+  padding: 10px; /* Square padding for icons */
+  width: 40px; /* Fixed width for icon buttons */
+  height: 40px; /* Fixed height for icon buttons */
+}
+
+.sidebar.collapsed .logo {
+  width: 40px; /* Make logo smaller when collapsed */
+  height: 40px;
+}
+
+/* Hide text content when collapsed */
+.sidebar.collapsed .new-conversation-btn span,
+.sidebar.collapsed .nav-item span,
+.sidebar.collapsed .recent-chats-title,
+.sidebar.collapsed .recent-chat-item .prompt-message,
+.sidebar.collapsed .loading-text,
+.sidebar.collapsed .error-text,
+.sidebar.collapsed .no-prompts-text,
+.sidebar.collapsed .sidebar-utility span { /* Also hide whiteboard text */
+  display: none;
+  opacity: 0; /* For a smoother transition if display changes immediately */
+  transition: opacity 0.1s ease-out;
+}
+
+/* Adjust padding for recent chats when collapsed, so only icon is visible if any */
+.sidebar.collapsed .recent-chats-container {
+  overflow-y: hidden; /* No scrolling in collapsed view, as text is hidden */
+  margin-bottom: 0; /* Remove margin */
+  flex-grow: 0; /* Don't grow */
+}
+
+.sidebar.collapsed .recent-chat-item {
+  justify-content: center; /* Center icon */
+  padding: 10px; /* Adjust padding */
+  width: 40px; /* Fixed width for icon */
+  height: 40px; /* Fixed height for icon */
+  overflow: hidden; /* Hide any overflowing text just in case */
+}
+
+
+/* Sidebar Header */
+.sidebar-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 25px;
+}
+
+.logo {
+  width: 60px;
+  height: 60px;
+  cursor: pointer;
+  margin-bottom: 15px;
+  transition: width 0.3s ease-in-out, height 0.3s ease-in-out; /* Animate logo size */
+}
+
+.new-conversation-btn {
+  width: 100%;
+  padding: 10px 15px;
+  background: #2f82ef;
+  color: white;
+  border: none;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  padding: 16px;
-  z-index: 1000;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s, width 0.3s ease-in-out, height 0.3s ease-in-out, padding 0.3s ease-in-out;
 }
 
-.dark-mode .recent-prompts-panel {
-  background-color: #2d2d2d;
-  border-color: #444;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+.new-conversation-btn:hover {
+  background: rgba(47, 130, 239, 0.9);
 }
 
-.recent-prompts-panel h4 {
-  margin-top: 0;
-  margin-bottom: 16px;
-  font-weight: 600;
-  font-size: 16px;
-  color: var(--text-color, #333);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  padding-bottom: 8px;
+.new-conversation-btn .icon {
+  width: 20px;
+  height: 20px;
 }
 
-.dark-mode .recent-prompts-panel h4 {
-  color: #e0e0e0;
-  border-bottom-color: #444;
-}
-
-.recent-prompts-list {
+/* Main Navigation */
+.sidebar-nav {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  width: 100%;
+  margin-bottom: 20px;
 }
 
-.recent-prompt-item {
+.nav-item {
+  width: 100%;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  font-size: 14px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  transition: background-color 0.2s, width 0.3s ease-in-out, height 0.3s ease-in-out, padding 0.3s ease-in-out; /* Add transitions */
+}
+
+.nav-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.dark .nav-item {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.dark .nav-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.nav-item .icon {
+  width: 20px;
+  height: 20px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.nav-item.active {
+  background: rgba(255, 255, 255, 0.15);
+  font-weight: 600;
+}
+
+
+/* Recent Chats Container */
+.recent-chats-container {
+  flex-grow: 1;
+  overflow-y: auto;
+  width: 100%;
+  margin-bottom: 20px;
+  padding-right: 5px;
+  transition: flex-grow 0.3s ease-in-out, overflow-y 0.3s ease-in-out, margin-bottom 0.3s ease-in-out, padding 0.3s ease-in-out;
+}
+
+.recent-chats-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.6);
+  padding: 0 10px 8px 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+  transition: opacity 0.3s ease-in-out; /* Animate text fade */
+}
+.dark .recent-chats-title {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.recent-chats-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.recent-chat-item {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 10px;
+  padding: 8px 10px;
   border-radius: 6px;
   cursor: pointer;
-  transition: all 0.2s ease;
-  background-color: rgba(0, 0, 0, 0.03);
+  transition: background-color 0.2s, padding 0.3s ease-in-out, width 0.3s ease-in-out, height 0.3s ease-in-out;
+  background-color: transparent;
+  color: rgba(255, 255, 255, 0.8);
 }
 
-.dark-mode .recent-prompt-item {
-  background-color: rgba(255, 255, 255, 0.05);
+.recent-chat-item:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+.dark .recent-chat-item {
+  color: rgba(255, 255, 255, 0.7);
+}
+.dark .recent-chat-item:hover {
+  background-color: rgba(255, 255, 255, 0.06);
 }
 
-.recent-prompt-item:hover {
-  background-color: rgba(0, 0, 0, 0.08);
-}
 
-.dark-mode .recent-prompt-item:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-.recent-prompt-item .message-icon {
-  color: var(--accent-color, #4d7cfe);
+.recent-chat-item .message-icon {
+  color: rgba(255, 255, 255, 0.6);
   font-size: 16px;
   flex-shrink: 0;
 }
 
-.recent-prompt-item p {
-  margin: 0;
+.recent-chat-item .prompt-message {
   font-size: 14px;
-  color: var(--text-color, #333);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   line-height: 1.4;
+  transition: opacity 0.3s ease-in-out; /* Animate text fade */
 }
 
-.dark-mode .recent-prompt-item p {
-  color: #d0d0d0;
+.loading-text, .error-text, .no-prompts-text {
+  padding: 10px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+  text-align: center;
+  transition: opacity 0.3s ease-in-out; /* Animate text fade */
+}
+.dark .loading-text, .dark .error-text, .dark .no-prompts-text {
+  color: rgba(255, 255, 255, 0.5);
+}
+.error-text {
+  color: #ff6b6b;
 }
 
-/* Media query for mobile */
+/* Sidebar Utility (for Whiteboard button or other tools) */
+.sidebar-utility {
+  margin-bottom: 20px;
+  width: 100%;
+  transition: margin-bottom 0.3s ease-in-out;
+}
+
+.utility-btn {
+  /* Inherits from .nav-item */
+}
+
+
+/* Footer (Profile Section) */
+.sidebar-footer {
+  margin-top: auto;
+  width: 100%;
+  position: relative;
+  padding-top: 15px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  display: flex; /* Make footer a flex container */
+  justify-content: center; /* Center content */
+  align-items: center; /* Align items vertically */
+  transition: border-top 0.3s ease-in-out, padding-top 0.3s ease-in-out;
+}
+.dark .sidebar-footer {
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+.profile-btn-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  /* Adjust margin for spacing between profile button and collapse toggle */
+  margin-right: 10px;
+}
+
+.sidebar.collapsed .profile-btn-container {
+  margin-right: 0; /* Remove margin when collapsed as only one item */
+}
+
+
+.profile-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s, width 0.3s ease-in-out, height 0.3s ease-in-out;
+}
+
+.profile-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.profile-btn .icon {
+  width: 20px;
+  height: 20px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Profile Menu Styles - Adjust positioning if needed */
+.profile-menu {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  transform: translateY(-120%);
+  background: #3c3c3c;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  width: 150px;
+  z-index: 10;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+.dark .profile-menu {
+    background: #2a2a2a;
+}
+/* Adjust profile menu positioning when sidebar is collapsed */
+.sidebar.collapsed .profile-menu {
+    left: 75px; /* Offset to appear to the right of the icon */
+    transform: translateX(0); /* Remove center transform */
+    width: 180px; /* Might need to be wider for more space */
+}
+
+
+.profile-menu-item {
+  width: 100%;
+  padding: 10px 15px;
+  text-align: left;
+  background-color: transparent;
+  color: rgba(255,255,255,0.85);
+  font-size: 14px;
+  transition: background-color 0.2s;
+  border: none;
+  cursor: pointer;
+}
+
+.profile-menu-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+
+/* New Collapse/Expand Button */
+.collapse-toggle-btn {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  font-size: 24px;
+  padding: 5px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s, background-color 0.2s;
+  position: absolute; /* Position relative to footer */
+  right: 10px; /* Adjust position */
+  top: 50%; /* Center vertically */
+  transform: translateY(-50%);
+}
+
+.collapse-toggle-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.dark .collapse-toggle-btn {
+  color: rgba(255, 255, 255, 0.5);
+}
+.dark .collapse-toggle-btn:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+
+/* Mobile Responsive Styles */
+.mobile-toggle {
+  display: none; /* Hidden by default on desktop */
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  z-index: 1100;
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  /* Ensure mobile toggle is only visible on small screens */
+}
+
+.mobile-toggle .icon, .mobile-toggle .side-icon {
+  width: 24px;
+  height: 24px;
+  color: #333;
+}
+
+.dark .mobile-toggle .side-icon, .dark .mobile-toggle .icon {
+  color: #fff;
+}
+
+.sidebar.collapsed .nav-item{
+  display: none; /* Hide nav items when sidebar is collapsed */
+}
+
 @media (max-width: 768px) {
-  .recent-prompts-panel {
-    left: 60px;
-    width: 200px;
+  .sidebar.collapsed .nav-item{
+  display:flex; 
+}
+  .mobile-toggle {
+    display: flex; /* Show toggle on mobile */
+  }
+
+  .sidebar {
+    /* Sidebar is hidden by default, slides in when .open */
+    transform: translateX(-100%);
+    z-index: 1000;
+    width: 240px; /* Mobile width */
+    padding: 20px 15px; /* Mobile padding */
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+     position: fixed;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 260px; /* Default (expanded) width */
+  display: flex;
+  flex-direction: column;
+  padding: 20px 15px;
+  background: rgba(255, 255, 255, 0.04);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5.7px);
+  background-color: #64748b;
+  transition: width 0.3s ease-in-out, transform 0.3s ease-in-out, padding 0.3s ease-in-out; /* Add width and padding to transition */
+  overflow-y: auto; /* Allow sidebar content to scroll if it overflows */
+  z-index: 999; /* Ensure it's below mobile toggle but above content */
+  }
+
+  /* When on mobile, always hide the desktop collapse button */
+  .sidebar .collapse-toggle-btn {
+    display: none;
+  }
+
+  /* When on mobile, disable the 'collapsed' desktop styles */
+  .sidebar.collapsed {
+    width: 240px; /* Override collapsed width for mobile */
+    padding: 20px 15px; /* Override collapsed padding for mobile */
+    align-items: flex-start; /* Reset alignment for mobile */
+  }
+
+  .sidebar.collapsed .new-conversation-btn,
+  .sidebar.collapsed .nav-item,
+  .sidebar.collapsed .utility-btn,
+  .sidebar.collapsed .profile-btn,
+  .sidebar.collapsed .recent-chat-item {
+    justify-content: flex-start; /* Reset justification for mobile */
+    width: 100%; /* Reset width for mobile */
+    height: auto; /* Reset height for mobile */
+  }
+
+  .sidebar.collapsed .logo {
+    width: 60px; /* Reset logo size for mobile */
+    height: 60px;
+  }
+
+  
+  .sidebar.collapsed .new-conversation-btn span,
+  .sidebar.collapsed .nav-item span,
+  .sidebar.collapsed .recent-chats-title,
+  .sidebar.collapsed .recent-chat-item .prompt-message,
+  .sidebar.collapsed .loading-text,
+  .sidebar.collapsed .error-text,
+  .sidebar.collapsed .no-prompts-text,
+  .sidebar.collapsed .sidebar-utility span {
+    display: block; /* Show text content again on mobile */
+    opacity: 1;
   }
   
-  .recent-prompt-item {
-    padding: 8px;
+
+  .sidebar.collapsed .recent-chats-container {
+    overflow-y: auto; /* Allow scrolling again on mobile */
+    flex-grow: 1;
+    margin-bottom: 20px;
   }
-  
-  .recent-prompt-item p {
-    font-size: 13px;
+
+  .profile-menu {
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 150px;
   }
 }
-  /* Mobile Responsive Styles */
-  @media (max-width: 768px) {
-    .sidebar {
-      width: 80px;
-      padding: 32px 16px;
-    }
-  
-    .profile-menu {
-      width: 120px;
-      left: -40px;
-    }
+
+@media (max-width: 480px) {
+  .sidebar {
+    width: 220px;
+    padding: 15px 10px;
   }
-  
-  @media (max-width: 480px) {
-    .sidebar {
-      width: 60px;
-      padding: 24px 8px;
-    }
-  
-    .nav-btn {
-      padding: 6px;
-    }
-  
-    .profile-btn {
-      width: 32px;
-      height: 32px;
-    }
-  
-    .profile-menu {
-      width: 100px;
-      left: -35px;
-    }
+
+  .new-conversation-btn, .nav-item {
+    padding: 8px 10px;
+    font-size: 14px;
+    gap: 8px;
   }
-  .mobile-toggle {
-    display: none;
-    position: fixed;
-    top: 20px;
-    left: 20px;
-    z-index: 1000;
-    background:transparent;
-    border: none;
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-    align-items: center;
-    justify-content: center;
-    .side-icon{
-      color:#000;
-    }
-    .dark .side-icon {
-      color:#fff;
-    }
-  }@media (max-width: 768px) {
-    .mobile-toggle {
-      display: flex;
-    }
-  
-    .sidebar {
-      transform: translateX(-100%);
-      z-index: 999;
-    }
-  
-    .sidebar.open {
-      transform: translateX(0);
-    }
-  
-    .profile-menu {
-      width: 120px;
-      left: -40px;
-    }
-    .dark .side-icon {
-      color:#fff;
-    }
+  .new-conversation-btn .icon, .nav-item .icon {
+    width: 18px;
+    height: 18px;
   }
-  
-  @media (max-width: 480px) {
-    .sidebar {
-      width: 60px;
-      padding: 24px 8px;
-    }
-  
-    .nav-btn {
-      padding: 6px;
-    }
-  
-    .profile-btn {
-      width: 32px;
-      height: 32px;
-    }
-  
-    .profile-menu {
-      width: 100px;
-      left: -35px;
-    }
-  
-    .logo {
-      width: 40px;
-      height: 40px;
-    }
+
+  .logo {
+    width: 50px;
+    height: 50px;
   }
+  .profile-btn {
+    width: 36px;
+    height: 36px;
+  }
+}

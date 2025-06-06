@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: "https://chikoro-ai.com/api"
+    baseURL: "https://atqtuew6syxese-8080.proxy.runpod.net/api"
 });
 
 // Login function
@@ -24,7 +24,7 @@ api.interceptors.response.use(response => response, async (error) => {
       originalRequest._retry = true;
       
       try {
-          const { data } = await axios.post('http://chikoro-ai.com/api/auth/refresh');
+          const { data } = await axios.post('http://https://atqtuew6syxese-8080.proxy.runpod.net/api/auth/refresh');
           localStorage.setItem('token', data.accessToken); 
           originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
           return api(originalRequest);

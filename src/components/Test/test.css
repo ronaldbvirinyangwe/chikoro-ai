@@ -1,11 +1,197 @@
+/* --- CSS Variables for Theming and Design Tokens --- */
+:root {
+    --primary-color: #4CAF50; /* Green */
+    --primary-dark-color: #45a049; /* Darker Green */
+    --secondary-color: #2196F3; /* Blue */
+    --secondary-dark-color: #1976D2; /* Darker Blue */
+    --background-light: #f8f9fa;
+    --background-white: #ffffff;
+    --text-color-dark: #333;
+    --text-color-light: #fff;
+    --border-color-light: #e0e0e0;
+    --border-color-medium: #f0f0f0;
+    --shadow-light: rgba(0, 0, 0, 0.1);
+    --shadow-medium: rgba(0, 0, 0, 0.05);
+
+    /* Dark Mode Variables */
+    --dark-background-primary: #1a202c; /* Tailwind gray-900 */
+    --dark-background-secondary: #2d3748; /* Tailwind gray-800 */
+    --dark-text-primary: #e2e8f0; /* Tailwind gray-200 */
+    --dark-text-secondary: #a0aec0; /* Tailwind gray-400 */
+    --dark-border-color: #4a5568; /* Tailwind gray-600 */
+    --dark-card-background: #2d3748; /* Use a darker background for cards */
+    --dark-shadow: rgba(0, 0, 0, 0.5); /* Adjust shadow for dark mode */
+
+    /* Define CSS variable for current question index (hacky for single file) */
+    /* This variable needs to be set on a parent element like .test-card-content */
+    /* Example: style={{ '--current-question-index': currentQuestionIndex }} */
+    --current-question-index: 0;
+}
+
+/* --- Dark Mode Styles --- */
+.dark { /* Apply this class to a parent container like <body> or a main div */
+    background-color: var(--dark-background-primary);
+    color: var(--dark-text-primary);
+}
+
+.dark .test-container {
+    background: linear-gradient(145deg, var(--dark-background-secondary) 0%, var(--dark-background-primary) 100%);
+    box-shadow: 0 8px 32px var(--dark-shadow);
+    color: var(--dark-text-primary); /* Ensure container text is readable */
+}
+
+.dark .test-select {
+    border-color: var(--dark-border-color);
+    background-color: var(--dark-background-secondary);
+    color: var(--dark-text-primary);
+    /* Adjust SVG background image color for dark mode if necessary */
+    /* You might need a different SVG or invert the color */
+}
+.dark .test-select:focus {
+     border-color: var(--primary-color); /* Still use primary focus color */
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.3); /* Keep green focus shadow */
+}
+
+
+.dark .test-card {
+    background: var(--dark-card-background);
+    box-shadow: 0 4px 24px var(--dark-shadow);
+}
+
+/* Header gradients might remain the same or adjust slightly */
+/* .dark .test-card-header {} */
+/* .dark .results-header {} */
+
+.dark .test-card-title,
+.dark .results-title {
+    color: var(--text-color-light); /* White text on header gradients */
+}
+
+.dark .test-question {
+    border-bottom-color: var(--dark-border-color);
+}
+
+.dark .test-question h3 {
+    color: var(--dark-text-primary);
+}
+
+.dark .test-options label {
+    border-color: var(--dark-border-color);
+    color: var(--dark-text-secondary); /* Option text color */
+    background-color: var(--dark-background-primary); /* Option background */
+}
+
+.dark .test-options label:hover {
+    border-color: var(--primary-color); /* Hover highlight */
+}
+
+.dark .test-options input[type="radio"]:checked + span {
+    font-weight: 600;
+    color: var(--primary-color); /* Checked option text color */
+}
+
+.dark textarea {
+     border-color: var(--dark-border-color);
+    background-color: var(--dark-background-primary);
+    color: var(--dark-text-primary);
+}
+
+.dark textarea:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+}
+
+.dark .submit-button {
+    /* Maybe keep the blue gradient */
+}
+
+.dark .test-results {
+     background: var(--dark-card-background);
+     box-shadow: 0 4px 24px var(--dark-shadow);
+}
+
+.dark .question-result {
+    border-bottom-color: var(--dark-border-color);
+}
+
+.dark .question-result h4 {
+    color: var(--dark-text-primary);
+}
+
+.dark .result-feedback,
+.dark .question-feedback-detail p,
+.dark .general-feedback textarea {
+    color: var(--dark-text-secondary);
+}
+
+.dark .question-feedback-detail {
+    background-color: var(--dark-background-primary); /* Feedback box background */
+    border-color: var(--dark-border-color);
+}
+
+.dark .question-feedback-detail h5 {
+    color: var(--dark-text-primary);
+}
+
+.dark .strengths ul {
+     color: var(--primary-color); /* Green for strengths */
+}
+.dark .improvements ul {
+     color: #ef5350; /* Red for improvements (Material Red 400) */
+}
+
+.dark .correct-answer {
+    color: var(--dark-text-primary);
+}
+
+.dark .results-summary {
+     background-color: rgba(33, 150, 243, 0.1); /* Light blue background from gradient */
+    border-color: rgba(33, 150, 243, 0.2);
+    color: var(--dark-text-primary);
+}
+.dark .results-summary .text-gray-600,
+.dark .results-summary .italic {
+    color: var(--dark-text-secondary);
+}
+
+
+.dark .general-feedback {
+    background-color: var(--dark-background-primary);
+    border-color: var(--dark-border-color);
+}
+
+.dark .general-feedback h3 {
+     color: var(--dark-text-primary);
+}
+
+.dark .resource-links {
+    background-color: rgba(255, 193, 7, 0.1); /* Light yellow background from gradient */
+     border-color: rgba(255, 193, 7, 0.2);
+     color: var(--dark-text-primary);
+}
+
+.dark .resource-links .text-blue-600 {
+    color: var(--secondary-color); /* Keep blue link color */
+}
+
+/* --- General Styles (Refined) --- */
+body {
+    font-family: 'Arial', sans-serif; /* Added a fallback font */
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-light); /* Use CSS variable */
+    transition: background-color 0.3s ease; /* Smooth theme transition */
+}
+
 .test-container {
     max-width: 800px;
     margin: 2rem auto;
     padding: 2rem;
-    background: linear-gradient(145deg, #f8f9fa 0%, #ffffff 100%);
+    background: linear-gradient(145deg, var(--background-light) 0%, var(--background-white) 100%); /* Use CSS variables */
     border-radius: 20px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    margin-left: 200px;
+    box-shadow: 0 8px 32px var(--shadow-light); /* Use CSS variable */
+    /* FIX: Remove hardcoded margin-left */
+    margin-left: auto;
 }
 
 .test-controls {
@@ -13,234 +199,452 @@
     gap: 1rem;
     margin-bottom: 2rem;
     flex-wrap: wrap;
+    /* Center controls if container is wide */
+    justify-content: center;
 }
 
 .test-select {
     padding: 0.75rem 1.5rem;
     border-radius: 12px;
-    border: 2px solid #e0e0e0;
-    background: white;
-    width: 100%;
+    border: 2px solid var(--border-color-light); /* Use CSS variable */
+    background: white; /* Use CSS variable */
+    flex-grow: 1; /* Allow select to grow */
+    min-width: 200px; /* Ensure minimum width */
     font-size: 1rem;
     transition: all 0.3s ease;
     appearance: none;
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    /* SVG for dropdown arrow - maybe change color for dark mode */
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234CAF50' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); /* Green arrow */
     background-repeat: no-repeat;
     background-position: right 1rem center;
     background-size: 1em;
+    cursor: pointer; /* Indicate it's interactive */
+}
+.dark .test-select {
+     background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a0aec0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); /* Light arrow for dark mode */
 }
 
+
 .test-select:focus {
-    border-color: #4CAF50;
+    border-color: var(--primary-color); /* Use CSS variable */
     outline: none;
     box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
 }
 
 .test-button {
     padding: 0.75rem 2rem;
-    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
-    color: white;
+    background:  var(--primary-dark-color); /* Use CSS variables */
+    color: var(--text-color-light); /* Use CSS variable */
     border: none;
     border-radius: 12px;
     cursor: pointer;
     font-weight: 600;
     transition: all 0.3s ease;
-    width: 100%;
+    flex-grow: 1; /* Allow buttons to grow */
+    min-width: 120px; /* Ensure minimum width */
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 0.5rem;
+    text-decoration: none; /* Ensure it looks like a button even if it's a link */
 }
 
 .test-button:hover:not(:disabled) {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+    transform: translateY(-2px); /* Slightly larger lift */
+    box-shadow: 0 6px 16px rgba(76, 175, 80, 0.4); /* Slightly larger shadow */
 }
 
+.test-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.test-button.reset-button {
+    background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%); /* Red gradient for reset */
+}
+.test-button.reset-button:hover:not(:disabled) {
+    box-shadow: 0 6px 16px rgba(244, 67, 54, 0.4);
+}
+
+.test-button.secondary-button {
+    background: #e0e0e0;
+    color: var(--text-color-dark);
+}
+.dark .test-button.secondary-button {
+     background: var(--dark-border-color);
+     color: var(--dark-text-primary);
+}
+.test-button.secondary-button:hover:not(:disabled) {
+     background: #d5d5d5;
+     transform: translateY(-2px);
+     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+.dark .test-button.secondary-button:hover:not(:disabled) {
+     background: #606f7b;
+     box-shadow: 0 6px 16px var(--dark-shadow);
+}
+
+
+.test-button.small-button {
+    padding: 0.5rem 1.5rem; /* Smaller padding */
+    font-size: 0.9rem;
+}
+
+
 .test-card {
-    background: white;
+    background: var(--background-white); /* Use CSS variable */
     border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 24px var(--shadow-medium); /* Use CSS variable */
 }
 
 .test-card-header {
-    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+    background: var(--primary-dark-color); /* Use CSS variables */
     padding: 1.5rem;
     text-align: center;
+    position: relative; /* Needed for potential absolute elements */
 }
 
 .test-card-title {
-    color: white;
+    color: var(--text-color-light); /* Use CSS variable */
     margin: 0;
-    font-size: 1.5rem;
+    font-size: 1.8rem; /* Increased size */
     font-weight: 700;
 }
 
-.test-question {
-    padding: 1.5rem;
-    border-bottom: 2px solid #f0f0f0;
+.test-info {
+     font-size: 0.9rem;
+     color: rgba(255, 255, 255, 0.8); /* Slightly transparent white */
 }
 
+.test-card-content {
+    padding: 1.5rem; /* Add padding to the content area */
+    /* Set the CSS variable for the current question index */
+    /* This needs to be done dynamically in JS, e.g., via style prop */
+    /* style={{ '--current-question-index': currentQuestionIndex }} */
+}
+
+
+.test-question {
+    padding: 1.5rem;
+    border-bottom: 2px solid var(--border-color-medium); /* Use CSS variable */
+    /* Transition for displaying single vs all questions */
+    transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out; /* Add transition */
+    opacity: 1; /* Default opacity */
+    height: auto; /* Default height */
+    overflow: visible; /* Default overflow */
+}
+
+/* Hide questions that are not current, and not in review or results mode */
+/* This requires JS to add a class like 'is-current' or 'is-visible' */
+/* The current CSS uses a hacky nth-child approach */
+/* Let's simplify: only hide if explicitly marked by JS */
+.test-question:not(.is-visible) {
+    position: absolute; /* Position out of flow */
+    left: -9999px; /* Move off-screen */
+    opacity: 0; /* Hide visually */
+    padding: 0; /* Collapse padding */
+    height: 0; /* Collapse height */
+    border-bottom: none; /* Remove border for hidden ones */
+    margin: 0; /* Collapse margin */
+}
+
+/* Ensure the currently active question is visible */
+/* This class 'is-visible' must be added by JS */
+.test-question.is-visible {
+    position: static; /* Bring back into flow */
+    left: auto; /* Reset position */
+    opacity: 1; /* Show it */
+    height: auto; /* Restore height */
+    padding: 1.5rem; /* Restore padding */
+    margin-bottom: 0; /* Default margin */
+    border-bottom: 2px solid var(--border-color-medium); /* Restore border */
+}
+/* Remove border for the last visible question */
+.test-question.is-visible:last-child {
+     border-bottom: none;
+}
+
+/* When in review or results mode, all questions are visible */
+.test-question.show-all-questions {
+     position: static;
+     left: auto;
+     opacity: 1;
+     height: auto;
+     padding: 1.5rem;
+     margin-bottom: 0;
+     border-bottom: 2px solid var(--border-color-medium);
+}
+.test-question.show-all-questions:last-child {
+     border-bottom: none;
+}
+
+
+/* Style the question number label */
+.question-number {
+    font-size: 1rem;
+    color: #777; /* Muted color */
+    margin-bottom: 0.5rem;
+}
+.dark .question-number {
+    color: var(--dark-text-secondary);
+}
+
+
 .test-question:last-child {
-    border-bottom: none;
+    /* This rule is less relevant with the new visibility logic */
+    /* border-bottom: none; */
 }
 
 .test-question h3 {
-    color: #333;
+    color: var(--text-color-dark); /* Use CSS variable */
     margin-top: 0;
     margin-bottom: 1rem;
-    font-size: 1.1rem;
+    font-size: 1.2rem; /* Slightly increased */
+}
+
+.test-options {
+    display: flex; /* Already flex */
+    flex-direction: column; /* Stack options vertically */
+    gap: 0.75rem; /* Reduced gap */
 }
 
 .test-options label {
     padding: 1rem;
-    border: 2px solid #e0e0e0;
+    border: 2px solid var(--border-color-light); /* Use CSS variable */
     border-radius: 8px;
     transition: all 0.2s ease;
+    cursor: pointer; /* Indicate clickable */
+    display: flex; /* Align radio and text */
+    align-items: center;
+    gap: 0.75rem; /* Space between radio and text */
 }
 
 .test-options label:hover {
-    border-color: #4CAF50;
+    border-color: var(--primary-color); /* Use CSS variable */
     transform: translateX(4px);
 }
 
+/* Style for the radio button itself */
+.test-options input[type="radio"] {
+    /* You can style the radio button visually if needed, but native is okay */
+     accent-color: var(--primary-color); /* Use accent-color for browser-default color */
+     /* Ensure it's clickable */
+     cursor: pointer;
+}
+
+
 .test-options input[type="radio"]:checked + span {
     font-weight: 600;
-    color: #4CAF50;
+    color: var(--primary-color); /* Use CSS variable */
 }
 
 textarea {
     width: 100%;
     padding: 1rem;
-    border: 2px solid #e0e0e0;
+    border: 2px solid var(--border-color-light); /* Use CSS variable */
     border-radius: 8px;
     font-family: inherit;
+    font-size: 1rem;
     transition: all 0.3s ease;
+    min-height: 120px; /* Ensure minimum height */
+    resize: vertical; /* Allow vertical resize */
 }
 
 textarea:focus {
-    border-color: #4CAF50;
+    border-color: var(--primary-color); /* Use CSS variable */
     outline: none;
     box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
 }
 
 .submit-button {
-    background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+    background: linear-gradient(135deg, var(--secondary-color) 0%, var(--secondary-dark-color) 100%); /* Use CSS variables */
     padding: 1rem 2.5rem;
     font-size: 1.1rem;
     margin-top: 1.5rem;
     width: 100%;
     border-radius: 12px;
     transition: all 0.3s ease;
+     color: var(--text-color-light); /* Ensure white text */
+    border: none; /* Ensure no default border */
+    cursor: pointer; /* Indicate clickable */
 }
 
 .submit-button:hover:not(:disabled) {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+    transform: translateY(-2px); /* Slightly larger lift */
+    box-shadow: 0 6px 16px rgba(33, 150, 243, 0.4); /* Slightly larger shadow */
 }
 
+.test-navigation {
+     margin-top: 1.5rem;
+}
+
+.test-navigation .test-button {
+    min-width: unset; /* Remove min-width from controls */
+}
+
+
 .test-results {
-    background: white;
+    background: var(--background-white); /* Use CSS variable */
     border-radius: 16px;
     margin-top: 2rem;
     overflow: hidden;
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 24px var(--shadow-medium); /* Use CSS variable */
+    transition: opacity 0.4s ease, transform 0.4s ease; /* Animation */
 }
 
 .results-header {
-    background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+    background: linear-gradient(135deg, var(--secondary-color) 0%, var(--secondary-dark-color) 100%); /* Use CSS variables */
     padding: 1.5rem;
     text-align: center;
 }
 
 .results-title {
-    color: white;
+    color: var(--text-color-light); /* Use CSS variable */
     margin: 0;
-    font-size: 1.5rem;
+    font-size: 1.8rem; /* Increased size */
 }
+
+.results-content {
+     padding: 1.5rem; /* Ensure padding inside */
+}
+
+.results-summary {
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: 8px;
+    background-color: #e3f2fd; /* Light blue */
+    border: 1px solid #bbdefb; /* Lighter blue border */
+    color: var(--text-color-dark);
+}
+.dark .results-summary {
+     background-color: rgba(33, 150, 243, 0.2);
+     border-color: rgba(33, 150, 243, 0.3);
+}
+
 
 .question-result {
     padding: 1.5rem;
-    border-bottom: 2px solid #f0f0f0;
+    border-bottom: 2px solid var(--border-color-medium); /* Use CSS variable */
     position: relative;
+    /* Remove the left border as it's less needed with full feedback */
+    /* &::before { ... } */
+    transition: opacity 0.4s ease; /* Fade in results */
+}
+.question-result:last-child {
+    border-bottom: none;
 }
 
-.question-result::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 4px;
-    background: #2196F3;
-    border-radius: 0 4px 4px 0;
+.question-result h4 {
+     color: var(--text-color-dark);
+     margin-top: 0;
+     margin-bottom: 0.8rem;
 }
 
-.strengths strong::before {
-    content: '✓';
-    margin-right: 0.5rem;
-    color: #2e7d32;
+.result-feedback {
+    color: #555; /* Muted text color */
+    margin-bottom: 1rem;
+}
+.dark .result-feedback {
+     color: var(--dark-text-secondary);
 }
 
-.improvements strong::before {
-    content: '⚠';
-    margin-right: 0.5rem;
-    color: #c62828;
+.question-feedback-detail {
+    margin-top: 1rem;
+    padding: 1rem;
+    background-color: #f5f5f5; /* Light gray */
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+}
+.dark .question-feedback-detail {
+     background-color: var(--dark-background-primary);
+     border-color: var(--dark-border-color);
 }
 
-@media (max-width: 768px) {
-
-    h1{
-        font-size: 1.8rem;
-    }
-    .test-container {
-        margin: 1rem;
-        padding: 1.5rem;
-        border-radius: 16px;
-    }
-
-    .test-card-title {
-        font-size: 1.3rem;
-    }
-
-    .test-question {
-        padding: 1rem;
-    }
-
-    .test-question h3 {
-        font-size: 1rem;
-    }
-
-    .score-circle {
-        width: 100px;
-        height: 100px;
-    }
-
-    .score-text {
-        font-size: 1.5rem;
-    }
+.strengths strong, .improvements strong, .correct-answer strong {
+    display: block; /* Make the label a block for better spacing */
+    margin-bottom: 0.5rem;
+    font-weight: 700;
 }
 
-@media (max-width: 480px) {
-    .test-container {
-        padding: 1rem;
-        margin: 0.5rem;
-    }
-
-    .test-card-header {
-        padding: 1rem;
-    }
-
-    .results-header {
-        padding: 1rem;
-    }
-
-    .question-result {
-        padding: 1rem;
-    }
+.strengths ul, .improvements ul {
+    list-style: disc; /* Use discs for lists */
+    margin-left: 1.2rem; /* Indent lists */
+    padding-left: 0;
 }
 
+.strengths ul {
+    color: #2e7d32; /* Dark green */
+}
+.improvements ul {
+    color: #c62828; /* Dark red */
+}
+
+.correct-answer {
+    margin-top: 1rem;
+    padding-top: 0.8rem;
+    border-top: 1px dashed #ccc; /* Separator */
+    color: #444;
+}
+.dark .correct-answer {
+     border-top-color: var(--dark-border-color);
+     color: var(--dark-text-secondary);
+}
+
+/* Feedback Mechanism Styles */
+.general-feedback {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background-color: #f9f9f9;
+    border: 1px solid #eee;
+    border-radius: 12px;
+}
+.dark .general-feedback {
+     background-color: var(--dark-background-primary);
+     border-color: var(--dark-border-color);
+}
+
+.general-feedback h3 {
+    margin-top: 0;
+    font-size: 1.3rem;
+    color: var(--text-color-dark);
+}
+.dark .general-feedback h3 {
+     color: var(--dark-text-primary);
+}
+
+.resource-links {
+    margin-top: 2rem;
+    padding: 1.5rem;
+     background-color: #fffbe5; /* Light yellow */
+     border: 1px solid #ffe0b2; /* Lighter yellow border */
+    border-radius: 12px;
+    text-align: center;
+}
+.dark .resource-links {
+     background-color: rgba(255, 193, 7, 0.2);
+     border-color: rgba(255, 193, 7, 0.3);
+}
+
+.resource-links h3 {
+     margin-top: 0;
+     font-size: 1.3rem;
+     color: var(--text-color-dark);
+}
+.dark .resource-links h3 {
+    color: var(--dark-text-primary);
+}
+
+.resource-links p {
+    color: #555;
+    margin-bottom: 1rem;
+}
+.dark .resource-links p {
+     color: var(--dark-text-secondary);
+}
+
+
+/* --- Animations --- */
 @keyframes spin {
     to { transform: rotate(360deg); }
 }
@@ -255,8 +659,206 @@ textarea:focus {
     width: 20px;
     height: 20px;
     border: 3px solid #f3f3f3;
-    border-top: 3px solid #3498db;
+    border-top: 3px solid var(--secondary-color); /* Use blue for spinner */
     border-radius: 50%;
     animation: spin 1s linear infinite;
     vertical-align: middle;
 }
+.dark .spinner {
+     border-color: #4a5568;
+     border-top-color: var(--secondary-color);
+}
+
+/* Slide-in animation for cards */
+@keyframes slideInBottom {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.slide-in-bottom {
+    animation: slideInBottom 0.5s ease-out forwards;
+}
+
+
+/* --- Responsiveness --- */
+@media (max-width: 768px) {
+
+    .test-container {
+        margin: 1rem; /* Reduced margin */
+        padding: 1.5rem;
+        border-radius: 16px;
+    }
+
+    .test-controls {
+        flex-direction: column; /* Stack controls on smaller screens */
+        gap: 0.75rem; /* Adjust gap */
+    }
+
+    .test-select,
+    .test-button {
+        width: 100%; /* Full width */
+        min-width: unset; /* Remove min-width */
+    }
+
+
+    .test-card-title,
+    .results-title {
+        font-size: 1.5rem; /* Adjusted size */
+    }
+
+    .test-question {
+        padding: 1rem; /* Adjusted padding */
+    }
+
+    .test-question h3 {
+        font-size: 1.1rem; /* Adjusted size */
+    }
+
+    .test-options label {
+         padding: 0.75rem; /* Adjusted padding */
+         gap: 0.5rem; /* Adjusted gap */
+    }
+
+     .test-card-content,
+     .results-content {
+        padding: 1rem; /* Adjusted content padding */
+     }
+
+     .test-navigation {
+         flex-direction: column; /* Stack navigation buttons */
+         gap: 0.75rem;
+         padding: 1rem;
+     }
+
+     .submit-button {
+         padding: 0.75rem 1.5rem;
+         font-size: 1rem;
+     }
+
+    /* Hide questions that are not current, and not in review or results mode */
+    .test-question:not(.is-visible) {
+        position: absolute;
+        left: -9999px;
+        opacity: 0;
+        height: 0;
+        padding: 0;
+        margin: 0;
+        border: none;
+    }
+
+     /* Ensure the current question is visible */
+     .test-question.is-visible {
+         position: static;
+         left: auto;
+         opacity: 1;
+         height: auto;
+         padding: 1rem; /* Restore padding */
+         margin-bottom: 0.75rem; /* Add some space below */
+          border-bottom: 2px solid var(--border-color-medium); /* Restore border */
+     }
+     .test-question.is-visible:last-child {
+         border-bottom: none; /* Remove border for the last one */
+     }
+
+     /* When in review or results mode, all questions are visible */
+    .test-question.show-all-questions {
+         position: static;
+         left: auto;
+         opacity: 1;
+         height: auto;
+         padding: 1rem;
+         margin-bottom: 0;
+         border-bottom: 2px solid var(--border-color-medium);
+    }
+    .test-question.show-all-questions:last-child {
+         border-bottom: none;
+    }
+
+
+     /* Results details padding */
+     .question-result {
+         padding: 1rem;
+     }
+
+     .general-feedback, .resource-links {
+         padding: 1rem;
+     }
+
+     .general-feedback h3, .resource-links h3 {
+         font-size: 1.1rem;
+     }
+}
+
+@media (max-width: 480px) {
+    .test-container {
+        padding: 1rem;
+        margin: 0.5rem;
+        border-radius: 12px;
+    }
+
+    .test-card-header,
+    .results-header {
+        padding: 1rem;
+    }
+
+    .test-card-title,
+    .results-title {
+        font-size: 1.3rem;
+    }
+
+    .test-question h3 {
+        font-size: 1rem;
+    }
+
+    .test-question {
+        padding: 0.75rem; /* Further reduce padding */
+    }
+
+     .test-card-content,
+     .results-content {
+         padding: 0.75rem; /* Further reduce padding */
+     }
+
+    .test-options label {
+        padding: 0.5rem;
+    }
+
+    .test-navigation .test-button {
+         padding: 0.6rem 1rem;
+         font-size: 0.9rem;
+    }
+
+     /* Adjust padding for current/visible questions on small screens */
+     .test-question.is-visible {
+          padding: 0.75rem;
+     }
+      .test-question.show-all-questions {
+          padding: 0.75rem;
+     }
+
+
+     .question-result {
+         padding: 0.75rem;
+     }
+
+     .general-feedback, .resource-links {
+         padding: 0.75rem;
+     }
+}
+
+/* Accessibility: Focus states (already somewhat handled, but ensure visibility) */
+*:focus {
+    outline: 2px solid #3b82f6; /* Standard blue focus ring */
+    outline-offset: 2px;
+}
+/* Hide outline only for mouse users who prefer it hidden after click */
+*:focus:not(:focus-visible) {
+    outline: none;
+}
+

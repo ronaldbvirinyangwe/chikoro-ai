@@ -175,3 +175,65 @@
       grid-template-columns: repeat(5, minmax(260px, 1fr));
     }
   }
+/* examBoardFilter.css */
+.exam-board-filter {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: nowrap; /* Prevent wrapping to keep items in a single line */
+  overflow-x: auto; /* Allow horizontal scrolling if needed on small screens */
+  padding-bottom: 0.5rem; /* Add padding for scrollbar */
+}
+
+.filter-btn {
+  padding: 0.5rem 1.25rem;
+  border-radius: 9999px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  background-color: #f3f4f6;
+  color: #4b5563;
+  min-width: 110px;
+  cursor: pointer;
+  flex-shrink: 0; /* Prevent buttons from shrinking on small screens */
+}
+
+.filter-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.filter-btn.active {
+  font-weight: 600;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.filter-btn.active.all {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.filter-btn.active.zimsec {
+  background-color: #10b981;
+  color: white;
+}
+
+.filter-btn.active.cambridge {
+  background-color: #ef4444;
+  color: white;
+}
+
+@media (max-width: 640px) {
+  .exam-board-filter {
+    justify-content: flex-start; 
+    padding-left: 1rem; 
+    padding-right: 1rem;
+  }
+  
+  .filter-btn {
+    min-width: 90px; 
+    padding: 0.5rem 1rem;
+  }
+}

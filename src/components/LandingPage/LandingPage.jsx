@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./LandingPage.css";
+// Removed axios and useNavigate imports as the useEffect is removed
+// import axios from "axios";
+// import { useNavigate } from "react-router-dom";
 import { assets } from "../../assets/assets";
 
 const LandingPage = () => {
@@ -13,8 +16,12 @@ const LandingPage = () => {
   }, []);
 
   // Embed URL with 3 videos looping: primary video and two extras
+  // NOTE: This URL "https://www.youtube.com/embed/hzwuUKD5ZLo?autoplay=1&mute=1&loop=1&playlist=hzwuUKD5ZLo,7VMAah1eVYI,WWJ3Q3y7t-s&controls=0&modestbranding=1" seems incorrect for embedding YouTube videos.
+  // A correct embed URL would look like: "https://www.youtube.com/embed/VIDEO_ID?autoplay=1&loop=1&playlist=VIDEO_ID&mute=1"
+  // You would need to replace VIDEO_ID with the actual YouTube video ID.
+  // For multiple videos, you might need a different approach or a playlist ID.
   const youtubeEmbedUrl =
-    "https://www.youtube.com/embed/hzwuUKD5ZLo?autoplay=1&mute=1&loop=1&playlist=hzwuUKD5ZLo,7VMAah1eVYI,WWJ3Q3y7t-s&controls=0&modestbranding=1";
+    "https://www.youtube.com/embed/hzwuUKD5ZLo?autoplay=1&mute=1&loop=1&playlist=hzwuUKD5ZLo,7VMAah1eVYI,WWJ3Q3y7t-s&controls=0&modestbranding=1"; // Placeholder - REPLACE WITH ACTUAL EMBED URL
 
   return (
     <div className="landing-container">
@@ -59,6 +66,7 @@ const LandingPage = () => {
           </div>
         </div>
         <div className="hero-video">
+          {/* Ensure the youtubeEmbedUrl is correct */}
           <iframe
             src={youtubeEmbedUrl}
             title="Educational Video"
@@ -166,6 +174,8 @@ const LandingPage = () => {
           </Link>
         </div>
       </section>
+      {/* Removed error display as the logic causing it is removed */}
+      {/* {error && <p className="error-message">{error}</p>} */}
     </div>
   );
 };

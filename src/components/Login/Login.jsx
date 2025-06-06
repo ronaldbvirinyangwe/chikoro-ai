@@ -1,16 +1,18 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import axios from "axios";
-import { useAuth } from '../../context/AuthContext.jsx';
+// Removed direct axios import as login will use AuthContext's function
+// import axios from "axios";
+import { useAuth } from '../../context/AuthContext.jsx'; // Assuming AuthContext is correctly imported
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FaEnvelope, FaLock, FaSignInAlt, FaUserPlus, FaEye, FaEyeSlash } from 'react-icons/fa';
 import './login.css';
-import { useTheme } from '../../context/ThemeContext';
+import { useTheme } from '../../context/ThemeContext'; // Assuming useTheme is correctly imported
 
-const BASE_API_URL = 'https://chikoro-ai.com/api';
+// Removed BASE_API_URL as the login function in AuthContext handles the API call
+// const BASE_API_URL = 'https://chikoro-ai.com/api';
 
 const Login = React.memo(() => {
-  const { darkMode, setDarkMode } = useTheme();
+  const { darkMode, setDarkMode } = useTheme(); // Assuming darkMode and setDarkMode are used elsewhere
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -19,13 +21,21 @@ const Login = React.memo(() => {
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
-  const location = useLocation();
-  const { login } = useAuth();
+  const location = useLocation(); // Assuming location is used elsewhere if not removed
+  // Get the login function and isAuthenticated state from AuthContext
+  const { login, isAuthenticated } = useAuth();
 
+  // Effect to redirect authenticated users away from the login page
   useEffect(() => {
-    // Clean up any previous errors when component mounts
+    if (isAuthenticated) {
+      // Redirect to a protected route, e.g., subject select or dashboard
+      // You might want to redirect to a specific page if the user was trying to access it before login
+      const from = location.state?.from?.pathname || '/enrol'; // Redirect to /enrol or previous page
+      navigate(from, { replace: true });
+    }
+     // Clean up any previous errors when component mounts
     setError('');
-  }, []);
+  }, [isAuthenticated, navigate, location.state]); // Added dependencies
 
   const handleChange = useCallback((e) => {
     const { id, value } = e.target;
@@ -35,38 +45,45 @@ const Login = React.memo(() => {
     }));
   }, []);
 
+  // Modified handleSubmit to use the login function from AuthContext
   const handleSubmit = useCallback(async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
-  
+
     try {
-      const response = await axios.post(`${BASE_API_URL}/auth`, formData);
-  
-      if (response.data.success) {
-        // Use the login function from AuthContext
-        await login(response.data.user, response.data.accessToken);
-        
-        // After successful login, redirect to /payment
-        navigate('/enrol', { replace: true });
+      // Call the login function provided by AuthContext
+      // Pass only email and password, AuthContext handles the API call, token storage, etc.
+      const result = await login(formData.email, formData.password);
+
+      if (result.success) {
+        // Login successful, AuthContext has updated state and stored tokens
+        // The useEffect above will handle the navigation based on isAuthenticated state change
+        console.log("Login successful via AuthContext.");
       } else {
-        setError('Invalid login credentials');
+        // Login failed, AuthContext has likely set an error message in its state
+        // Use the error message returned by the login function or from AuthContext state
+        setError(result.error || 'Login failed. Please check your credentials.');
       }
     } catch (error) {
-      console.error('Login Error:', error);
-      if (error.response && error.response.status >= 400 && error.response.status <= 500) {
-        setError(error.response.data.message || 'Invalid credentials');
-      } else {
-        setError('Unable to connect to the server. Please try again later.');
-      }
+      // This catch block might be less frequently hit if AuthContext handles API errors internally
+      console.error('Login Error during AuthContext call:', error);
+      setError('An unexpected error occurred during login.');
     } finally {
       setLoading(false);
     }
-  }, [formData, login, navigate]);
+  }, [formData, login]); // Added login to dependencies
 
   const togglePasswordVisibility = useCallback(() => {
     setShowPassword(prev => !prev);
   }, []);
+
+  // If user is already authenticated, render nothing or a loading spinner
+  // as the useEffect will handle the redirect
+  if (isAuthenticated) {
+      return null; // Or return a loading indicator
+  }
+
 
   return (
     <div className="login-container">
@@ -81,7 +98,6 @@ const Login = React.memo(() => {
             <div className="form-group">
               <label htmlFor="email">Email</label>
               <div className="input-with-icon">
-          
                 <input
                   type="email"
                   id="email"
@@ -95,7 +111,10 @@ const Login = React.memo(() => {
                     if (formData.email && !/\S+@\S+\.\S+/.test(formData.email)) {
                       setError('Please enter a valid email address');
                     } else {
-                      setError('');
+                      // Clear email validation error if format is now valid
+                       if (error === 'Please enter a valid email address') {
+                           setError('');
+                       }
                     }
                   }}
                 />
@@ -117,8 +136,8 @@ const Login = React.memo(() => {
                   required
                   minLength="8"
                 />
-                <div className="password-strength">
-                </div>
+                {/* Removed password strength placeholder */}
+                {/* <div className="password-strength"></div> */}
                 <button
                   type="button"
                   className="password-toggle"
@@ -129,15 +148,15 @@ const Login = React.memo(() => {
                 </button>
               </div>
             </div>
-            
+
             {error && (
               <div className="alert alert-danger mt-2" role="alert">
                 {error}
               </div>
             )}
 
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               className="btn btn-primary btn-block"
               disabled={loading || !formData.email || !formData.password}
               aria-busy={loading}
