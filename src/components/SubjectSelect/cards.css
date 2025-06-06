@@ -1,4 +1,5 @@
- @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css');
+
 :root {
     --header-height: 3rem; /* Height of the header */
     --font-semi: 600; /* Semi-bold font weight */
@@ -8,6 +9,8 @@
     --mb-2: 1rem; /* Margin bottom value */
     --mb-4: 2rem; /* Margin bottom value for nav items */
 }
+
+/* Dark Theme Styles */
 .dark {
     --background: #1a1a1a;
     --card-bg: #2d2d2d;
@@ -16,17 +19,32 @@
     --shadow: 0 4px 6px rgba(0,0,0,0.2);
     --primary: #3cc210;
     --primary-dark: #1f5a08;
+    --card-hover-bg: #3a3a3a; /* Dark theme card hover */
+    --card-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    --card-hover-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
 }
 
 .dark .mainwindow-container{
     background-color: var(--background);
 }
+
 .dark .card{
     background-color: var(--card-bg);
+    box-shadow: var(--card-shadow);
+    color: var(--text-primary);
 }
 
 .dark .card:hover{
-    background-color: var(--background);
+    background-color: var(--card-hover-bg);
+    box-shadow: var(--card-hover-shadow);
+}
+
+.dark .card p {
+    color: var(--text-primary);
+}
+
+.dark .card img {
+    background-color: #444; /* Darker background for icons in dark mode */
 }
 
 .dark .nav{
@@ -45,12 +63,12 @@ h1{
     font-size: 2rem;
 }
 
-
 .mainwindow-container {
     flex: 1;
     min-height: 100vh;
     padding-bottom: 15vh;
     position: relative;
+    margin: 48px 0 0 0;
 }
 
 .l-header {
@@ -72,43 +90,42 @@ h1{
     height: var(--header-height);
     display: flex;
     justify-content: space-between;
-    align-items: center; /* Align items vertically */
+    align-items: center;
     font-weight: var(--font-semi);
     padding: 0 var(--mb-4);
 }
 
 .nav__logo {
     color: var(--first-color);
-    font-size: 1.5rem; /* Adjust the size of the logo if needed */
+    font-size: 1.5rem;
 }
 
-/* Initially, the menu is hidden on mobile */
 .nav__menu {
     display: flex;
     gap: 1rem;
     position: fixed;
     top: var(--header-height);
-    right: -100%;  /* Initially off-screen on small screens */
+    right: -100%;
     width: 50%;
     height: 100%;
     padding: 2rem;
     background-color: var(--second-color);
-    transition: right 0.5s ease; /* Smooth sliding transition */
+    transition: right 0.5s ease;
   }
-  #dark-light-mode{
-         flex-direction: row;
-         
-    }
-    #dark-light-mode::after {
-        position: absolute;
-        content: "";
-        width: 100%;
-        height: 0.18rem;
-        left: 0;
-        top: calc(var(--header-height) - 2px); 
-        background-color: transparent;
-    }
 
+#dark-light-mode{
+    flex-direction: row;
+}
+
+#dark-light-mode::after {
+    position: absolute;
+    content: "";
+    width: 100%;
+    height: 0.18rem;
+    left: 0;
+    top: calc(var(--header-height) - 2px);
+    background-color: transparent;
+}
 
 .theme-toggle {
   display: flex;
@@ -150,7 +167,6 @@ h1{
   font-weight: 500;
 }
 
-/* Optional: Add animation for theme switch */
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
@@ -159,64 +175,11 @@ h1{
 .theme-toggle:active .theme-toggle__icon {
   animation: spin 0.3s ease;
 }
-  /* When the 'show' class is applied, slide the menu into view */
-  .nav__menu.show {
-    right: 0; /* Slide the menu into view */
-  }
-  
-  /* Desktop - Show nav__menu normally and hide nav__toggle (the icon) */
-  @media screen and (min-width: 768px) {
-    .nav__menu {
-      position: static; /* Make the menu static on larger screens */
-      right: auto; /* Remove the 'right' positioning */
-      display: flex; /* Always show the menu on desktop */
-      gap: 3rem; /* Adjust gap between menu items */
-      padding: 0;
-      background-color: transparent; /* No background on desktop */
-    }
-    
-    /* Hide the nav toggle icon on desktop */
-    .nav__toggle {
-      display: none;
-    }
-  
-    .nav__list {
-      flex-direction: row; /* Display menu items in a row */
-      gap: 3rem; /* Adjust gap between nav items */
-      margin-left: -200px;
-    }
-  }
-  
-  /* Mobile - Show the nav__toggle (menu icon) */
-  @media screen and (max-width: 768px) {
-    .nav__toggle {
-      display: block; /* Show the toggle icon */
-    }
-    .nav__list {
-        display: flex;
-        gap: 3rem;
-        padding-top: 0;
-        height: 100%; /* Add this */
-        align-items: center; /* Add this */
-        margin-left: 0;
-    }
-  
-    .nav__item {
-      margin-bottom: 0;
-    }
-  }
-  
-  /* Styling for the menu toggle button */
-  .nav__toggle {
-    color: var(--first-color);
-    font-size: 2rem;
-    cursor: pointer;
-  }
-  
-  .nav__toggle i {
-    font-size: 2rem; /* Adjust the size of the icon */
-  }
-  
+
+.nav__menu.show {
+    right: 0;
+}
+
 .nav__item {
     list-style: none;
     margin-bottom: 0;
@@ -225,11 +188,34 @@ h1{
 .nav__link {
     position: relative;
     color: #000;
-    display: flex; /* Add this */
-    align-items: center; /* Add this */
-    height: 100%; /* Add this */
-    padding: 0 0.5rem; /* Add this for spacing */
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 0.5rem;
 }
+
+.curriculum-toggle{
+    position: relative;
+    color: #000;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 0.5rem;
+     border-radius: 50px;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(0,0,0,0.1);
+  background: rgba(255,255,255,0.1);
+  cursor: pointer;
+}
+.curriculum-toggle:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.dark  .curriculum-toggle {
+    background: #2b2b2b;
+    color: #fff;
+}
+
 
 .nav__link:hover {
     position: relative;
@@ -241,7 +227,7 @@ h1{
     width: 100%;
     height: 0.18rem;
     left: 0;
-    top: calc(var(--header-height) - 2px); /* Adjust this value */
+    top: calc(var(--header-height) - 2px);
     background-color: var(--first-color);
 }
 
@@ -251,7 +237,7 @@ h1{
     width: 100%;
     height: 0.18rem;
     left: 0;
-    top: calc(var(--header-height) - 2px); /* Match hover position */
+    top: calc(var(--header-height) - 2px);
     background-color: var(--first-color);
 }
 
@@ -260,43 +246,172 @@ h1{
     font-size: 1.5rem;
     cursor: pointer;
 }
+
 a {
     text-decoration: none;
 }
 
-
-/* Active menu */
-.active-link::after {
-    position: absolute;
-    content: "";
-    width: 100%;
-    height: 0.18rem;
-    left: 0;
-    top: 2rem;
-    background-color: var(--first-color);
-}
-
-/* Show menu */
-.show {
-    right: 0;
-}
-
 .nav__list {
     display: flex;
-    gap: 3rem; /* Adjust gap between nav items */
+    gap: 3rem;
     padding-top: 0;
 }
 
+/* Layout for cards */
+.mainwindow-container .cards {
+    display: grid;
+       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    padding: 20px;
+    position: relative;
+    z-index: 0;
+    margin-top: 20px; /* Add some margin from the header */
+}
+
+.mainwindow-container .card {
+    height: 260px; /* Increased height for better spacing */
+    padding: 25px; /* Increased padding */
+    background-color: #ffffff; /* Clean white background */
+    border-radius: 16px; /* Smoother, larger radius */
+    display: flex; /* Use flexbox for alignment */
+    flex-direction: column; /* Stack elements vertically */
+    justify-content: space-between; /* Push icon to bottom */
+    align-items: flex-start; /* Align text to the start */
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08); /* Softer, modern shadow */
+    overflow: hidden; /* Prevent content overflow */
+}
+
+.card::before { /* Optional: Add a subtle border or gradient effect */
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--first-color), var(--second-color));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.card:hover::before {
+    opacity: 1;
+}
+
+.mainwindow-container .card img {
+    width: 105px; /* Slightly adjusted icon size */
+    padding: 12px; /* Padding within the circle */
+    position: absolute;
+    background-color: #e9ecef; /* Light gray background for icon */
+    border-radius: 50%; /* Make it circular */
+    bottom: 25px; /* Position from bottom */
+    right: 100px; /* Position from right */
+    transition: transform 0.3s ease;
+}
+.dark .mainwindow-container .card{
+    background-color: var(--card-bg); /* Dark background for cards */
+    box-shadow: var(--card-shadow); /* Dark shadow for cards */
+    color: var(--text-primary); /* Light text color for better contrast */
+}
+
+.card:hover img {
+    transform: scale(1.1); /* Slightly scale icon on hover */
+}
+
+.card p {
+    color: #343a40; /* Darker, modern text color */
+    font-size: 20px; /* Slightly larger font */
+    font-weight: 600; /* Bolder for titles */
+    margin: 0; /* Remove default margins */
+    max-width: calc(100% - 80px); /* Ensure text doesn't overlap icon */
+}
+
+.card:hover {
+    transform: translateY(-8px); /* Lift effect on hover */
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12); /* Enhanced shadow on hover */
+}
+
+
+/* Responsive Media Queries */
+
+@media (max-width: 480px) {
+    .cards {
+        padding: 15px;
+        gap: 20px;
+    }
+    .card {
+       height: 220px; /* Adjust height for small screens */
+       padding: 20px;
+    }
+    .card p {
+        font-size: 18px;
+    }
+    .card img {
+        width: 55px;
+        padding: 10px;
+        bottom: 20px;
+        right: 20px;
+    }
+}
+
+@media (min-width: 540px) {
+    .cards {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns */
+        padding: 20px;
+    }
+}
+
+@media (min-width: 768px) {
+    .cards {
+        grid-template-columns: repeat(3, 1fr); /* 3 columns */
+    }
+    .nav__menu {
+      position: static;
+      right: auto;
+      display: flex;
+      gap: 3rem;
+      padding: 0;
+      background-color: transparent;
+    }
+    .nav__toggle {
+      display: none;
+    }
+    .nav__list {
+      flex-direction: row;
+      gap: 3rem;
+      margin-left: -200px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .cards {
+        grid-template-columns: repeat(4, 1fr); /* 4 columns for desktop */
+        gap: 25px;
+    }
+}
+
+@media (min-width: 1368px) {
+    .cards {
+        grid-template-columns: repeat(4, 1fr); /* Keep 4 columns */
+        padding: 25px; /* Slightly more padding */
+        gap: 30px; /* Increase gap slightly */
+    }
+}
+
+/* Mobile Nav Adjustments */
 @media screen and (max-width: 768px) {
     .nav__menu {
         position: fixed;
         top: var(--header-height);
         right: -100%;
-        width: 80%;
+        width: 80%; /* Adjust width as needed */
         height: 100%;
         padding: 2rem;
         background-color: var(--second-color);
         transition: 0.5s;
+        z-index: var(--z-fixed); /* Ensure it's above other content */
     }
 
     .nav__menu.show {
@@ -304,117 +419,27 @@ a {
     }
 
     .nav__list {
-        flex-direction: column; /* Stack items vertically on smaller screens */
+        flex-direction: column;
         gap: 2rem;
+        align-items: flex-start; /* Align items to the left */
+        margin-left: 0; /* Reset margin */
+        height: auto; /* Adjust height */
     }
 
     .nav__item {
         margin-bottom: 0;
     }
-}
 
-/* Layout for cards */
-.cards {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(300px, 1fr));
-    gap: 30px;
-    padding: 20px;
-    position: relative;
-    z-index: 0;
-    margin-top: 0;
-}
-
-.card {
-    height: 250px;
-    padding: 20px;
-    background-color: #f0f4f9;
-    border-radius: 10px;
-    align-items: center;
-    position: relative;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.card img {
-    width: 80px;
-    padding: 5px;
-    position: absolute;
-    background-color: white;
-    border-radius: 20px;
-    bottom: 10px;
-    right: 100px;
-}
-
-.card p {
-    color: #585858;
-    font-size: 17px;
-}
-
-.card:hover {
-    background-color: #dfe4ea;
-}
-
-
-@media (max-width: 480px) {
-    .cards {
-        grid-template-columns: 1fr;
-        padding: 0px;
-        margin-top: 0;
+    .nav__toggle {
+      display: block;
+      color: var(--first-color);
+      font-size: 2rem;
+      cursor: pointer;
     }
-    .card {
-       width: 270px;
+    .nav__toggle i {
+      font-size: 2rem;
     }
 }
-@media (min-width: 768px) {
-    .chat-container .cards {
-        grid-template-columns: repeat(2, minmax(100px, 1fr));
-        gap: 10px;
-        margin: 100px 0px;
-        margin-top: 0;
-    }
-}
-@media (min-width: 820px) {
-    .cards {
-        grid-template-columns: repeat(2, minmax(100px, 1fr));
-        gap: 10px;
-        margin: 100px 0px;
-        margin-top: 0;
-    }
-}
-
-@media (min-width: 1024px) {
-    .cards {
-        grid-template-columns: repeat(2, minmax(200px, 1fr));
-        gap: 20px;
-        padding: 5px;
-        margin-top: 0;
-    }
-   
-}
-@media (min-width: 540px) {
-    .cards {
-        grid-template-columns: repeat(2, minmax(200px, 1fr));
-        padding: 0px;
-        margin-top: 0;
-    }
-/*.chat-container .card {
-       width: 200px;
-    }*/
-}
-@media (min-width: 1280px) {
-    .cards {
-        grid-template-columns: repeat(3, minmax(300px, 1fr));
-        padding: 1px;
-        margin-top: 0;
-    }
-    .chat-container .card {
-        width: 300px;
-     }
-}
-@media (min-width: 1368px) {
-    .cards {
-        grid-template-columns: repeat(4, minmax(300px, 1fr));
-        padding: 1px;
-        margin-top: 0;
-    }
+.inline-link-button{
+    color:lightblue;
 }

@@ -3,7 +3,8 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [
-  react()],
+    react()
+  ],
   build: {
     minify: 'terser', // Use Terser for stronger minification
     terserOptions: {
@@ -26,5 +27,11 @@ export default defineConfig({
         secure: false,
       }
     }
+  },
+  // --- Add this entire 'preview' section ---
+  preview: {
+    host: true,
+    port: 5173, // Or whatever port you are exposing on Runpod
+    allowedHosts: ['chikoro-ai.com']
   }
 });

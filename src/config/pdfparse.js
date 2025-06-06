@@ -14,7 +14,7 @@ export const handlePDFRequest = async (file, prompt, conversationHistory = []) =
 
     // Initialize model with PDF-specific config
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.0-flash-exp-image-generation",
+      model: "gemini-2.0-flash",
       systemInstruction: `
         You are a PDF analysis assistant for students. Focus on:
         1. Understanding and explaining PDF content

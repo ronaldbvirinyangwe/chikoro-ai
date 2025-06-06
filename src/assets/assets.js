@@ -264,8 +264,85 @@ import xichanganap2 from './xichanganap2.pdf'
 import xichanganap12 from './xichanganap12.pdf'
 import xichanganap21 from './xichanganap21.pdf'
 import ndebele from './ndebele.webp'
+import accountingp3insertnov2024 from './accountingp3insertnov2024:9706:31.pdf'
+import accountingp4nov2024 from './accountingp4nov2024:9706:41.pdf'
+import accountingp4nov20242 from './accountingp4nov2024:9706:42.pdf'
+import accountingp32024 from './accountingp32024:9706:33pdf.pdf'
+import artp1nov2019 from './artp1nov2019:9704:1.pdf'
+import artp2nov2019 from './artp2nov2019:9704:2.pdf'
+import biop1june2014 from './biop1june2014:9184:13.pdf'
+import biop1june20142 from './biop1june2014:9184:35.pdf'
+import biop2june2014 from './biop2june2014:9184:23.pdf'
+import biop3nov2024 from './biop3nov2024:9700:31.pdf'
+import biop3nov20242 from './biop3nov2024:9700:33.pdf'
+import biop3nov20243 from './biop3nov2024:9700:34.pdf'
+import biop3nov20244 from './biop3nov2024:9700:35.pdf'
+import biop4june2014 from './biop4june2014:9184:43.pdf'
+import biop5june2014 from './biop5june2014:9184:53.pdf'
+import businessp1 from './businessp1:9609:13.pdf'
+import businessp1nov2024 from './businessp1nov2024:9609:11.pdf'
+import businessp1nov20242 from './businessp1nov2024:9609:12.pdf'
+import businessp3nov2014 from './businessp3nov2014:9609:32.pdf'
+import businessp3nov2024 from './businessp3nov2024:9609:31.pdf'
+import businessp3nov20242 from './businessp3nov2024:9609:33.pdf'
+import chemistryp1june from './chemistryp1june:9185:13.pdf'
+import chemistryp1nov2024 from './chemistryp1nov2024:9701:11.pdf'
+import chemistryp1nov20242 from './chemistryp1nov2024:9701:12.pdf'
+import social_scienceg7p1 from './social_scienceg7p1.pdf'
+import mathsg7p2 from './mathsg7p2.pdf'
+import englishg7p2 from './englishg7p2.pdf'
+import englishg7p1 from './englishg7p1.pdf'
+import mathsg7p1 from './mathsg7p1.pdf'
+import social_scienceg7p2 from './social_scienceg7p2.pdf'
+import agric_scientechg7p1 from './agric,scientechg7p1.pdf'
+import agric_scientechg7p2 from './agric,scientechg7p2.pdf'
+
+import five_tests from './five_tests.png'
+import sciencestar from './science_start.png'
+import first_test from './first_test.png'
+import math_master from './math_master.png'
+import advanced_proficiency from './advanced_proficiency.png'
+
+
 
 export const assets = {
+    social_scienceg7p1,
+    social_scienceg7p2,
+    mathsg7p1,
+    mathsg7p2,
+    englishg7p1,
+    englishg7p2,
+    agric_scientechg7p1,
+    agric_scientechg7p2,
+    five_tests,
+    sciencestar,
+    first_test,
+    math_master,
+    advanced_proficiency,
+    accountingp4nov2024,
+    accountingp4nov20242,
+    accountingp3insertnov2024,
+    accountingp32024,
+    artp1nov2019,
+    artp2nov2019,
+    biop1june2014,
+    biop1june20142,
+    biop2june2014,
+    biop3nov2024,
+    biop3nov20242,
+    biop3nov20243,
+    biop3nov20244,
+    biop4june2014,
+    biop5june2014,
+    businessp1,
+    businessp1nov2024,
+    businessp1nov20242,
+    businessp3nov2014,
+    businessp3nov2024,
+    businessp3nov20242,
+    chemistryp1june,
+    chemistryp1nov2024,
+    chemistryp1nov20242,
     history_icon,
     science_sub,
     fashion,

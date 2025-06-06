@@ -10,7 +10,7 @@ import jwt from 'jsonwebtoken'; // Import jwt for token verification
 dotenv.config();
 
 const app = express();
-const port = 3001;
+const port = 4173;
 
 const GOAL_CATEGORIES = ['Daily', 'Weekly', 'Monthly', 'Subject-Specific'];
 

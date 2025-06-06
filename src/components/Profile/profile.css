@@ -1,0 +1,249 @@
+/* src/styles/index.css */
+
+/* --- CSS Variables for Modern Theming --- */
+:root {
+    --background-light: #f0f2f5; /* Soft light gray background */
+    --card-bg-light: #ffffff; /* Pure white card background */
+    --text-primary-light: #2c3e50; /* Dark charcoal for main text */
+    --text-secondary-light: #7f8c8d; /* Muted gray for secondary text */
+    --border-light: #e0e6ed; /* Light subtle border */
+
+    --background-dark: #1f2937; /* Darker gray for dark mode background */
+    --card-bg-dark: #2d3a4b; /* Slightly lighter dark card background */
+    --text-primary-dark: #ecf0f1; /* Off-white for dark mode text */
+    --text-secondary-dark: #bdc3c7; /* Lighter gray for secondary dark text */
+    --border-dark: #374151; /* Dark subtle border */
+
+    --spacing-unit: 1rem; /* Base unit for spacing */
+    --border-radius-card: 16px; /* More pronounced rounded corners for cards */
+    --border-radius-sm: 8px; /* Smaller rounded corners for elements */
+
+    /* Modern, subtle shadow */
+    --shadow-light: 0 10px 30px rgba(0, 0, 0, 0.08);
+    --shadow-dark: 0 10px 30px rgba(0, 0, 0, 0.25);
+
+    --transition-speed: 0.3s ease-in-out; /* Smooth transitions */
+}
+
+/* --- Dark Theme Application (Applied via a class on body or root div) --- */
+.dark {
+    --background-color: var(--background-dark);
+    --card-background-color: var(--card-bg-dark);
+    --text-color-primary: var(--text-primary-dark);
+    --text-color-secondary: var(--text-secondary-dark);
+    --border-color: var(--border-dark);
+    --box-shadow: var(--shadow-dark);
+}
+
+/* --- Light Theme Application (Default, or applied if .dark is absent) --- */
+body:not(.dark),
+:root:not(.dark) { /* Ensures these are the defaults if .dark isn't present */
+    --background-color: var(--background-light);
+    --card-background-color: var(--card-bg-light);
+    --text-color-primary: var(--text-primary-light);
+    --text-color-secondary: var(--text-color-secondary-light); /* Corrected variable name */
+    --border-color: var(--border-light);
+    --box-shadow: var(--shadow-light);
+}
+
+/* --- Global & Base Styles (Using CSS Variables) --- */
+body {
+    font-family: 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    color: var(--text-color-primary); /* Inherit from theme */
+    background-color: var(--background-color); /* Inherit from theme */
+    transition: background-color var(--transition-speed), color var(--transition-speed); /* Smooth theme transitions */
+}
+
+/* --- Custom Component Classes --- */
+
+/* Page Container - full screen, centered */
+.page-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-unit);
+    background-color: var(--background-color);
+    color: var(--text-color-primary);
+    transition: background-color var(--transition-speed), color var(--transition-speed);
+}
+
+/* Profile Card - Modern, sleek */
+.profile-card {
+    background-color: var(--card-background-color);
+    border-radius: var(--border-radius-card); /* Soft rounded corners */
+    box-shadow: var(--box-shadow); /* Subtle, modern shadow */
+    padding: calc(var(--spacing-unit) * 2); /* More internal padding */
+    width: 100%;
+    max-width: 480px; /* Equivalent to max-w-md */
+    border: 1px solid var(--border-color); /* A subtle border */
+    transition: background-color var(--transition-speed), border-color var(--transition-speed), box-shadow var(--transition-speed);
+}
+
+.profile-card.loading-message { /* Specific styling for the loading state card */
+    text-align: center;
+}
+
+.profile-card h2 {
+    color: var(--primary-color); /* Primary color for headings */
+    font-size: 2.25rem; /* Larger, more impactful heading */
+    font-weight: 700; /* Equivalent to font-bold */
+    margin-bottom: calc(var(--spacing-unit) * 2); /* Equivalent to mb-8 */
+    text-align: center; /* Equivalent to text-center */
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center the icon and text */
+}
+
+.profile-card h2 svg { /* Adjust icon size/color within heading */
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    margin-right: var(--spacing-unit); /* Equivalent to mr-3 */
+}
+
+/* Profile Items Container */
+.profile-items-container {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--spacing-unit) * 1.5); /* Equivalent to space-y-6 */
+}
+
+/* Profile Item - Individual data rows */
+.profile-item {
+    display: flex;
+    align-items: center;
+    padding-bottom: var(--spacing-unit); /* Adding some bottom padding */
+    border-bottom: 1px solid var(--border-color); /* Subtle separator */
+}
+
+.profile-item:last-child {
+    border-bottom: none; /* No border on the last item */
+}
+
+.profile-item svg { /* Icon styling */
+    font-size: 1.5rem; /* Equivalent to text-xl */
+    color: var(--accent-color); /* Accent color for icons */
+    margin-right: var(--spacing-unit); /* Equivalent to mr-4 */
+    flex-shrink: 0; /* Prevent icon from shrinking */
+}
+
+.profile-item .label-group {
+    /* flex grow can be useful if needed, but not strictly required here */
+}
+
+.profile-item label {
+    display: block; /* Equivalent to block */
+    font-weight: 600; /* Equivalent to font-semibold */
+    font-size: 0.95rem; /* Equivalent to text-sm */
+    color: var(--text-color-secondary); /* Secondary color for labels */
+    margin-bottom: 0.25rem; /* Small space between label and value, equivalent to mb-1 */
+}
+
+.profile-item p {
+    font-size: 1.15rem; /* Equivalent to text-lg */
+    font-weight: 500; /* Equivalent to font-medium */
+    color: var(--text-color-primary); /* Primary text color for values */
+    margin: 0;
+}
+
+/* Buttons - Modern style */
+.modern-button {
+    padding: 0.8rem 1.8rem; /* Equivalent to px-4 py-2, but slightly larger */
+    border-radius: var(--border-radius-sm); /* Equivalent to rounded */
+    background-color: var(--primary-color); /* Equivalent to bg-blue-600 */
+    color: #ffffff; /* Equivalent to text-white */
+    font-weight: 600; /* Equivalent to font-bold */
+    border: none;
+    cursor: pointer;
+    transition: background-color var(--transition-speed), transform 0.2s ease, box-shadow var(--transition-speed);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for buttons */
+    margin-top: var(--spacing-unit); /* Equivalent to mt-4 */
+    outline: none; /* To remove default focus outline */
+}
+
+.modern-button:hover {
+    background-color: var(--primary-dark-color); /* Equivalent to hover:bg-blue-700 */
+    transform: translateY(-2px); /* Slight lift on hover */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15); /* More pronounced shadow on hover */
+}
+
+/* Focus styles for buttons */
+.modern-button:focus {
+    /* You can add custom focus ring styles here if needed,
+       e.g., box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5); */
+}
+
+/* Alert/Info Boxes */
+.alert-box {
+    padding: var(--spacing-unit); /* Equivalent to px-4 py-3 */
+    border-radius: var(--border-radius-sm); /* Equivalent to rounded-lg */
+    border: 1px solid; /* Equivalent to border */
+    position: relative; /* Equivalent to relative */
+    width: 100%; /* Equivalent to w-full */
+    max-width: 480px; /* Equivalent to max-w-md */
+    text-align: center; /* Equivalent to text-center if content is centered */
+    font-weight: 500;
+    display: flex; /* To allow flexible internal layout */
+    flex-direction: column;
+    align-items: center; /* To center content horizontally */
+    gap: var(--spacing-unit); /* For spacing between elements inside the box */
+}
+
+.alert-box strong {
+    font-weight: 700; /* Equivalent to font-bold */
+}
+
+.alert-box span {
+    display: block; /* Equivalent to block sm:inline */
+}
+
+.alert-box.error {
+    background-color: #fcebeb; /* Light red */
+    border-color: #f5c6cb; /* Darker red border */
+    color: #721c24; /* Dark red text */
+}
+.dark .alert-box.error {
+    background-color: #6a0e0e; /* Equivalent to bg-red-800 */
+    border-color: #9f3a3a; /* Equivalent to border-red-700 */
+    color: #f8d7da; /* Equivalent to text-red-200 */
+}
+
+.alert-box.info {
+    background-color: #e8f7fa; /* Light blue */
+    border-color: #b3e0ed; /* Darker blue border */
+    color: #005663; /* Dark blue text */
+}
+.dark .alert-box.info {
+    background-color: #1a4f61; /* Equivalent to bg-yellow-800, adjusting to a blue tone */
+    border-color: #3b7e8d; /* Equivalent to border-yellow-700, adjusting */
+    color: #d1ecf1; /* Equivalent to text-yellow-200, adjusting */
+}
+
+/* Animation for loading state */
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.animate-pulse {
+    animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .profile-card {
+        padding: var(--spacing-unit);
+    }
+    .profile-card h2 {
+        font-size: 2rem;
+    }
+    .profile-card h2 svg {
+        font-size: 2rem;
+    }
+    .profile-item p {
+        font-size: 1rem;
+    }
+}

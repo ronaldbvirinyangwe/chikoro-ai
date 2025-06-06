@@ -16,6 +16,7 @@ import Reports from './components/Reports/reports.jsx';
 import MainWindow from './components/MainWindow/mainwindow.jsx';
 import LandingPage from './components/LandingPage/LandingPage.jsx';
 import PaperSelector from './components/PaperSelector/PaperSelector.jsx'
+import Profile from './components/Profile/profile.jsx';
 
 const App = () => {
   return (
@@ -26,6 +27,7 @@ const App = () => {
           <Route path="/signup" element={<Signup />} />
           <Route path="/home" element={<LandingPage />} />
           <Route element={<PrivateRoute />}>
+            <Route path="/profile" element={<Profile />} />
             <Route path="/" element={<><Sidebar /><MainWindow /></>} />
             <Route path="/payment" element={<PaymentPage />} />
   <Route path="/enrol" element={<Enrol />} />

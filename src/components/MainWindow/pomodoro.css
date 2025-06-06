@@ -1,0 +1,144 @@
+/* === PomodoroTimer.css === */
+.pomodoro-timer-enhanced {
+    text-align: center;
+    background: linear-gradient(135deg, var(--background-light), var(--background-grey));
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-md);
+    max-width: 480px; /* Optimal width for a timer block */
+}
+
+.pomodoro-timer-enhanced .pomodoro-header h2 {
+    font-size: 1.8rem; /* Increase title size */
+    margin-bottom: 0.75rem;
+    color: var(--text-primary);
+    font-weight: 700;
+}
+.pomodoro-timer-enhanced .pomodoro-header p { /* For "Task: ..." */
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+    min-height: 1.6em; /* Avoid layout shift */
+}
+
+.pomodoro-timer-enhanced .timer-display { /* Evolved from your .timer */
+    font-size: 4.5rem; /* Significantly larger for impact */
+    font-weight: 700;
+    color: var(--primary-green);
+    margin-bottom: 2rem;
+    line-height: 1;
+    letter-spacing: -1px; /* Tighten up large numbers */
+}
+
+.pomodoro-timer-enhanced .task-input {
+    width: calc(100% - 2rem);
+    padding: 0.9rem 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius-md);
+    font-size: 1rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    transition: var(--transition-normal);
+}
+.pomodoro-timer-enhanced .task-input::placeholder { color: var(--text-placeholder); }
+.pomodoro-timer-enhanced .task-input:focus {
+    outline: none;
+    border-color: var(--primary-green);
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+}
+
+.pomodoro-timer-enhanced .pomodoro-controls {
+    display: flex;
+    justify-content: center;
+    gap: 0rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap; 
+}
+
+.pomodoro-timer-enhanced .pomodoro-controls button {
+    background: var(--primary-green);
+    border: none;
+    color: var(--text-light);
+    padding: 0.8rem 2rem; /* More padding for a better feel */
+    border-radius: var(--border-radius-md);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition-fast); /* Faster transition for buttons */
+    box-shadow: var(--shadow-sm);
+}
+.pomodoro-timer-enhanced .pomodoro-controls button:hover:not(:disabled) {
+    background: var(--primary-green-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+.pomodoro-timer-enhanced .pomodoro-controls button:active:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+/* Secondary buttons (Reset, Skip) */
+.pomodoro-timer-enhanced .pomodoro-controls button.secondary {
+    background: transparent;
+    color: var(--primary-green);
+    border: 2px solid var(--primary-green);
+    box-shadow: none;
+}
+.pomodoro-timer-enhanced .pomodoro-controls button.secondary:hover:not(:disabled) {
+    background: var(--primary-green-light);
+    color: var(--primary-green-dark);
+}
+
+.pomodoro-timer-enhanced .pomodoro-stats {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+}
+.pomodoro-timer-enhanced .pomodoro-stats p { margin: 0.4rem 0; }
+
+.pomodoro-timer-enhanced .pomodoro-settings {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-color);
+}
+.pomodoro-timer-enhanced .pomodoro-settings summary {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    cursor: pointer;
+    margin-bottom: 1rem;
+    list-style-position: inside;
+}
+.pomodoro-timer-enhanced .pomodoro-settings summary::marker { color: var(--primary-green); }
+.pomodoro-timer-enhanced .pomodoro-settings div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+.pomodoro-timer-enhanced .pomodoro-settings label { color: var(--text-secondary); }
+.pomodoro-timer-enhanced .pomodoro-settings input[type="number"] {
+    width: 60px;
+    padding: 0.6rem;
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    text-align: center;
+    transition: var(--transition-normal);
+}
+.pomodoro-timer-enhanced .pomodoro-settings input[type="number"]:focus {
+    outline: none;
+    border-color: var(--primary-green);
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+}
+
+/* Break Mode Specific Styling */
+.pomodoro-timer-enhanced.break-mode .timer-display { color: var(--primary-blue); }
+.pomodoro-timer-enhanced.break-mode .pomodoro-header h2 { color: var(--primary-blue-dark); }
+.pomodoro-timer-enhanced.break-mode .pomodoro-controls button:not(.secondary) { background: var(--primary-blue); }
+.pomodoro-timer-enhanced.break-mode .pomodoro-controls button:not(.secondary):hover:not(:disabled) { background: var(--primary-blue-dark); }
+.pomodoro-timer-enhanced.break-mode .pomodoro-controls button.secondary {
+    color: var(--primary-blue);
+    border-color: var(--primary-blue);
+}
+.pomodoro-timer-enhanced.break-mode .pomodoro-controls button.secondary:hover:not(:disabled) {
+    background: var(--primary-blue-light);
+    color: var(--primary-blue-dark);
+}

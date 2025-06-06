@@ -1,495 +1,545 @@
+/* Root CSS Variables */
 :root {
-    --primary: #4A90E2;
-    --primary-light: #5C9CE5;
-    --secondary: #32A1C8;
-    --background: #F8FAFC;
-    --text: #2D3748;
-    --text-light: #718096;
-    --card-bg: #FFFFFF;
-    --success: #48BB78;
-    --warning: #ECC94B;
-    --radius-sm: 0.5rem;
-    --radius: 0.75rem;
-    --radius-lg: 1rem;
-    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
-    --shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
-    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
-  }
-  
-  .home {
-    min-height: 100vh;
-    background: var(--background);
-  }
-  
-  
-  /* Reports Container */
-  .reports-container {
-     min-height: 100vh;
-    width: 100%;
-    padding: 2rem;
-    margin: 0;
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    gap: 2rem;
-    background: var(--background);
-  }
-  
-  /* Metrics Section */
-  .progress-metrics {
-     grid-column: 1 / 9;
-    margin-bottom: 1rem;
-    background: transparent;
-  }
-  
-  .progress-metrics h3 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-bottom: 1.5rem;
-    color: var(--text);
-  }
-  .dark .progress-metrics h3{
-    color:#fff;
-  }
-  .metric-cards {
-    display: grid;
-      grid-template-columns: repeat(3, 1fr);;
-    gap: 2rem;
-  }
-  
-  .metric-card {
-    background: var(--card-bg);
-    padding: 1.75rem;
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    transition: all 0.2s;
-  }
-  
-  .metric-card:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
-    cursor:pointer;
-  }
-  
-  .metric-card h4 {
-    color: var(--text-light);
-    font-size: 0.9rem;
-    font-weight: 500;
-    margin: 0;
-  }
-  .dark .metric-card h4 {
-    color: #fff;
-  }
-  
-  .metric-card p {
-    font-size: 2rem;
-    font-weight: 600;
-    color: var(--primary);
-    margin: 0.5rem 0 0;
-  }
-  
-  /* Goal Tracker */
-  .goal-tracker {
-      grid-column: 9 / 13;
-    background: var(--card-bg);
-    padding: 2rem;
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow);
-    height: fit-content;
-   align-self: start;
-  }
-  
-  .goal-tracker h3 {
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin-bottom: 1.5rem;
-    color: var(--text);
-  }
-  .dark .goal-tracker h3{
-    color: #fff;
-  }
-  
-  .goal-input-container {
-    display: grid;
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-  }
-  
-  .goal-input-group {
-    display: flex;
-    gap: 1rem;
-  }
-  
-  .goal-input,
-  .goal-category,
-  .goal-date {
-    padding: 0.75rem 1rem;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: var(--radius-sm);
-    font-size: 0.95rem;
-    transition: all 0.2s;
-    background: var(--background);
-  }
+  --primary: #4A90E2;
+  --primary-light: #5C9CE5;
+  --secondary: #32A1C8;
+  --background: #F8FAFC;
+  --text: #2D3748;
+  --text-light: #718096;
+  --card-bg: #FFFFFF;
+  --success: #48BB78;
+  --warning: #ECC94B;
+  --radius-sm: 0.5rem;
+  --radius: 0.75rem;
+  --radius-lg: 1rem;
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
 
-  .dark .goal-input{
-    background-color: #fff;
-  }
-  .dark .goal-date{
-    background-color: #fff;
-  }
+/* Dark Mode Variables */
+.dark {
+  --background: #1a1a1a;
+  --card-bg: #2d2d2d;
+  --text: #ffffff;
+  --text-light: #95a5a6;
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.2);
+  --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.4);
+  --primary: #66aaff; /* Adjusted primary for dark mode */
+  --primary-light: #88bbff; /* Adjusted primary-light for dark mode */
+  --secondary: #5cd0ff; /* Adjusted secondary for dark mode */
+  --success: #68d391; /* Adjusted success for dark mode */
+  --warning: #f6e05e; /* Adjusted warning for dark mode */
+}
 
-  .goal-input:focus,
-  .goal-category:focus,
-  .goal-date:focus {
-    outline: none;
+/* Dark Mode Specific Styles */
+.dark .progress-metrics h3,
+.dark .gamification-metrics h3,
+.dark .goal-tracker h3,
+.dark .table-header-text,
+.dark .test-history-section h3,
+.dark .test-summary h4,
+.dark .progress-chart-section h3,
+.dark .leaderboard-section h3, /* Dark mode for leaderboard heading */
+.dark .generated-report-structured h3, /* Dark mode for structured report heading */
+.dark .report-section h4 /* Dark mode for report section subheadings */
+{
+  color: var(--text); /* Use text variable for dark mode headings */
+}
+
+.dark .metric-card h4 {
+  color: var(--text-light); /* Use text-light for card subheadings */
+}
+
+.dark .goal-input,
+.dark .goal-category,
+.dark .goal-date {
+  background-color: var(--card-bg); /* Use card-bg for input backgrounds */
+  color: var(--text); /* Ensure text is readable */
+  border-color: rgba(255, 255, 255, 0.1); /* Subtle border in dark mode */
+}
+ .dark .goal-input:focus,
+  .dark .goal-category:focus,
+  .dark .goal-date:focus {
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+    box-shadow: 0 0 0 3px rgba(102, 170, 255, 0.2); /* Adjusted shadow for dark mode */
   }
-  .dark .table-header-text{
-    color: #fff;
-  }
-  
-  .add-goal-button {
-    background: var(--primary);
+
+.dark .student-table th {
+    background: var(--primary-dark, #0056b3); /* Fallback if primary-dark isn't defined in dark mode */
     color: white;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: var(--radius-sm);
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  
-  .add-goal-button:hover {
-    background: var(--primary-light);
-    transform: translateY(-1px);
-  }
-  .goal-tracker,
-  .chat-history-section {
-    padding: 2.5rem; /* Increased padding */
-  }
-  /* Goal List */
-  .goal-list {
-    display: grid;
-    gap: 0.75rem;
-  }
-  
-  .goal-item {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    align-items: center;
-    gap: 1rem;
-    padding: 1rem;
-    background: var(--background);
-    border-radius: var(--radius-sm);
-    transition: all 0.2s;
-  }
-  
-  .goal-item:hover {
-    background: rgba(0, 0, 0, 0.02);
-  }
-  
-  .goal-content {
-    display: grid;
-    gap: 0.5rem;
-  }
-  
-  .goal-text {
-    margin: 0;
-    font-size: 1rem;
+}
+
+.dark .student-table td {
+    border-bottom-color: rgba(255, 255, 255, 0.05); /* Subtle border */
     color: var(--text);
-  }
-  
-  .goal-text.completed {
-    text-decoration: line-through;
-    color: var(--text-light);
-  }
-  
-  .goal-details {
-    display: flex;
-    gap: 1rem;
-    font-size: 0.85rem;
-    color: var(--text-light);
-  }
-  
-  .goal-category {
-    padding: 0.25rem 0.75rem;
-    background: rgba(74, 144, 226, 0.1);
-    border-radius: 1rem;
-    color: var(--primary);
-  }
-  
-  /* Chat History Section */
-  .chat-history-section {
-     background: var(--card-bg);
-    padding: 2rem;
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow);
-    grid-column: 1 / -1; 
-    width: 100%;
-  }
-  
-  .student-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-  }
-  
-  .table-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-  }
-  .total-entries {
-    color: var(--text-light);
-    font-size: 0.9rem;
-  }
-  .student-table th {
-    background: var(--primary);
-    color: white;
-    padding: 1rem 1.5rem;
-    text-align: left;
-    font-weight: 500;
-  }
-  
-  .student-table th:first-child {
-    border-top-left-radius: var(--radius-sm);
-  }
-  
-  .student-table th:last-child {
-    border-top-right-radius: var(--radius-sm);
-  }
-  
-  .student-table td {
-    padding: 1rem 1.5rem;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-  }
-  
-  .student-table tr:hover td {
-    background: rgba(0, 0, 0, 0.02);
-  }
-  .student-table tr:last-child td {
-    border-bottom: none;
-  }
-  /* Report Generator */
-  .generate-report-button {
-    background: var(--primary);
-    color: white;
-    border: none;
-    padding: 1rem 2rem;
-    border-radius: var(--radius);
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-    margin-top: 2rem;
-   grid-column: 1 / -1;
-    width: 100%;
-    max-width: 540px;
-  }
-  
-  .generate-report-button:hover {
-    background: var(--primary-light);
-    transform: translateY(-1px);
-    box-shadow: var(--shadow);
-  }
-  
-  .generate-report-button:disabled {
-    background: var(--text-light);
-    cursor: not-allowed;
-    transform: none;
-  }
-  
-  .generated-report {
-    padding: 20px;
-    border: 1px solid #ddd;
-    background-color: #f9f9f9;
-    margin-top: 20px;
-    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
-    max-height: 500px; /* Limit height */
-    grid-column: 1 / -1; 
-    overflow-y: auto; /* Allow scrolling */
-  }
-  
-  .generated-report h3 {
-    color: var(--text);
-    font-size: 1.25rem;
-    margin-bottom: 1.5rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-  }
-  
-  .generated-report pre {
-     font-family: 'Courier New', Courier, monospace;
-    font-size: 14px;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    margin: 10px 0;
-  }
-  
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    .nav {
-      padding: 1rem;
-    }
-  
-    .reports-container {
-      padding: 1rem;
-      margin: 1rem auto;
-    }
-  
-    .metric-cards {
-      grid-template-columns: 1fr;
-    }
-  
-    .goal-input-group {
-      flex-direction: column;
-    }
-  
-    .chat-history-section {
-      padding: 1rem;
-    }
-  
-    .student-table {
-      display: block;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      width: 100%;
-  
-    }
-  
-    .student-table th,
-    .student-table td {
-      padding: 0.75rem 1rem;
-    }
-  }
-  /* Test History Section */
-.test-history-section {
-  grid-column: 1 / -1;
-  background: var(--card-bg);
-  padding: 2rem;
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow);
-  margin-top: 2rem;
-  animation: fadeIn 0.3s ease-out;
 }
 
-.test-history-section h3 {
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-bottom: 1.5rem;
-  color: var(--text);
+.dark .student-table tr:hover td {
+    background: rgba(255, 255, 255, 0.03); /* Subtle hover background */
 }
 
-.dark .test-history-section h3 {
-  color: #fff;
-}
-
-.test-summary {
-  margin-top: 2rem;
-}
-
-.test-summary h4 {
-  font-size: 1.1rem;
-  font-weight: 500;
-  margin-bottom: 1rem;
-  color: var(--text);
-}
-
-.dark .test-summary h4 {
-  color: #fff;
-}
-
-/* Performance Bars */
-.performance-bars {
-  display: grid;
-  gap: 1rem;
-  margin-top: 1.5rem;
-}
-
-.performance-bar {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.subject-name {
-  flex: 0 0 120px;
-  font-weight: 500;
-  color: var(--text);
-}
-
-.dark .subject-name {
-  color: #e4e4e4;
-}
-
-.bar-container {
-  flex: 1;
-  height: 12px;
-  background: rgba(0, 0, 0, 0.05);
-  border-radius: 6px;
-  overflow: hidden;
-  position: relative;
+.dark .subject-name,
+.dark .bar-text,
+.dark .chart-label,
+.dark .recharts-tooltip-item-name,
+.dark .leaderboard-name, /* Dark mode for leaderboard name */
+.dark .leaderboard-points, /* Dark mode for leaderboard points */
+.dark .leaderboard-level /* Dark mode for leaderboard level */
+{
+  color: var(--text-light) !important; /* Use text-light for labels/text */
 }
 
 .dark .bar-container {
   background: rgba(255, 255, 255, 0.1);
 }
 
-.bar-fill {
-  height: 100%;
-  background: var(--primary);
-  border-radius: 6px;
-  transition: width 0.5s ease-out;
+.dark .recharts-tooltip-wrapper {
+  background-color: var(--card-bg) !important;
+  box-shadow: var(--shadow-sm) !important;
+}
+ .dark .recharts-tooltip-item-value {
+   color: var(--primary) !important;
+ }
+
+.dark .leaderboard-item { /* Dark mode for leaderboard items */
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
 }
 
-.bar-text {
-  position: absolute;
-  right: 10px;
-  top: -18px;
-  color: var(--text);
-  font-weight: 500;
-  font-size: 0.85rem;
+.dark .generated-report-structured { /* Dark mode for structured report container */
+    background-color: var(--card-bg);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: var(--text);
+}
+.dark .generated-report-structured h3 { /* Dark mode for structured report main heading */
+    border-bottom-color: rgba(255, 255, 255, 0.05);
+}
+.dark .report-section p,
+.dark .report-section li {
+    color: var(--text-light); /* Dark mode for report section text */
+}
+.dark .report-section strong {
+     color: var(--text); /* Dark mode for strong text in report sections */
+}
+.dark tbody, td, tfoot, th, thead, tr{
+  color: var(--text-light); /* Ensure table text is readable in dark mode */
+  background-color: var(--card-bg); /* Ensure table background is transparent */
 }
 
-.dark .bar-text {
-  color: #e4e4e4;
+.dark tr:nth-child(even){
+  background-color: rgba(255, 255, 255, 0.05); /* Subtle even row background */
 }
-.progress-chart-section {
-  grid-column: 1 / 9;
-  background: var(--card-bg);
+.home {
+  min-height: 100vh;
+  background: var(--background);
+  margin-bottom: -10px;
+}
+
+/* Reports Container - Using CSS Grid */
+.reports-container {
+  min-height: 100vh;
+  width: 100%;
   padding: 2rem;
-  border-radius: var(--radius-lg);
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr); /* 12 column grid */
+  gap: 2rem; /* Gap between grid items */
+  background: var(--background);
+  box-sizing: border-box; /* Include padding in width */
+}
+
+/* --- Section Styling --- */
+
+/* Learning Overview Metrics */
+.progress-metrics {
+   grid-column: 1 / 9; /* Spans columns 1 to 8 */
+   grid-row: 1; /* Placed in the first row */
+   margin-bottom: 0; /* Remove margin as grid gap handles spacing */
+   background: transparent; /* No background for the container itself */
+}
+
+.progress-metrics h3,
+.gamification-metrics h3,
+.test-history-section h3,
+.progress-chart-section h3,
+.badges-section h4,
+.test-summary h4,
+.leaderboard-section h3 /* Style for leaderboard heading */
+{
+  font-size: 1.5rem; /* Consistent heading size */
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: var(--text);
+}
+
+.metric-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); /* Responsive metric cards */
+  gap: 1.5rem; /* Gap between cards */
+}
+
+.metric-card {
+  background: var(--card-bg);
+  padding: 1.75rem;
+  border-radius: var(--radius);
   box-shadow: var(--shadow);
-  margin-bottom: 2rem;
-  animation: fadeIn 0.3s ease-out;
+  transition: all 0.2s;
+  display: flex; /* Use flex for content alignment */
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
-.progress-timeline-section {
-  background-color: var(--section-bg-color, #fff);
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  margin-bottom: 20px;
+.metric-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  cursor: pointer;
 }
 
-.timeline-chart-container {
-  margin-top: 15px;
+.metric-card h4 {
+  color: var(--text-light);
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin: 0 0 0.5rem 0; /* Added bottom margin */
 }
 
-.progress-chart-section h3 {
+.metric-card p {
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--primary);
+  margin: 0;
+}
+
+/* Goal Tracker */
+.goal-tracker {
+    grid-column: 9 / 13; /* Spans columns 9 to 12 */
+    grid-row: 1 / 3; /* Spans rows 1 and 2 */
+    background: var(--card-bg);
+    padding: 2rem;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    height: fit-content; /* Adjust height to content */
+    align-self: start; /* Align to the start of the grid cell */
+}
+
+.goal-tracker h3 {
   font-size: 1.25rem;
   font-weight: 600;
   margin-bottom: 1.5rem;
   color: var(--text);
 }
 
-.dark .progress-chart-section h3 {
-  color: #fff;
+.goal-input-container {
+  display: grid;
+  gap: 1rem; /* Reduced gap */
+  margin-bottom: 1.5rem; /* Reduced margin */
+}
+
+.goal-input-group {
+  display: flex;
+  gap: 0.75rem; /* Reduced gap */
+}
+
+.goal-input,
+.goal-category,
+.goal-date {
+  flex: 1; /* Allow inputs to grow */
+  padding: 0.75rem 1rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  transition: all 0.2s;
+  background: var(--background);
+  color: var(--text); /* Ensure text color */
+}
+
+.goal-input:focus,
+.goal-category:focus,
+.goal-date:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+.add-goal-button {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 100%; /* Full width button */
+}
+
+.add-goal-button:hover {
+  background: var(--primary-light);
+  transform: translateY(-1px);
+}
+
+/* Goal List */
+.goal-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.goal-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--background);
+  border-radius: var(--radius-sm);
+  transition: all 0.2s;
+  color: var(--text); /* Ensure text color */
+}
+
+.goal-item:hover {
+  background: rgba(0, 0, 0, 0.02);
+}
+.dark .goal-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.goal-content {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.goal-text {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--text);
+}
+
+.goal-text.completed {
+  text-decoration: line-through;
+  color: var(--text-light);
+}
+
+.goal-details {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.85rem;
+  color: var(--text-light);
+}
+
+.goal-category {
+  padding: 0.25rem 0.75rem;
+  background: rgba(74, 144, 226, 0.1);
+  border-radius: 1rem;
+  color: var(--primary);
+  font-size: 0.85rem; /* Match goal details font size */
+}
+.dark .goal-category {
+    background: rgba(102, 170, 255, 0.1);
+    color: var(--primary-light);
+}
+
+
+/* --- Gamification Sections --- */
+
+/* Gamification Metrics (Points, Level, Streaks) */
+.gamification-metrics {
+    grid-column: 1 / 9; /* Place below progress-metrics */
+    grid-row: 2;
+    margin-bottom: 0; /* Use grid gap */
+    background: transparent; /* No background */
+}
+
+.gamification-metrics h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: var(--text);
+}
+
+/* Badges Section */
+.badges-section {
+    grid-column: 1 / -1; /* Spans full width below other sections */
+    grid-row: 3; /* Placed in the third row */
+    background: var(--card-bg);
+    padding: 2rem;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    margin-top: 2rem; /* Add some top margin if needed, or rely on grid gap */
+    animation: fadeIn 0.3s ease-out;
+}
+
+.badges-section h4 {
+    font-size: 1.25rem; /* Match other section headings */
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: var(--text);
+}
+
+.badges-list {
+    display: flex; /* Arrange badges in a row */
+    flex-wrap: wrap; /* Wrap badges to next line */
+    gap: 1.5rem; /* Gap between badges */
+    justify-content: center; /* Center badges if not filling width */
+}
+
+.badge-item {
+    display: flex;
+    flex-direction: column; /* Stack icon and name */
+    align-items: center; /* Center content */
+    text-align: center;
+    padding: 1rem;
+    background: var(--background); /* Subtle background for each badge */
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s;
+    min-width: 100px; /* Minimum size for badges */
+    max-width: 120px; /* Maximum size for badges */
+}
+.dark .badge-item {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.badge-item:hover {
+    transform: translateY(-5px) rotate(3deg); /* Simple hover effect */
+}
+
+.badge-icon {
+    width: 50px; /* Size of the badge icon */
+    height: 50px;
+    object-fit: contain; /* Ensure icon fits */
+    margin-bottom: 0.5rem; /* Space between icon and name */
+}
+
+.badge-name {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text);
+    word-break: break-word; /* Break long badge names */
+}
+ .dark .badge-name {
+     color: var(--text-light);
+ }
+
+/* Leaderboard Section */
+.leaderboard-section {
+    grid-column: 1 / -1; /* Spans full width */
+    grid-row: 4; /* Placed below badges */
+    background: var(--card-bg);
+    padding: 2rem;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    margin-top: 2rem;
+    animation: fadeIn 0.3s ease-out;
+}
+.leaderboard-section h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: var(--text);
+}
+.leaderboard-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 0.8rem;
+}
+.leaderboard-item {
+    display: flex;
+    align-items: center;
+    background: var(--background);
+    padding: 0.8rem 1.5rem;
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-sm);
+    transition: all 0.2s;
+}
+.dark .leaderboard-item {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.leaderboard-item:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+}
+.leaderboard-rank {
+    font-weight: 600;
+    color: var(--primary);
+    margin-right: 1.5rem;
+    min-width: 30px; /* Ensure rank column has space */
+}
+.leaderboard-name {
+    flex-grow: 1; /* Allow name to take up available space */
+    font-weight: 500;
+    color: var(--text);
+}
+.dark .leaderboard-name {
+    color: var(--text);
+}
+.leaderboard-points {
+    font-weight: 600;
+    color: var(--secondary);
+    margin-left: 1rem;
+    min-width: 80px; /* Ensure points column has space */
+    text-align: right;
+}
+.leaderboard-level {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    margin-left: 0.8rem;
+     min-width: 60px; /* Ensure level column has space */
+     text-align: right;
+}
+
+
+/* Progress Timeline Section */
+.progress-timeline-section {
+  grid-column: 1 / -1; /* Spans full width */
+  grid-row: 5; /* Placed below leaderboard */
+  background-color: var(--card-bg); /* Use card background */
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  padding: 2rem; /* Consistent padding */
+  margin-bottom: 2rem; /* Use grid gap */
+  animation: fadeIn 0.3s ease-out;
+}
+
+.progress-timeline-section h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: var(--text);
+}
+
+.timeline-chart-container {
+  margin-top: 1rem; /* Adjusted margin */
+}
+
+
+/* Progress Chart Section (Pie Chart) */
+.progress-chart-section {
+  grid-column: 1 / 9; /* Spans columns 1 to 8 */
+  grid-row: 6; /* Placed below timeline */
+  background: var(--card-bg);
+  padding: 2rem;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  margin-bottom: 2rem; /* Use grid gap */
+  animation: fadeIn 0.3s ease-out;
+}
+
+.progress-chart-section h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: var(--text);
 }
 
 /* Pie Chart Container */
 .pie-chart-container {
-  height: 400px;
+  height: 350px; /* Adjusted height */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -506,10 +556,6 @@
   margin-bottom: 1rem;
   font-weight: 500;
   color: var(--text);
-}
-
-.dark .chart-title {
-  color: #e4e4e4;
 }
 
 /* Recharts Customization */
@@ -534,19 +580,11 @@
   color: var(--text) !important;
 }
 
-.dark .recharts-legend-item-text {
-  color: #e4e4e4 !important;
-}
-
 /* Custom Label Styling */
 .chart-label {
   font-size: 12px;
   font-weight: 500;
   fill: var(--text);
-}
-
-.dark .chart-label {
-  fill: #e4e4e4;
 }
 
 /* Tooltip Styling */
@@ -570,7 +608,6 @@
   font-weight: 600 !important;
 }
 
-
 .no-data-message {
   text-align: center;
   padding: 2rem;
@@ -579,229 +616,690 @@
 }
 
 
-@media (min-width: 1201px) {
+/* Test History Section */
+.test-history-section {
+  grid-column: 1 / -1; /* Spans full width */
+  grid-row: 7; /* Placed below pie chart */
+  background: var(--card-bg);
+  padding: 2rem;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  margin-top: 2rem; /* Use grid gap */
+  animation: fadeIn 0.3s ease-out;
+}
+
+.test-history-section h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: var(--text);
+}
+
+.test-summary {
+  margin-top: 2rem;
+}
+
+.test-summary h4 {
+  font-size: 1.25rem; /* Match other section headings */
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: var(--text);
+}
+
+/* Performance Bars */
+.performance-bars {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.performance-bar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.subject-name {
+  flex: 0 0 120px; /* Fixed width for subject name */
+  font-weight: 500;
+  color: var(--text);
+}
+
+.bar-container {
+  flex: 1; /* Allow bar to take remaining space */
+  height: 12px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+
+.bar-fill {
+  height: 100%;
+  background: var(--primary);
+  border-radius: 6px;
+  transition: width 0.5s ease-out;
+}
+
+.bar-text {
+  position: absolute;
+  right: 10px;
+  top: -18px; /* Position above the bar */
+  color: var(--text);
+  font-weight: 500;
+  font-size: 0.85rem;
+}
+
+/* Chat History Section */
+.chat-history-section {
+   grid-column: 1 / -1; /* Spans full width */
+   grid-row: 8; /* Placed below test history */
+   background: var(--card-bg);
+   padding: 2rem;
+   border-radius: var(--radius-lg);
+   box-shadow: var(--shadow);
+   margin-top: 2rem; /* Use grid gap */
+   animation: fadeIn 0.3s ease-out;
+}
+
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+.table-header-text {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text);
+}
+.total-entries {
+  color: var(--text-light);
+  font-size: 0.9rem;
+}
+
+.student-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 1rem; /* Space below header */
+}
+
+.student-table th {
+  background: var(--primary);
+  color: white;
+  padding: 1rem 1.5rem;
+  text-align: left;
+  font-weight: 500;
+}
+
+.student-table th:first-child {
+  border-top-left-radius: var(--radius-sm);
+}
+
+.student-table th:last-child {
+  border-top-right-radius: var(--radius-sm);
+}
+
+.student-table td {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  color: var(--text); /* Ensure text color */
+}
+
+.student-table tr:hover td {
+  background: rgba(0, 0, 0, 0.02);
+}
+.dark .student-table tr:hover td {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.student-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* Report Generator Button */
+.generate-report-button {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: var(--radius);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 2rem;
+  grid-column: 1 / -1; /* Spans full width */
+  width: 100%;
+  max-width: 540px; /* Limit max width */
+  justify-self: center; /* Center button in the grid */
+}
+
+.generate-report-button:hover {
+  background: var(--primary-light);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow);
+}
+
+.generate-report-button:disabled {
+  background: var(--text-light);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Generated Report Output Container */
+.generated-report {
+  padding: 2rem; /* Consistent padding */
+  border: 1px solid rgba(0, 0, 0, 0.1); /* Subtle border */
+  background-color: var(--background); /* Use background variable */
+  margin-top: 2rem;
+  box-shadow: var(--shadow);
+  max-height: 600px; /* Adjusted max height */
+  grid-column: 1 / -1;
+  overflow-y: auto; /* Allow scrolling */
+  border-radius: var(--radius-lg); /* Match other sections */
+  color: var(--text); /* Ensure text color */
+}
+ .dark .generated-report {
+     background-color: var(--card-bg);
+     border-color: rgba(255, 255, 255, 0.1);
+     color: var(--text);
+ }
+
+/* Structured Report Styling */
+.generated-report-structured {
+    /* Inherits styles from .generated-report */
+    padding: 0; /* Remove padding from inner div */
+    border: none; /* Remove border from inner div */
+    background: transparent; /* Remove background from inner div */
+    box-shadow: none; /* Remove shadow from inner div */
+    color: var(--text);
+}
+
+.generated-report-structured h3 {
+  color: var(--text);
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+.dark .generated-report-structured h3 {
+     border-bottom-color: rgba(255, 255, 255, 0.05);
+ }
+
+.report-section {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px dashed rgba(0, 0, 0, 0.05); /* Subtle separator */
+}
+.dark .report-section {
+    border-bottom-color: rgba(255, 255, 255, 0.05);
+}
+
+.report-section:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none; /* No border after the last section */
+}
+
+.report-section h4 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--primary); /* Use primary color for section titles */
+}
+
+.report-section p,
+.report-section li {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+}
+.dark .report-section p,
+.dark .report-section li {
+    color: var(--text-light);
+}
+
+.report-section ul {
+    padding-left: 1.5rem;
+    margin-top: 0.8rem;
+}
+
+.report-section strong {
+    color: var(--text);
+}
+.dark .report-section strong {
+    color: var(--text);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.metric-card,
+.goal-item,
+.generated-report,
+.badges-section,
+.leaderboard-section, /* Added leaderboard section */
+.progress-timeline-section,
+.progress-chart-section,
+.test-history-section,
+.chat-history-section
+{
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* --- Responsive Adjustments --- */
+
+/* Medium screens (Tablets and smaller desktops) */
+@media (max-width: 1200px) {
   .reports-container {
-    grid-template-rows: auto auto auto;
+    grid-template-columns: repeat(8, 1fr); /* Reduced to 8 columns */
+    gap: 1.5rem; /* Reduced gap */
+    padding: 1.5rem; /* Adjusted padding */
   }
-  
+
   .progress-metrics {
-    grid-column: 1 / 9;
-    grid-row: 1;
+    grid-column: 1 / -1; /* Full width */
+    grid-row: auto; /* Auto row placement */
   }
-  
+
+  .gamification-metrics { /* Gamification metrics full width */
+      grid-column: 1 / -1;
+      grid-row: auto;
+  }
+
   .goal-tracker {
-    grid-column: 9 / 13;
-    grid-row: 1 / 3; /* Extend to cover both rows */
+    grid-column: 1 / -1; /* Full width */
+    grid-row: auto;
   }
-  
-  .progress-chart-section {
-    grid-column: 1 / 9;
-    grid-row: 2;
-  }
-  
-  .test-history-section {
-    grid-column: 1 / -1;
-    grid-row: 3;
-  }
-  
-  .chat-history-section {
-    grid-column: 1 / -1;
-    grid-row: 4;
-  }
-}
 
-/* Responsive Adjustments */
-@media (max-width: 1200px) {
-  .progress-chart-section {
+   .badges-section { /* Badges section full width */
+       grid-column: 1 / -1;
+       grid-row: auto;
+       margin-top: 1.5rem; /* Adjusted margin */
+   }
+
+   .leaderboard-section { /* Leaderboard full width */
+       grid-column: 1 / -1;
+       grid-row: auto;
+       margin-top: 1.5rem;
+   }
+
+   .progress-timeline-section { /* Timeline full width */
+       grid-column: 1 / -1;
+       grid-row: auto;
+       margin-top: 1.5rem;
+   }
+
+  .progress-chart-section { /* Chart full width */
     grid-column: 1 / -1;
+    grid-row: auto;
     padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    margin-top: 1.5rem;
   }
-  
+
+  .test-history-section { /* Test history full width */
+    grid-column: 1 / -1;
+    grid-row: auto;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .chat-history-section { /* Chat history full width */
+    grid-column: 1 / -1;
+    grid-row: auto;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .generate-report-button {
+      margin-top: 1.5rem;
+  }
+
+  .generated-report {
+      margin-top: 1.5rem;
+  }
+
+  .metric-cards {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Adjusted min size */
+    gap: 1rem;
+  }
+
   .pie-chart-container {
-    height: 350px;
+    height: 300px; /* Adjusted height */
   }
 }
 
+/* Small screens (Mobile) */
 @media (max-width: 768px) {
-  .pie-header{
-    display: none;
-  }
-  .progress-chart-section {
-    padding: 1.25rem;
+  .reports-container {
+    display: block; /* Stack sections vertically */
+    padding: 1rem;
     width: 100%;
+    box-sizing: border-box;
   }
-  
-  .pie-chart-container {
-    height: 300px;
-  }
-  
-  .recharts-legend-item {
-    font-size: 11px;
-  }
-}
 
-@media (max-width: 480px) {
-  .pie-header{
-    display: none;
+  .progress-metrics,
+  .gamification-metrics,
+  .goal-tracker,
+  .badges-section,
+  .leaderboard-section, /* Leaderboard stacked */
+  .progress-timeline-section,
+  .progress-chart-section,
+  .test-history-section,
+  .chat-history-section,
+  .generated-report {
+    width: 100%;
+    margin-bottom: 1.5rem; /* Consistent spacing */
+    padding: 1.25rem; /* Adjusted padding */
+    box-sizing: border-box;
   }
-  .pie-chart-container {
-    height: 250px;
-  }
-  
-  .recharts-legend-item {
-    font-size: 10px;
-  }
-  
-  .chart-title {
-    font-size: 14px;
-  }
-}
 
-/* Additional responsive styling */
-@media (max-width: 1200px) {
-  .test-history-section {
-    padding: 1.5rem;
+  .progress-metrics h3,
+  .gamification-metrics h3,
+  .goal-tracker h3,
+  .badges-section h4,
+  .leaderboard-section h3, /* Leaderboard h3 adjusted */
+  .progress-timeline-section h3,
+  .progress-chart-section h3,
+  .test-history-section h3,
+  .test-summary h4,
+  .table-header-text {
+      font-size: 1.25rem; /* Smaller headings */
+      margin-bottom: 1rem;
   }
-}
 
-@media (max-width: 768px) {
-  .test-history-section {
-    padding: 1.25rem;
+  .metric-cards {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Adjusted min size */
+    gap: 0.8rem;
   }
-  
+
+   .metric-card {
+       padding: 1.25rem; /* Adjusted padding */
+   }
+
+  .goal-input-group {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .goal-input,
+  .goal-category,
+  .goal-date {
+      padding: 0.6rem 0.8rem;
+      font-size: 0.9rem;
+  }
+
+  .add-goal-button {
+      padding: 0.6rem 1rem;
+      font-size: 0.95rem;
+  }
+
+   .goal-item {
+       padding: 0.8rem;
+       gap: 0.8rem;
+   }
+   .goal-text {
+       font-size: 0.9rem;
+   }
+   .goal-details {
+       font-size: 0.8rem;
+   }
+   .goal-category {
+       padding: 0.2rem 0.6rem;
+       font-size: 0.8rem;
+   }
+
+
+   .badges-list {
+       gap: 1rem; /* Smaller gap */
+   }
+   .badge-item {
+       padding: 0.8rem;
+       min-width: 80px;
+       max-width: 100px;
+   }
+   .badge-icon {
+       width: 40px;
+       height: 40px;
+   }
+   .badge-name {
+       font-size: 0.8rem;
+   }
+
+    .leaderboard-item { /* Leaderboard item adjusted */
+        padding: 0.6rem 1rem;
+    }
+    .leaderboard-rank {
+        margin-right: 1rem;
+    }
+    .leaderboard-points {
+        margin-left: 0.8rem;
+        min-width: 60px;
+    }
+    .leaderboard-level {
+        margin-left: 0.6rem;
+        min-width: 50px;
+        font-size: 0.8rem;
+    }
+
+
+  .pie-header {
+    display: none; /* Hide large pie chart title on mobile */
+  }
+
+  .pie-chart-container,
+  .timeline-chart-container {
+    width: 100% !important;
+    min-height: 200px; /* Smaller chart height */
+    height: auto; /* Allow height to adjust */
+  }
+
   .performance-bar {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.5rem;
   }
-  
+
   .subject-name {
     flex: none;
+    width: 100%; /* Full width */
     margin-bottom: 0.25rem;
+    font-size: 0.9rem;
   }
-  
+
   .bar-container {
     width: 100%;
   }
 
+  .bar-text {
+    font-size: 0.75rem;
+    right: 5px;
+  }
+
   .student-table {
     display: block;
-    overflow-x: auto;
+    overflow-x: auto; /* Enable horizontal scrolling */
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
   }
-  
+
   .student-table th,
   .student-table td {
     padding: 0.75rem 0.5rem;
     font-size: 0.85rem;
   }
-  
-  .bar-text {
-    font-size: 0.75rem;
-    right: 5px;
-  }
-}
 
-/* For very small screens */
-@media (max-width: 480px) {
-  .test-history-section h3 {
-    font-size: 1.1rem;
+  .total-entries {
+      font-size: 0.8rem;
   }
-  
-  .test-summary h4 {
-    font-size: 1rem;
+
+  .generate-report-button {
+      padding: 0.8rem 1.5rem;
+      font-size: 1rem;
+      max-width: 100%;
   }
-  
-  .student-table th,
-  .student-table td {
-    padding: 0.5rem 0.25rem;
-    font-size: 0.75rem;
-  }
-  
-  .subject-name {
-    font-size: 0.9rem;
-  }
-}
-  
-  /* Animations */
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  .metric-card,
-  .goal-item,
+
   .generated-report {
-    animation: fadeIn 0.3s ease-out;
+      padding: 1.25rem;
   }
-  @media (max-width: 1200px) {
-    .h1{
-      font-size: 1.8rem;
-    }
-    .progress-metrics {
-      grid-column: 1 / -1;
-    }
-  
-    .goal-tracker {
-      grid-column: 1 / -1;
-    }
-  
-    .metric-cards {
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.5rem;
-    }
+  .generated-report-structured h3 {
+      font-size: 1.25rem;
   }
-  
-  @media (max-width: 768px) {
-    .h1{
-      font-size: 1.8rem;
-    }
+  .report-section h4 {
+      font-size: 1.1rem;
+  }
+  .report-section p,
+  .report-section li {
+      font-size: 0.9rem;
+  }
+}
+
+/* Very small screens */
+@media (max-width: 480px) {
     .reports-container {
-      display: block; /* Change from grid to block on small screens */
-    padding: 1rem;
-    width: 100%;
-    box-sizing: border-box;
+        padding: 0.8rem;
+    }
+     .progress-metrics,
+     .gamification-metrics,
+     .goal-tracker,
+     .badges-section,
+     .leaderboard-section,
+     .progress-timeline-section,
+     .progress-chart-section,
+     .test-history-section,
+     .chat-history-section,
+     .generated-report {
+         margin-bottom: 1rem;
+         padding: 1rem;
+     }
+
+     .progress-metrics h3,
+     .gamification-metrics h3,
+     .goal-tracker h3,
+     .badges-section h4,
+     .leaderboard-section h3,
+     .progress-timeline-section h3,
+     .progress-chart-section h3,
+     .test-history-section h3,
+     .test-summary h4,
+     .table-header-text {
+         font-size: 1.1rem;
+         margin-bottom: 0.8rem;
+     }
+
+     .metric-cards {
+         gap: 0.6rem;
+     }
+     .metric-card {
+         padding: 1rem;
+     }
+     .metric-card h4 {
+         font-size: 0.8rem;
+     }
+     .metric-card p {
+         font-size: 1.5rem;
+     }
+
+     .goal-input,
+     .goal-category,
+     .goal-date {
+         padding: 0.5rem 0.6rem;
+         font-size: 0.85rem;
+     }
+     .add-goal-button {
+         padding: 0.5rem 1rem;
+         font-size: 0.9rem;
+     }
+      .goal-item {
+          padding: 0.6rem;
+          gap: 0.6rem;
+      }
+      .goal-text {
+          font-size: 0.85rem;
+      }
+      .goal-details {
+          font-size: 0.75rem;
+      }
+      .goal-category {
+          padding: 0.15rem 0.5rem;
+          font-size: 0.75rem;
+      }
+
+
+      .badges-list {
+          gap: 0.8rem;
+      }
+      .badge-item {
+          padding: 0.6rem;
+          min-width: 70px;
+          max-width: 90px;
+      }
+      .badge-icon {
+          width: 35px;
+          height: 35px;
+      }
+      .badge-name {
+          font-size: 0.7rem;
+      }
+
+     .leaderboard-item {
+         padding: 0.5rem 0.8rem;
+     }
+     .leaderboard-rank {
+         margin-right: 0.8rem;
+     }
+     .leaderboard-points {
+         margin-left: 0.6rem;
+         min-width: 50px;
+         font-size: 0.9rem;
+     }
+     .leaderboard-level {
+         margin-left: 0.4rem;
+         min-width: 40px;
+         font-size: 0.7rem;
+     }
+
+
+    .pie-chart-container,
+    .timeline-chart-container {
+      min-height: 180px; /* Even smaller chart height */
     }
 
-    .progress-metrics, 
-  .progress-chart-section,
-  .test-history-section,
-  .chat-history-section,
-  .goal-tracker {
-    width: 100%;
-    margin-bottom: 1.5rem;
-    box-sizing: border-box;
-  }
-  
-    .metric-cards {
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
+    .student-table th,
+    .student-table td {
+      padding: 0.6rem 0.4rem;
+      font-size: 0.8rem;
     }
-    .pie-chart-container,
-  .timeline-chart-container {
-    width: 100% !important;
-    min-height: 250px;
-  }
-  .performance-bar {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  
-  .subject-name {
-    width: 100%;
-    margin-bottom: 0.5rem;
-  }
-  
-  .bar-container {
-    width: 100%;
-  }
-  }
-  .goal-input{
-  padding: 0;
-  }
-   
+
+    .total-entries {
+        font-size: 0.75rem;
+    }
+
+    .generate-report-button {
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+    }
+     .generated-report-structured h3 {
+         font-size: 1.1rem;
+     }
+     .report-section h4 {
+         font-size: 1rem;
+     }
+     .report-section p,
+     .report-section li {
+         font-size: 0.85rem;
+     }
+}
