@@ -108,6 +108,7 @@ body {
 .profile-items-container {
     display: flex;
     flex-direction: column;
+      margin: 0.2rem auto;
     gap: calc(var(--spacing-unit) * 1.5); /* Equivalent to space-y-6 */
 }
 

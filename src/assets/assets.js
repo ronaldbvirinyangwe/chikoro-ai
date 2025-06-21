@@ -302,10 +302,15 @@ import sciencestar from './science_start.png'
 import first_test from './first_test.png'
 import math_master from './math_master.png'
 import advanced_proficiency from './advanced_proficiency.png'
-
+import achieve_mastery from './achieve_mastery.png'
+import engage_and_learn from './engage_and_learn.png'
+import choose_your_path from './choose_your_path.png'
 
 
 export const assets = {
+ choose_your_path,
+    achieve_mastery,
+    engage_and_learn,
     social_scienceg7p1,
     social_scienceg7p2,
     mathsg7p1,

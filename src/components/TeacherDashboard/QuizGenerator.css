@@ -1,0 +1,315 @@
+/* --- Generic Tool Styles (can be shared across tools) --- */
+.tool-container {
+    max-width: 1400px;
+    margin: 2rem auto;
+    padding: 2rem;
+    font-family: 'Inter', sans-serif;
+    background-color: #fff;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(44, 62, 80, 0.1);
+}
+
+.tool-nav {
+    margin-bottom: 2rem;
+}
+
+.tool-nav a {
+    color: var(--teacher-accent, #3498db);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.tool-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.tool-header h1 {
+    font-size: 2.5rem;
+    color: var(--teacher-text-primary, #2c3e50);
+}
+
+.tool-header p {
+    font-size: 1.1rem;
+    color: var(--teacher-text-secondary, #576c7f);
+    max-width: 600px;
+    margin: 0.5rem auto 0;
+}
+
+/* --- Specific Styles for Quiz Generator --- */
+
+.quiz-generator-content {
+    display: grid;
+    grid-template-columns: 400px 1fr;
+    gap: 3rem;
+}
+
+.quiz-form-section {
+    border-right: 1px solid #eef2f7;
+    padding-right: 3rem;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--teacher-text-primary, #2c3e50);
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group select {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--teacher-accent, #3498db);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.generate-btn {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #fff;
+    background-color: var(--teacher-accent, #3498db);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.generate-btn:hover:not(:disabled) {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+}
+
+.generate-btn:disabled {
+    background-color: #95a5a6;
+    cursor: not-allowed;
+}
+
+
+/* --- Output Section Styles --- */
+
+.quiz-output-section {
+    position: relative;
+    padding: 1.5rem;
+    background-color: #f7f9fc;
+    border-radius: 8px;
+    min-height: 500px;
+}
+
+.loading-overlay {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    z-index: 10;
+}
+
+.loading-overlay .spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--teacher-accent-light);
+    border-top-color: var(--teacher-accent);
+    border-radius: 50%;
+    animation: spin 1s ease-in-out infinite;
+}
+
+.placeholder-text {
+    text-align: center;
+    color: var(--teacher-text-secondary, #576c7f);
+    padding-top: 4rem;
+}
+
+.generated-quiz {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.quiz-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.quiz-header h2 {
+    font-size: 1.8rem;
+    margin: 0;
+}
+
+.quiz-header hr {
+    border: none;
+    border-top: 1px solid #e0e0e0;
+    margin-top: 1rem;
+}
+
+.question-block {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px dashed #d0d9e2;
+}
+
+.question-block:last-child {
+    border-bottom: none;
+}
+
+.question-text {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.options-list {
+    list-style-type: upper-alpha;
+    padding-left: 2rem;
+    margin: 0;
+}
+
+.options-list li {
+    margin-bottom: 0.5rem;
+}
+
+.answer-reveal {
+    background-color: #eaf4fc;
+    border: 1px solid #cce1f2;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    margin-top: 1rem;
+    font-size: 1rem;
+}
+
+.print-btn {
+    display: block;
+    margin: 2rem auto 0;
+    padding: 0.8rem 2rem;
+    background-color: #2c3e50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.2s;
+}
+
+.print-btn:hover {
+    background-color: #34495e;
+}
+
+
+/* --- Print Styles --- */
+@media print {
+    body, .tool-container {
+        background: #fff;
+        margin: 0;
+        padding: 0;
+        box-shadow: none;
+    }
+    .quiz-form-section, .tool-nav, .tool-header, .print-btn {
+        display: none;
+    }
+    .quiz-generator-content {
+        grid-template-columns: 1fr;
+    }
+    .quiz-output-section {
+        padding: 0;
+        background-color: transparent;
+        min-height: auto;
+    }
+    .answer-reveal {
+        display: none; /* Hide answers when printing for students */
+    }
+    .question-block {
+        page-break-inside: avoid;
+    }
+}
+
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 1024px) {
+    .quiz-generator-content {
+        grid-template-columns: 1fr;
+    }
+    .quiz-form-section {
+        border-right: none;
+        padding-right: 0;
+        border-bottom: 1px solid #eef2f7;
+        padding-bottom: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .tool-container {
+        padding: 1rem;
+    }
+    .tool-header h1 {
+        font-size: 2rem;
+    }
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+.save-link-btn {
+    display: block;
+    width: 100%;
+    margin-top: 2rem;
+    padding: 1rem;
+    background-color: #27ae60; /* A different color to distinguish */
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.save-link-btn:hover {
+    background-color: #229954;
+}
+
+.shareable-link-container {
+    margin-top: 2rem;
+    padding: 1rem;
+    background-color: #eafaf1;
+    border: 1px solid #abebc6;
+    border-radius: 8px;
+    text-align: center;
+}
+.shareable-link-container p {
+    margin: 0 0 0.5rem 0;
+    font-weight: 500;
+}
+.shareable-link-container input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-family: monospace;
+    margin-bottom: 0.5rem;
+}

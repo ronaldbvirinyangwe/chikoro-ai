@@ -5,6 +5,7 @@ import { useTheme } from '../../context/ThemeContext';
 import './PaperSelector.css';
 import { assets } from '../../assets/assets';
 import Greeting from '../Enrol/Greeting';
+import Sidebar from '../Sidebar/sidebar';
 
 const PaperSelector = () => {
   const navigate = useNavigate();
@@ -15,7 +16,11 @@ const PaperSelector = () => {
   const [showPreview, setShowPreview] = useState(false);
   const [previewUrl, setPreviewUrl] = useState('');
   const [pdfBlob, setPdfBlob] = useState(null);
+  
+  // State for filters
   const [examBoardFilter, setExamBoardFilter] = useState('All');
+  const [levelFilter, setLevelFilter] = useState('All'); // ✅ NEW: State for level filter
+
   const { darkMode } = useTheme();
 
 
@@ -1246,18 +1251,46 @@ const PaperSelector = () => {
     },
   ];
 
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(
+    () => JSON.parse(localStorage.getItem('sidebarCollapsed')) || false
+  );
+  
+  useEffect(() => {
+    const checkSidebarState = () => {
+        const collapsedState = JSON.parse(localStorage.getItem('sidebarCollapsed')) || false;
+        setIsSidebarCollapsed(collapsedState);
+    };
+    const interval = setInterval(checkSidebarState, 500);
+    return () => clearInterval(interval);
+  }, []);
+
   
   useEffect(() => {
     setPapers(samplePapers);
     return () => {
       if (previewUrl) URL.revokeObjectURL(previewUrl);
     };
-  }, []);
+  }, [previewUrl]);
 
-  // Filtering function for exam boards
-  const filteredPapers = papers.filter(paper => 
-    examBoardFilter === 'All' || paper.examBoard === examBoardFilter
-  );
+  // ✅ UPDATED: Filtering logic now includes levelFilter
+  const filteredPapers = papers.filter(paper => {
+    // Match curriculum (exam board)
+    const boardMatch = examBoardFilter === 'All' || paper.examBoard === examBoardFilter;
+
+    // Match educational level
+    const levelMatch = () => {
+      if (levelFilter === 'All') return true;
+      if (levelFilter === 'Primary') {
+        return paper.level === 'Grade 7';
+      }
+      if (levelFilter === 'Secondary') {
+        return paper.level === 'Form 4' || paper.level === 'Form 6';
+      }
+      return false;
+    };
+
+    return boardMatch && levelMatch();
+  });
 
   const validatePDF = (blob) => {
     if (blob.size === 0) throw new Error('Empty PDF file');
@@ -1327,83 +1360,68 @@ const PaperSelector = () => {
     setMenuVisible(false);
   };
 
-  // Fixed examBoardFilter function - resolves naming conflict
   const handleExamBoardFilter = (boardType) => {
-    // Update the state to the selected filter
     setExamBoardFilter(boardType);
-    
-    console.log(`Filter set to: ${boardType}`);
-    
-    // The actual filtering logic is handled by the filteredPapers constant
-    // which uses the examBoardFilter state
   };
 
+  // ✅ NEW: Handler for the level filter
+  const handleLevelFilter = (level) => {
+    setLevelFilter(level);
+  }
+
   return (
-    <div className={`paper-selector-container ${darkMode ? "dark" : ""}`}>
-      <header className={`l-header ${darkMode ? "dark" : ""}`}>
-        <nav className="nav bd-grid">
-          <Link to="/subjectselect" className="nav__logo">
-            <Greeting />
-          </Link>
+    <div className={`paper-selector ${darkMode ? "dark" : ""}`}>
+      <Sidebar />
 
-          <div
-            className={`nav__menu ${menuVisible ? "show" : ""}`}
-            id="nav-menu"
-          >
-            <ul className="nav__list">
-              {/* <li className="nav__item">
-                <a className="nav__link" onClick={() => navigate("/discover")}>
-                  Discover
-                </a>
-              </li> */}
-              <li className="nav__item">
-                <a className="nav__link" onClick={() => navigate("/test")}>
-                  Test
-                </a>
-              </li>
-              <li className="nav__item">
-                <a className="nav__link" onClick={() => navigate("/papers")}>
-                  Exam Papers
-                </a>
-              </li>
-              <li className="nav__item">
-                <a className="nav__link" onClick={() => navigate("/reports")}>
-                  Reports
-                </a>
-              </li>
-            </ul>
-          </div>
-          <link
-            href="https://cdn.jsdelivr.net/npm/boxicons@2.0.5/css/boxicons.min.css"
-            rel="stylesheet"
-          />
-          <div className="nav__toggle" id="nav-toggle" onClick={toggleMenu}>
-            <i className="bx bx-menu"></i>
-          </div>
-        </nav>
-      </header>
+      <main className={`main-content ${isSidebarCollapsed ? 'collapsed' : ''}`}>
+        <div className="paper-selector-container">
+          
+          <div className="filters-container">
+            {/* Exam Board Filter Buttons */}
+            <div className="exam-board-filter">
+              <button 
+                onClick={() => handleExamBoardFilter('All')}
+                className={`filter-btn all ${examBoardFilter === 'All' ? 'active' : ''}`}
+              >
+                All 
+              </button>
+              <button 
+                onClick={() => handleExamBoardFilter('Zimsec')}
+                className={`filter-btn zimsec ${examBoardFilter === 'Zimsec' ? 'active' : ''}`}
+              >
+                Zimsec
+              </button>
+              <button 
+                onClick={() => handleExamBoardFilter('Cambridge')}
+                className={`filter-btn cambridge ${examBoardFilter === 'Cambridge' ? 'active' : ''}`}
+              >
+                Cambridge 
+              </button>
+            </div>
 
-      {/* Exam Board Filter Buttons */}
-      <div className="exam-board-filter">
-        <button 
-          onClick={() => handleExamBoardFilter('All')}
-          className={`filter-btn all ${examBoardFilter === 'All' ? 'active' : ''}`}
-        >
-          All 
-        </button>
-        <button 
-          onClick={() => handleExamBoardFilter('Zimsec')}
-          className={`filter-btn zimsec ${examBoardFilter === 'Zimsec' ? 'active' : ''}`}
-        >
-          Zimsec
-        </button>
-        <button 
-          onClick={() => handleExamBoardFilter('Cambridge')}
-          className={`filter-btn cambridge ${examBoardFilter === 'Cambridge' ? 'active' : ''}`}
-        >
-          Cambridge 
-        </button>
-      </div>
+            {/* ✅ NEW: Level Filter Buttons */}
+            <div className="level-filter">
+              <button 
+                onClick={() => handleLevelFilter('All')}
+                className={`filter-btn all-levels ${levelFilter === 'All' ? 'active' : ''}`}
+              >
+                All Levels
+              </button>
+              <button 
+                onClick={() => handleLevelFilter('Primary')}
+                className={`filter-btn primary ${levelFilter === 'Primary' ? 'active' : ''}`}
+              >
+                Primary
+              </button>
+              <button 
+                onClick={() => handleLevelFilter('Secondary')}
+                className={`filter-btn secondary ${levelFilter === 'Secondary' ? 'active' : ''}`}
+              >
+                Secondary 
+              </button>
+            </div>
+          </div>
+
 
       <motion.h2
         initial={{ opacity: 0, y: -20 }}
@@ -1505,9 +1523,11 @@ const PaperSelector = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
         >
-          <p>No papers available for the selected exam board.</p>
+          <p>No papers available for the selected filters.</p>
         </motion.div>
       )}
+       </div>
+      </main>
     </div>
   );
 };

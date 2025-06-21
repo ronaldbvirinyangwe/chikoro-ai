@@ -1,333 +1,214 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/AuthContext'; // We still need this for the token
 import './PaymentPage.css';
 
+// --- CONFIGURATION ---
+const API_BASE_URL = '/api/v1'; // Using proxy
+const POLLING_INTERVAL_MS = 8000;
+const MAX_POLLING_ATTEMPTS = 8;
+
 const PaymentPage = () => {
-  const [instructions, setInstructions] = useState('');
-  const [pollUrl, setPollUrl] = useState('');
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [paymentStatus, setPaymentStatus] = useState('');
-  const [paymentChecking, setPaymentChecking] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState('premium'); // Default to premium plan
-  const navigate = useNavigate();
-  const { token, isAuthenticated, updateSubscriptionStatus, resetTrialMessages } = useAuth();
-  const [studentId, setStudentId] = useState(localStorage.getItem('studentId'));
+    const navigate = useNavigate();
+    // We only get the token and basic auth status from context.
+    // The subscription logic will be handled locally.
+    const { token, isAuthenticated } = useAuth();
+    
+    // --- LOCAL STATE ---
+    const [isVerifying, setIsVerifying] = useState(true); // Manages the initial loading spinner
+    const [pageError, setPageError] = useState(''); // For page-level errors
+    const [formError, setFormError] = useState(''); // For form-specific errors
 
-  const ONE_DAY_MS = 24 * 60 * 60 * 1000; // Milliseconds in a day
-  const THIRTY_DAYS_MS = 150 * ONE_DAY_MS; // 150 days in milliseconds
-  const WARNING_THRESHOLD_MS = 7 * ONE_DAY_MS; // 7 days warning threshold
+    // State for the payment initiation and polling
+    const [phoneNumber, setPhoneNumber] = useState('');
+    const [selectedPlan, setSelectedPlan] = useState('premium');
+    const [isSubmitting, setIsSubmitting] = useState(false); // For the form submission button
+    const [isPolling, setIsPolling] = useState(false);
+    const [pollingAttempts, setPollingAttempts] = useState(0);
+    const [instructions, setInstructions] = useState('');
 
-  const getNextMay12Expiration = () => {
-    const now = new Date();
-    const currentYear = now.getFullYear();
+    /**
+     * This effect runs ONCE when the component loads.
+     * It checks the user's subscription status directly.
+     */
+    useEffect(() => {
+        const verifySubscription = async () => {
+            if (!isAuthenticated || !token) {
+                // If not logged in, just stop verifying and let the form handle it.
+                setIsVerifying(false);
+                return;
+            }
 
-    // Create May 12th of current year
-    const may12 = new Date(currentYear, 4, 12); // Months are 0-indexed (4 = May)
+            try {
+                // This API call fetches the student profile for the logged-in user.
+                // You need to ensure this endpoint exists on your backend.
+                console.log("PaymentPage: Verifying subscription status directly...");
+                const response = await axios.get(`${API_BASE_URL}/students/me`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
 
-    // If current date is after May 12th, use next year
-    if (now > may12) {
-      may12.setFullYear(currentYear + 1);
-    }
+                const student = response.data;
+                const sub = student?.subscription;
 
-    return may12.getTime();
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    navigate('/login');
-  };
-
-  const validatePhoneNumber = (number) => {
-    const phoneRegex = /^(07[7-8])[0-9]{7}$/;
-    return phoneRegex.test(number);
-  };
-
-  const handlePayment = async () => {
-    if (!isAuthenticated) {
-      setError('You are not logged in. Please log in first.');
-      return;
-    }
-
-    if (!validatePhoneNumber(phoneNumber)) {
-      setError('Please enter a valid Zimbabwe mobile number');
-      return;
-    }
-
-    setLoading(true);
-    setError('');
-
-    try {
-      const response = await axios.post('https://atqtuew6syxese-3080.proxy.runpod.net/bhadhara', {
-        phoneNumber,
-        plan: selectedPlan
-      }, {
-        headers: { Authorization: `Bearer ${token}` },
-        timeout: 30000, // 30 second timeout
-      });
-
-      if (response.data && response.data.instructions) {
-        setInstructions(response.data.instructions);
-        setPollUrl(response.data.pollUrl);
-        setPaymentStatus('initiated');
-        console.log('Payment initiated successfully. Instructions received.');
-      } else if (response.data && response.data.error) {
-        setError(response.data.error);
-        console.error('Payment initiation error:', response.data.error);
-      } else {
-        setError('Unknown error occurred during payment initiation.');
-        console.error('Unknown error during payment initiation. Response:', response.data);
-      }
-    } catch (err) {
-      console.error('Error initiating payment:', err);
-      setError(err.response?.data?.error || 'An error occurred while processing the payment.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const savePaymentToStudent = useCallback(async (paymentToken) => {
-    if (!paymentToken) {
-      console.error('No payment token provided to savePaymentToStudent');
-      return;
-    }
-
-    try {
-      const currentStudentId = localStorage.getItem('studentId'); // Use a different variable name or get it directly here
-      if (!currentStudentId) {
-        console.error('No student ID found in localStorage for saving payment.');
-        return;
-      }
-
-      const BASE_API_URL = 'https://atqtuew6syxese-3080.proxy.runpod.net';
-
-      await axios.post(`${BASE_API_URL}/students/${currentStudentId}/update-payment`, {
-        paymentToken
-      }, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-
-      console.log('Payment information saved to student record successfully.');
-    } catch (err) {
-      console.error('Failed to save payment to student record:', err);
-      // Don't set page error as this is a background operation
-    }
-  }, [token]); // Add token as a dependency
-
-  const checkPaymentStatus = useCallback(async () => {
-    console.log('Checking payment status...');
-    if (!isAuthenticated || !token) {
-      setPaymentStatus('notAuthenticated');
-      console.log('Payment status check skipped: User not authenticated or token missing.');
-      return { valid: false, message: 'Not authenticated' };
-    }
-
-    setPaymentChecking(true);
-
-    try {
-      const response = await axios.get(`https://atqtuew6syxese-3080.proxy.runpod.net/payment-status/${studentId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-        timeout: 10000, // 10 second timeout
-      });
-
-      setError(''); // Reset error on successful check attempt
-
-      if (response.data && response.data.paymentToken) {
-        const { status, expirationDate, plan } = response.data.paymentToken;
-        const currentDate = new Date().getTime();
-
-        if (plan) {
-          setSelectedPlan(plan);
-        }
-
-        if (currentDate >= expirationDate) {
-          setPaymentStatus('expired');
-          console.log('Payment status: Expired.');
-          return { valid: false, message: 'Payment expired' };
-        }
-
-        if (currentDate > expirationDate - WARNING_THRESHOLD_MS) {
-          setPaymentStatus('expiringSoon');
-          const daysLeft = Math.ceil((expirationDate - currentDate) / ONE_DAY_MS);
-          console.log(`Payment status: Expiring soon (${daysLeft} days left).`);
-          return { valid: true, message: 'Payment expiring soon', daysLeft: daysLeft };
-        }
-
-        setPaymentStatus(status);
-        console.log(`Payment status: Valid (${status}).`);
-        return { valid: true, message: 'Payment valid', status };
-      } else {
-        setPaymentStatus('notPaid');
-        console.log('Payment status: Not paid (no payment token found).');
-        return { valid: false, message: 'No payment found' };
-      }
-    } catch (error) {
-      console.error('Error checking payment status:', error);
-      const errorMessage = error.response?.data?.error || 'Unknown error checking payment status';
-      setError(errorMessage);
-      setPaymentStatus('error');
-      return { valid: false, message: errorMessage };
-    } finally {
-      setPaymentChecking(false);
-    }
-  }, [isAuthenticated, token, studentId, ONE_DAY_MS, WARNING_THRESHOLD_MS]);
-
-  const pollPaymentStatus = useCallback(async () => {
-    console.log('Polling payment status...');
-    if (!pollUrl || !isAuthenticated) {
-      setError('Token or Poll URL missing');
-      console.error('Polling stopped: Token or Poll URL missing.');
-      return;
-    }
-
-    try {
-      const response = await axios.post('https://atqtuew6syxese-3080.proxy.runpod.net/check-payment-status', {
-        pollUrl,
-        plan: selectedPlan
-      }, {
-        headers: { Authorization: `Bearer ${token}` },
-        timeout: 10000, // 10 second timeout
-      });
-
-      if (response.data.success) {
-        setPaymentStatus('paid');
-        const expirationDate = getNextMay12Expiration();
-
-        const paymentToken = {
-          status: 'paid',
-          expirationDate,
-          plan: selectedPlan,
-          studentId
+                if (sub && sub.status === 'paid' && new Date(sub.expirationDate) > new Date()) {
+                    // If the subscription is active, redirect immediately.
+                    console.log("PaymentPage: Active subscription found. Redirecting...");
+                    navigate('/subjectselect', { replace: true });
+                } else {
+                    // If not active, stop the spinner and show the payment form.
+                    setIsVerifying(false);
+                }
+            } catch (error) {
+                if (error.response?.status === 404) {
+                    // 404 means no student profile exists, so they need to pay. This is not an error.
+                    console.log("PaymentPage: No student profile found, showing payment form.");
+                    setIsVerifying(false);
+                } else {
+                    // Handle other errors, like server being down.
+                    console.error("PaymentPage: Error verifying subscription", error);
+                    setPageError("Could not verify your subscription status. Please try again later.");
+                    setIsVerifying(false);
+                }
+            }
         };
 
-        await savePaymentToStudent(paymentToken);
-        console.log('Polling successful: Payment confirmed!');
+        verifySubscription();
+    }, [isAuthenticated, token, navigate]); // This effect runs only once on load
 
-        updateSubscriptionStatus(expirationDate, selectedPlan);
-        resetTrialMessages();
-        navigate('/subjectselect');
-      } else {
-        setPaymentStatus('failed');
-        setError('Payment failed. Please try again.');
-        console.warn('Polling response: Payment not yet successful or failed.');
-      }
-    } catch (error) {
-      console.error('Error polling payment status:', error);
-      setError(error.response?.data?.error || 'Error checking payment status');
-      setPaymentStatus('failed'); // Set status to failed if polling itself errors out
-    }
-  }, [pollUrl, isAuthenticated, selectedPlan, token, studentId, getNextMay12Expiration, savePaymentToStudent, updateSubscriptionStatus, resetTrialMessages, navigate]); // Added dependencies
+    // Function to initiate a new payment
+    const handlePayment = useCallback(async () => {
+        if (!isAuthenticated) {
+            setFormError('You must be logged in to make a payment.');
+            return;
+        }
+        if (!/^(07[7-8])[0-9]{7}$/.test(phoneNumber)) {
+            setFormError('Please enter a valid Zimbabwe Ecocash number (e.g., 0771234567)');
+            return;
+        }
 
-  // Effect for initial and periodic payment status checks
-  useEffect(() => {
-    if (isAuthenticated && paymentStatus !== 'initiated' && paymentStatus !== 'paid') {
-      const statusCheck = async () => {
-        await checkPaymentStatus();
-      };
+        setIsSubmitting(true);
+        setFormError('');
+        try {
+            const response = await axios.post(`${API_BASE_URL}/payments/initiate`, {
+                phoneNumber,
+                plan: selectedPlan
+            }, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
 
-      console.log('Setting up initial and periodic payment status checks...');
-      statusCheck(); // Initial check
+            if (response.data?.success) {
+                setInstructions(response.data.instructions);
+                setPollingAttempts(0);
+                setIsPolling(true);
+            } else {
+                setFormError(response.data.error || 'An unknown error occurred.');
+            }
+        } catch (err) {
+            setFormError(err.response?.data?.error || 'An error occurred while processing the payment.');
+        } finally {
+            setIsSubmitting(false);
+        }
+    }, [isAuthenticated, token, phoneNumber, selectedPlan]);
+    
+    // Function that polls the backend for status updates
+    const pollPaymentStatus = useCallback(async () => {
+        setPollingAttempts(prev => prev + 1);
+        try {
+            const response = await axios.get(`${API_BASE_URL}/payments/status`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
 
-      // Refresh payment status every 5 minutes
-      const interval = setInterval(statusCheck, 5 * 60 * 1000);
-      console.log('Periodic payment status check set for every 5 minutes.');
+            if (response.data.success && response.data.status === 'paid') {
+                // SUCCESS! Payment is complete.
+                setIsPolling(false);
+                // Instead of calling the context, we can just navigate away.
+                // You could show a success message first before redirecting.
+                console.log("Payment confirmed! Redirecting...");
+                navigate('/subjectselect', { replace: true });
+            }
+        } catch (error) {
+            console.error('Error polling payment status:', error);
+            setFormError('Could not confirm payment status.');
+            setIsPolling(false);
+        }
+    }, [token, navigate]);
 
-      return () => {
-        clearInterval(interval);
-        console.log('Cleared periodic payment status check interval.');
-      };
-    } else {
-      console.log(`Payment status check skipped due to current status: ${paymentStatus} or not authenticated.`);
-    }
-  }, [isAuthenticated, paymentStatus, checkPaymentStatus]);
+    // Effect to manage the polling lifecycle and timeout
+    useEffect(() => {
+        if (!isPolling) return;
+        if (pollingAttempts >= MAX_POLLING_ATTEMPTS) {
+            setIsPolling(false);
+            setFormError('The payment request timed out. Please try again.');
+            return;
+        }
+        const intervalId = setInterval(pollPaymentStatus, POLLING_INTERVAL_MS);
+        return () => clearInterval(intervalId);
+    }, [isPolling, pollingAttempts, pollPaymentStatus]);
 
-  // Effect for polling payment status after initiation
-  useEffect(() => {
-    if (pollUrl && paymentStatus === 'initiated') {
-      console.log('Initiating polling for payment confirmation...');
-      const interval = setInterval(() => {
-        pollPaymentStatus(); // Call polling function every 5 seconds
-      }, 5000);
+    // --- Main Rendering Logic ---
+    const renderContent = () => {
+        // Show a full-page spinner while we verify the initial subscription status.
+        if (isVerifying) {
+            return <div className="payment-status-container"><div className="spinner"></div></div>;
+        }
+        
+        // Show a page-level error if verification failed.
+        if (pageError) {
+            return <div className="payment-status-container"><p className="error-message">{pageError}</p></div>;
+        }
 
-      return () => {
-        clearInterval(interval);
-        console.log('Cleared payment polling interval.');
-      };
-    } else if (pollUrl && paymentStatus !== 'initiated') {
-        console.log(`Polling not active. pollUrl: ${pollUrl ? 'present' : 'absent'}, paymentStatus: ${paymentStatus}`);
-    }
-  }, [pollUrl, paymentStatus, pollPaymentStatus]);
+        // Show the polling UI if a payment was just initiated
+        if (isPolling) {
+            return (
+                <div className="payment-status-container">
+                    <h2>Check Your Phone</h2>
+                    <p className="instructions">{instructions}</p>
+                    <p>Please approve the transaction on your mobile device.</p>
+                    <div className="spinner"></div>
+                    <p className="status-text">Waiting for confirmation... ({pollingAttempts}/{MAX_POLLING_ATTEMPTS})</p>
+                </div>
+            );
+        }
 
-  useEffect(() => {
-    if (paymentStatus === 'paid') {
-      console.log('Payment confirmed, redirecting to subject selection.');
-      resetTrialMessages(); // Ensure counter is cleared
-      navigate('/subjectselect'); // Redirect to root route
-      localStorage.removeItem('freeTrialMessages'); // Remove from storage
-    }
-  }, [paymentStatus, navigate, resetTrialMessages]);
-
-  return (
-    <div className="content">
-      <div className="this-container">
-        {paymentStatus === 'initiated' ? (
-          <div>
-            <h2>Payment Instructions</h2>
-            <p>{instructions}</p>
-            <p>Please complete the payment on your mobile device.</p>
-            <p>Status: Waiting for payment confirmation...</p>
-          </div>
-        ) : paymentStatus === 'paid' ? (
-          <div>
-            <h2>Payment Successful</h2>
-            <p>Your payment has been confirmed!</p>
-            <p>Status: Paid</p>
-          </div>
-        ) : paymentStatus === 'expired' ? (
-          <div> {/* MODIFIED BLOCK STARTS HERE */}
-            <h2>Payment Expired</h2>
-            <p>Your payment status has expired. Please make a new payment to continue.</p>
+        // Otherwise, show the main payment form.
+        return (
             <div className="payment-container">
-              <div className="plan-selector">
-                <h2>Choose Your New Plan</h2>
-                <div className="plan-options">
-                  <div
-                    className={`plan-card ${selectedPlan === 'basic' ? 'selected' : ''}`}
-                    onClick={() => setSelectedPlan('basic')}
-                  >
+                <h2>Activate Your Subscription</h2>
+                <p className="renew">Choose a plan to get started with full access to Chikoro AI.</p>
+                <PaymentForm />
+            </div>
+        );
+    };
+
+    // Helper component for the payment form to keep render logic clean
+    const PaymentForm = () => (
+        <>
+             <div className="plan-options">
+                <div className={`plan-card ${selectedPlan === 'basic' ? 'selected' : ''}`} onClick={() => setSelectedPlan('basic')}>
                     <h3>Basic Plan</h3>
                     <p className="price">USD $10</p>
-                    <p className="duration">1 term</p>
-                    <div className="features">
-                      <p className="feature-item">✔ Includes holidays</p>
-                      <p className="feature-item">✔ Assistance with homework and writing</p>
-                      <p className="feature-item">✔ Limited image uploads (5 per day)</p>
-                      <p className="feature-item">✖ No advanced problem solving</p>
-                      <p className="feature-item">✖ Standard features only</p>
-                    </div>
-                  </div>
-
-                  <div
-                    className={`plan-card ${selectedPlan === 'premium' ? 'selected' : ''}`}
-                    onClick={() => setSelectedPlan('premium')}
-                  >
+                    <p className="duration">per 30 days</p>
+                    <ul className="features">
+                        <li className="feature-item">Includes holidays</li>
+                        <li className="feature-item">Homework & writing help</li>
+                        <li className="feature-none">No advanced problem solving</li>
+                    </ul>
+                </div>
+                <div className={`plan-card ${selectedPlan === 'premium' ? 'selected' : ''}`} onClick={() => setSelectedPlan('premium')}>
                     <h3>Premium Plan</h3>
                     <p className="price">USD $15</p>
-                    <p className="duration">1 term</p>
-                    <div className="features">
-                      <p className="feature-item">✔ Includes holidays</p>
-                      <p className="feature-item">✔ Assistance with homework, writing, problem solving</p>
-                      <p className="feature-item">✔ Upload and analyze unlimited pictures per day</p>
-                      <p className="feature-item">✔ Early access to new features</p>
-                      <p className="feature-item">✔ Automatic access to updates</p>
-                    </div>
-                  </div>
+                    <p className="duration">per 30 days</p>
+                    <ul className="features">
+                        <li className="feature-item">Includes holidays</li>
+                        <li className="feature-item">Advanced problem solving</li>
+                        <li className="feature-item">Unlimited image uploads</li>
+                    </ul>
                 </div>
-                <form className="payment-form" onSubmit={(e) => { e.preventDefault(); handlePayment(); }}>
-                  <div className="form-group">
+            </div>
+     
+            <form className="payment-form" onSubmit={(e) => { e.preventDefault(); handlePayment(); }}>
+               <div className="form-group">
                     <label htmlFor="phoneNumber">Ecocash Number</label>
                     <input
                       id="phoneNumber"
@@ -338,147 +219,22 @@ const PaymentPage = () => {
                       required
                     />
                   </div>
-                  <button type="submit" className="submit-btn" disabled={loading}>
-                    {loading ? 'Processing...' : `Subscribe (USD $${selectedPlan === 'premium' ? '15' : '10'})`}
-                  </button>
-                </form>
-              </div>
-              {error && <p className="error-message">Error: {error}</p>}
-            </div>
-          </div> 
-        ) : paymentStatus === 'expiringSoon' ? (
-          <div>
-            <h2>Payment Expiring Soon</h2>
-            <p>Your subscription will expire soon. Consider renewing to maintain uninterrupted access.</p>
-            <div className="payment-container">
-              <div className="plan-selector">
-                <h2>Renew Your Plan</h2>
-                <div className="plan-options">
-                    <div
-                        className={`plan-card ${selectedPlan === 'basic' ? 'selected' : ''}`}
-                        onClick={() => setSelectedPlan('basic')}
-                    >
-                        <h3>Basic Plan</h3>
-                        <p className="price">USD $10</p>
-                        <p className="duration">1 term</p>
-                        <div className="features">
-                        <p className="feature-item">✔ Includes holidays</p>
-                        <p className="feature-item">✔ Assistance with homework and writing</p>
-                        <p className="feature-item">✔ Limited image uploads (5 per day)</p>
-                        <p className="feature-item">✖ No advanced problem solving</p>
-                        <p className="feature-item">✖ Standard features only</p>
-                        </div>
-                    </div>
-
-                    <div
-                        className={`plan-card ${selectedPlan === 'premium' ? 'selected' : ''}`}
-                        onClick={() => setSelectedPlan('premium')}
-                    >
-                        <h3>Premium Plan</h3>
-                        <p className="price">USD $15</p>
-                        <p className="duration">1 term</p>
-                        <div className="features">
-                        <p className="feature-item">✔ Includes holidays</p>
-                        <p className="feature-item">✔ Assistance with homework, writing, problem solving</p>
-                        <p className="feature-item">✔ Upload and analyze unlimited pictures per day</p>
-                        <p className="feature-item">✔ Early access to new features</p>
-                        <p className="feature-item">✔ Automatic access to updates</p>
-                        </div>
-                    </div>
-                </div>
-                <form className="payment-form" onSubmit={(e) => { e.preventDefault(); handlePayment(); }}>
-                  <div className="form-group">
-                    <label htmlFor="phoneNumber">Ecocash Number</label>
-                    <input
-                      id="phoneNumber"
-                      type="tel"
-                      placeholder="0771234567"
-                      value={phoneNumber}
-                      onChange={(e) => setPhoneNumber(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <button type="submit" className="submit-btn" disabled={loading}>
-                    {loading ? 'Processing...' : `Subscribe (USD $${selectedPlan === 'premium' ? '15' : '10'})`}
-                  </button>
-                </form>
-              </div>
-               {error && <p className="error-message">Error: {error}</p>}
-            </div>
-          </div>
-        ) : paymentStatus === 'error' ? (
-          <div>
-            <h2>Payment Status Error</h2>
-            <p>There was a problem checking your payment status. Please try again.</p>
-            <p className="error-message">{error}</p>
-            <button
-              className="retry-btn"
-              onClick={checkPaymentStatus}
-              disabled={paymentChecking}
-            >
-              {paymentChecking ? 'Checking...' : 'Retry'}
-            </button>
-          </div>
-        ) : (
-          <div className="payment-container">
-            <div className="plan-selector">
-              <h2>Choose Your Plan</h2>
-              <div className="plan-options">
-                <div
-                  className={`plan-card ${selectedPlan === 'basic' ? 'selected' : ''}`}
-                  onClick={() => setSelectedPlan('basic')}
-                >
-                  <h3>Basic Plan</h3>
-                  <p className="price">USD $10</p>
-                  <p className="duration">1 term</p>
-                  <div className="features">
-                    <p className="feature-item">✔ Includes holidays</p>
-                    <p className="feature-item">✔ Assistance with homework and writing</p>
-                    <p className="feature-item">✔ Limited image uploads (5 per day)</p>
-                    <p className="feature-item">✖ No advanced problem solving</p>
-                    <p className="feature-item">✖ Standard features only</p>
-                  </div>
-                </div>
-
-                <div
-                  className={`plan-card ${selectedPlan === 'premium' ? 'selected' : ''}`}
-                  onClick={() => setSelectedPlan('premium')}
-                >
-                  <h3>Premium Plan</h3>
-                  <p className="price">USD $15</p>
-                  <p className="duration">1 term</p>
-                  <div className="features">
-                    <p className="feature-item">✔ Includes holidays</p>
-                    <p className="feature-item">✔ Assistance with homework, writing, problem solving</p>
-                    <p className="feature-item">✔ Upload and analyze unlimited pictures per day</p>
-                    <p className="feature-item">✔ Early access to new features</p>
-                    <p className="feature-item">✔ Automatic access to updates</p>
-                  </div>
-                </div>
-              </div>
-              <form className="payment-form" onSubmit={(e) => { e.preventDefault(); handlePayment(); }}>
-                <div className="form-group">
-                  <label htmlFor="phoneNumber">Ecocash Number</label>
-                  <input
-                    id="phoneNumber"
-                    type="tel"
-                    placeholder="0771234567"
-                    value={phoneNumber}
-                    onChange={(e) => setPhoneNumber(e.target.value)}
-                    required
-                  />
-                </div>
-                <button type="submit" className="submit-btn" disabled={loading}>
-                  {loading ? 'Processing...' : `Subscribe (USD $${selectedPlan === 'premium' ? '15' : '10'})`}
+                <button type="submit" className={`submit-btn ${isSubmitting ? 'loading' : ''}`} disabled={isSubmitting}>
+                    <span className="spinner"></span>
+                    <span className="btn-text">{isSubmitting ? 'Processing...' : 'Pay and Activate'}</span>
                 </button>
-              </form>
+            </form>
+            {formError && <p className="error-message">{formError}</p>}
+        </>
+    );
+
+    return (
+        <div className="content">
+            <div className="payment-page-container">
+                {renderContent()}
             </div>
-            {error && <p className="error-message">Error: {error}</p>}
-          </div>
-        )}
-      </div>
-    </div>
-  );
+        </div>
+    );
 };
 
 export default PaymentPage;
