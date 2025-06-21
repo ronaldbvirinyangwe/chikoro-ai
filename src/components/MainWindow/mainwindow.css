@@ -11,7 +11,7 @@
 
 .dark {
     --background: #111827;
-    --card-bg:  #1f2937;
+    --card-bg-dark:  #1f2937;
     --text-primary: #ffffff;
     --text-secondary: #95a5a6;
     --shadow: 0 4px 6px rgba(0,0,0,0.2);
@@ -43,29 +43,6 @@ cursor:pointer;
     background-color: var(--background);
 }
 
-/* Profile menu styles */
-.profile-menu {
-    position: absolute;
-    right: 0;
-    top: 100%;
-    background: var(--card-bg);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    padding: 0.5rem;
-    min-width: 120px;
-    margin-top: 0.5rem;
-    z-index: 1001;
-
-}
-
-.profile-menu-item {
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    cursor: pointer;
-    color: var(--text-primary);
-    transition: all 0.2s ease;
-    cursor: pointer;
-}
 
 .profile-menu-item:hover {
     background: var(--primary);
@@ -252,6 +229,15 @@ cursor:pointer;
     border-radius: var(--radius);
     box-shadow: var(--shadow);
     padding: 5px;
+}
+
+.dark{
+    .mainwindow .search-container {
+    background: var( --card-bg-dark);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 5px;
+}
 }
 
   .mainwindow .chat-input {

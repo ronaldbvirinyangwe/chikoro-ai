@@ -172,7 +172,7 @@ const Sidebar = () => {
                 {isSidebarOpen ? <FiX className="icon" /> : <FiMenu className="side-icon" />}
             </button>
 
-            <div className={`sidebar ${isSidebarOpen ? 'open' : ''} ${isCollapsed ? 'collapsed' : ''}`}>
+            <div className={`sidebar ${darkMode ? 'dark-theme' : ''} ${isSidebarOpen ? 'open' : ''} ${isCollapsed ? 'collapsed' : ''}`}>
                 <div className="sidebar-header">
                     <img src={assets.logo} alt="Logo" className="logo" />
                     {!isSidebarOpen && (
