@@ -58,29 +58,29 @@ const authenticatedFetch = async (url, options = {}) => {
  * @param {File} [file=null] - An optional file (image).
  * @param {Array} [currentChatHistory=[]] - The current conversation history.
  * @returns {Promise<string>} The AI's text response.
- */
-export async function runMulti(prompt, file = null, analysisData = null, currentChatHistory = []) {
-    try {
-        const payload = { prompt, history: currentChatHistory };
-        if (file) {
-            payload.file = {
-                base64: await encodeImage(file),
-                type: file.type,
-            };
-        }
+//  */
+// export async function runMulti(prompt, file = null, analysisData = null, currentChatHistory = []) {
+//     try {
+//         const payload = { prompt, history: currentChatHistory };
+//         if (file) {
+//             payload.file = {
+//                 base64: await encodeImage(file),
+//                 type: file.type,
+//             };
+//         }
         
-        const data = await authenticatedFetch(`${API_BASE_URL}/chat/conversation`, {
-            method: 'POST',
-            body: JSON.stringify(payload)
-        });
+//         const data = await authenticatedFetch(`${API_BASE_URL}/chat/conversation`, {
+//             method: 'POST',
+//             body: JSON.stringify(payload)
+//         });
         
-        return data.text;
+//         return data.text;
 
-    } catch (error) {
-        console.error("Error in runMulti:", error);
-        return `Sorry, an error occurred: ${error.message}`;
-    }
-}
+//     } catch (error) {
+//         console.error("Error in runMulti:", error);
+//         return `Sorry, an error occurred: ${error.message}`;
+//     }
+// }
 
 /**
  * Fetches the chat history for a subject from the backend.
@@ -213,22 +213,22 @@ export async function submitDrawing(imageData, studentId, subject) {
  * @param {string} imageData - The base64 image data URL of the drawing.
  * @returns {Promise<string>} The AI's analysis.
  */
-export async function analyzeMathDrawing(imageData) {
-    try {
-        const fetchResponse = await fetch(imageData);
-        const blob = await fetchResponse.blob();
-        const file = new File([blob], "math-drawing.png", { type: 'image/png' });
+// export async function analyzeMathDrawing(imageData) {
+//     try {
+//         const fetchResponse = await fetch(imageData);
+//         const blob = await fetchResponse.blob();
+//         const file = new File([blob], "math-drawing.png", { type: 'image/png' });
         
-        const prompt = "Please analyze this mathematical drawing or handwritten equation. Provide the solution if it's a problem, explain the concepts involved, and offer feedback or suggestions for improvement.";
+//         const prompt = "Please analyze this mathematical drawing or handwritten equation. Provide the solution if it's a problem, explain the concepts involved, and offer feedback or suggestions for improvement.";
         
-        // This correctly uses the existing runMulti function
-        return await runMulti(prompt, file, []); 
+//         // This correctly uses the existing runMulti function
+//         return await runMulti(prompt, file, []); 
 
-    } catch (error) {
-        console.error('Error analyzing math drawing:', error);
-        return "Sorry, I couldn't analyze the drawing. Please try again.";
-    }
-}
+//     } catch (error) {
+//         console.error('Error analyzing math drawing:', error);
+//         return "Sorry, I couldn't analyze the drawing. Please try again.";
+//     }
+// }
 
   const generateStudentSummary = async (student) => {
      const studentId = localStorage.getItem('profileId');
@@ -268,4 +268,4 @@ export async function analyzeMathDrawing(imageData) {
 
   export { generateStudentSummary };
 
-export default runMulti;
+// export default runMulti;

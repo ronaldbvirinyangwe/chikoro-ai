@@ -3,8 +3,8 @@ import hljs from 'highlight.js';
 import katex from 'katex';
 import 'katex/dist/katex.min.css';
 // Assuming these are your helper functions for specific backend interactions
-import { handlePDFRequest } from "../config/pdfparse"; 
-import { updateConversationHistory, fetchHistory, analyzeMathDrawing } from "../config/image_understand"; 
+import { handlePDFRequest, handleImageRequest } from "../config/pdfparse"; 
+import { updateConversationHistory, fetchHistory} from "../config/image_understand"; 
 
 // --- highlight.js Configuration ---
 hljs.configure({
@@ -235,82 +235,132 @@ const ContextProvider = (props) => {
         }
     }, [selectedSubject, processContent]);
     
-    const onSent = async (prompt, fileAttachment, drawingAsDataUrl) => {
-        if (!prompt?.trim() && !fileAttachment && !drawingAsDataUrl) {
+const onSent = async (prompt, fileAttachment, drawingAsDataUrl) => {
+    if (!prompt?.trim() && !fileAttachment && !drawingAsDataUrl) {
+        return; // Do nothing if there's no input
+    }
+
+    setLoading(true); // Disables the send button
+    setError(null);
+    setShowResult(true);
+
+    let finalFile = fileAttachment;
+    let userAttachmentForDisplay = null;
+
+    // --- Process whiteboard drawing into a File object if it exists ---
+    if (drawingAsDataUrl && !fileAttachment) {
+        try {
+            const fetchResponse = await fetch(drawingAsDataUrl);
+            const blob = await fetchResponse.blob();
+            finalFile = new File([blob], "math-drawing.png", { type: 'image/png' });
+            userAttachmentForDisplay = { url: drawingAsDataUrl, fileName: "math-drawing.png" };
+        } catch (err) {
+            setError("Failed to process the drawing. Please try again.");
+            setLoading(false);
             return;
         }
-        
-        setLoading(true);
-        setError(null);
-        setShowResult(true);
+    } else if (fileAttachment) {
+        userAttachmentForDisplay = { url: URL.createObjectURL(fileAttachment), fileName: fileAttachment.name };
+    }
 
-        let analysisResult = null;
-        if (drawingAsDataUrl) {
-            try {
-                analysisResult = await analyzeMathDrawing(drawingAsDataUrl);
-            } catch (err) {
-                setError("Failed to analyze drawing.");
-                setLoading(false);
-                return;
-            }
-        }
-        
-        let userMessageText = analysisResult ? `[Drawing Analyzed] ${prompt}` : prompt;
-        if(fileAttachment) userMessageText = `[File: ${fileAttachment.name}] ${prompt}`;
-        
-        const userMessage = {
-            id: `user_${Date.now()}`,
-            type: "user",
-            rawText: userMessageText,
-            timestamp: new Date().toISOString(),
-            attachment: fileAttachment ? { url: URL.createObjectURL(fileAttachment), fileName: fileAttachment.name } : (drawingAsDataUrl ? { url: drawingAsDataUrl, fileName: "whiteboard.png" } : null)
-        };
+    // --- Create User Message and Bot Placeholder ---
+    const userMessageText = prompt || (finalFile ? `Analyzing ${finalFile.name}...` : 'Analyzing...');
+    if (prompt) setRecentPrompt(prompt);
 
-        const currentHistory = [...chatHistory, userMessage];
-        setChatHistory(currentHistory);
-        if (prompt) setRecentPrompt(prompt);
-        
-        let finalPromptForApi = analysisResult ? `Context from drawing analysis: "${analysisResult}". User's question: "${prompt}"` : prompt;
-        
-        try {
-            if (fileAttachment && fileAttachment.type === 'application/pdf') {
-                const historyForPdfApi = currentHistory.map(msg => ({ role: msg.type === 'bot' ? 'model' : 'user', parts: [{ text: msg.rawText }] }));
-                const pdfResult = await handlePDFRequest(fileAttachment, prompt, historyForPdfApi);
-                const botResponse = { id: `bot_${Date.now()}`, type: "bot", rawText: pdfResult.response, htmlText: processContent(pdfResult.response), timestamp: new Date().toISOString() };
-                setChatHistory(prev => [...prev, botResponse]);
-                await updateConversationHistory(selectedSubject, userMessage, pdfResult.response);
-            } else {
-                const payload = {
-                    prompt: finalPromptForApi,
-                    history: currentHistory.slice(-21, -1).map(m => ({type: m.type, rawText: m.rawText})),
-                    curriculum: selectedSubject || "ZIMSEC"
-                };
-
-                const botMessageId = `bot_${Date.now()}`;
-                setChatHistory(prev => [...prev, { id: botMessageId, type: "bot", rawText: "", htmlText: "", isTyping: true }]);
-                
-                let accumulatedRawText = "";
-                await streamChatCompletion(payload,
-                    (chunk) => { // onChunk
-                        accumulatedRawText += chunk;
-                        setChatHistory(prev => prev.map(msg => msg.id === botMessageId ? { ...msg, htmlText: processContent(accumulatedRawText) } : msg));
-                    },
-                    async () => { // onDone
-                        setChatHistory(prev => prev.map(msg => msg.id === botMessageId ? { ...msg, isTyping: false, rawText: accumulatedRawText } : msg));
-                        setTimeout(() => document.querySelectorAll('pre code').forEach(el => hljs.highlightElement(el)), 50);
-                        await updateConversationHistory(selectedSubject, userMessage, accumulatedRawText);
-                    },
-                    (errorMessage) => { // onError
-                        setChatHistory(prev => prev.map(msg => msg.id === botMessageId ? { ...msg, isTyping: false, rawText: errorMessage, htmlText: `<div class="ai-response" style="color:red;">${errorMessage}</div>` } : msg));
-                    }
-                );
-            }
-        } catch (e) {
-            setError(e.message);
-        } finally {
-            setLoading(false);
-        }
+    const userMessage = {
+        id: `user_${Date.now()}`,
+        type: "user",
+        rawText: userMessageText,
+        timestamp: new Date().toISOString(),
+        attachment: userAttachmentForDisplay
     };
+
+    const botMessageId = `bot_${Date.now()}`;
+    const botTypingMessage = {
+        id: botMessageId,
+        type: "bot",
+        rawText: "",
+        htmlText: "", // Empty text
+        isTyping: true, // This triggers the loader in the UI
+        timestamp: new Date().toISOString(),
+    };
+
+    // --- Immediately update UI to show user message and loader ---
+    setChatHistory(prev => [...prev, userMessage, botTypingMessage]);
+
+    // --- Process Request and Update Placeholder ---
+    try {
+        const historyForApi = [...chatHistory, userMessage].map(msg => ({
+            role: msg.type === 'bot' ? 'model' : 'user',
+            parts: [{ text: msg.rawText }]
+        }));
+
+        // --- BRANCH 1: Handle File-based requests (Image, PDF, Drawing) ---
+        if (finalFile) {
+            let result;
+            if (finalFile.type.startsWith('image/')) {
+                result = await handleImageRequest(finalFile, prompt, historyForApi);
+            } else if (finalFile.type === 'application/pdf') {
+                result = await handlePDFRequest(finalFile, prompt, historyForApi);
+            } else {
+                throw new Error("Unsupported file type provided.");
+            }
+            
+            const botResponseText = result.response;
+
+            // Update the placeholder with the final response
+            setChatHistory(prev => prev.map(msg =>
+                msg.id === botMessageId
+                    ? { ...msg, isTyping: false, rawText: botResponseText, htmlText: processContent(botResponseText) }
+                    : msg
+            ));
+            await updateConversationHistory(selectedSubject, userMessage, botResponseText);
+        } 
+        // --- BRANCH 2: Handle Text-only streaming requests ---
+        else {
+            const payload = {
+                prompt: prompt,
+                history: historyForApi.slice(-21, -1), // Send relevant history
+                curriculum: selectedSubject || "ZIMSEC"
+            };
+
+            let accumulatedRawText = "";
+            await streamChatCompletion(payload,
+                (chunk) => { // On chunk received
+                    accumulatedRawText += chunk;
+                    setChatHistory(prev => prev.map(msg =>
+                        msg.id === botMessageId ? { ...msg, htmlText: processContent(accumulatedRawText) } : msg
+                    ));
+                },
+                async () => { // On stream done
+                    setChatHistory(prev => prev.map(msg =>
+                        msg.id === botMessageId ? { ...msg, isTyping: false, rawText: accumulatedRawText } : msg
+                    ));
+                    setTimeout(() => document.querySelectorAll('pre code').forEach(el => hljs.highlightElement(el)), 50);
+                    await updateConversationHistory(selectedSubject, userMessage, accumulatedRawText);
+                },
+                (errorMessage) => { // On error
+                    setChatHistory(prev => prev.map(msg =>
+                        msg.id === botMessageId ? { ...msg, isTyping: false, rawText: errorMessage, htmlText: `<div class="ai-response" style="color:red;">${errorMessage}</div>` } : msg
+                    ));
+                }
+            );
+        }
+    } catch (e) {
+        // --- Catch-all for errors (e.g., from file handlers) ---
+        const errorMessage = e.message || "An unexpected error occurred.";
+        setError(errorMessage);
+        // Update the placeholder to show the error
+        setChatHistory(prev => prev.map(msg =>
+            msg.id === botMessageId
+                ? { ...msg, isTyping: false, rawText: errorMessage, htmlText: `<div class="ai-response" style="color:red;">${errorMessage}</div>` }
+                : msg
+        ));
+    } finally {
+        setLoading(false); // Re-enable the send button
+    }
+};
+
 
     const newChat = () => {
         setLoading(false);

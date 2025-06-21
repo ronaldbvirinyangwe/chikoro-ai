@@ -508,10 +508,29 @@
   }
 
   .profile-menu {
-    bottom: 50px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 150px;
+    position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  transform: translateY(-120%);
+  background: #3c3c3c;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  width: 150px;
+  z-index: 10;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  top:0
+  }
+  .profile-menu-item{
+    width: 100%;
+  padding: 10px 15px;
+  text-align: left;
+  background-color: transparent;
+  color: rgba(255,255,255,0.85);
+  font-size: 14px;
+  transition: background-color 0.2s;
+  border: none;
+  cursor: pointer;
   }
 }
 
