@@ -1,0 +1,107 @@
+/* Reports.css */
+.reports-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 2rem;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Quiz List Styling */
+.quiz-list-item {
+    background-color: #fff;
+    border: 1px solid #eef2f7;
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.quiz-list-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(44, 62, 80, 0.08);
+}
+
+.quiz-info h3 {
+    margin: 0 0 0.25rem 0;
+    color: var(--teacher-text-primary, #2c3e50);
+}
+
+.quiz-info p {
+    margin: 0;
+    color: var(--teacher-text-secondary, #576c7f);
+}
+
+.quiz-stats {
+    text-align: right;
+}
+
+.quiz-stats span {
+    display: block;
+}
+
+.view-report-btn {
+    font-weight: 600;
+    color: var(--teacher-accent, #3498db);
+    margin-top: 0.5rem;
+}
+
+.no-quizzes-message {
+    text-align: center;
+    padding: 3rem;
+    color: #576c7f;
+}
+
+/* Submissions Table Styling */
+.submissions-table-container {
+    background-color: #fff;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(44, 62, 80, 0.05);
+}
+
+.submissions-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.submissions-table th, .submissions-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #eef2f7;
+}
+
+.submissions-table th {
+    font-weight: 600;
+    color: #576c7f;
+}
+
+.feedback-cell {
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+.feedback-cell p, .feedback-cell div {
+    margin-bottom: 0.5rem;
+}
+.feedback-cell div:last-child {
+    margin-bottom: 0;
+}
+
+.score {
+    font-weight: 700;
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+    color: #fff;
+}
+.score.high { background-color: #27ae60; }
+.score.medium { background-color: #f39c12; }
+.score.low { background-color: #e74c3c; }
+
+.loading-container, .error-message {
+    text-align: center;
+    padding: 4rem;
+    font-size: 1.2rem;
+}

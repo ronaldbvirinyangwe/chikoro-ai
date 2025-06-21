@@ -6,7 +6,7 @@ import { useAuth } from '../../context/AuthContext.jsx';
 import { login as apiLogin } from "../../services/api";
 import './signup.css';
 
-const BASE_API_URL = 'https://atqtuew6syxese-8080.proxy.runpod.net/api'; // Adjusted to match your API endpoint
+const BASE_API_URL = 'https://lsdl9qdylhle6t-8080.proxy.runpod.net/api'; // Adjusted to match your API endpoint
 
 const Signup = React.memo(() => {
   const [formData, setFormData] = useState({
@@ -21,22 +21,14 @@ const Signup = React.memo(() => {
   const navigate = useNavigate();
   const location = useLocation();
   const { login } = useAuth();
-  const [successMessage, setSuccessMessage] = useState(''); 
+  const [successMessage, setSuccessMessage] = useState('');
 
-  // Declare validateForm function here, before it's used in handleSubmit
   const validateForm = useCallback(() => {
     const errors = [];
 
-    // First name validation (at least 2 letters)
     if (!/^[A-Za-z]{2,}$/.test(formData.firstName)) errors.push('First name must be at least 2 letters');
-    
-    // Last name validation (at least 2 letters)
     if (!/^[A-Za-z]{2,}$/.test(formData.lastName)) errors.push('Last name must be at least 2 letters');
-    
-    // Email validation (basic email format check)
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) errors.push('Invalid email format');
-    
-    // Password validation (min 8 chars, 1 number, 1 special character)
     if (formData.password.length < 8) errors.push('Password must be at least 8 characters');
     if (!/[0-9]/.test(formData.password)) errors.push('Password must contain at least one number');
     if (!/[!@#$%^&*(),.?":{}|<>]/.test(formData.password)) errors.push('Password must contain at least one special character');
@@ -67,7 +59,7 @@ const Signup = React.memo(() => {
       }
     }
   };
-  
+
   const togglePasswordVisibility = useCallback(() => {
     setShowPassword(prev => !prev);
   }, []);
@@ -87,7 +79,7 @@ const Signup = React.memo(() => {
                 <div className="form-group">
                   <label htmlFor="firstName">First Name</label>
                   <div className="input-with-icon">
-                 
+                    <FaUser className="input-icon" aria-hidden="true" />
                     <input
                       type="text"
                       id="firstName"
@@ -101,12 +93,12 @@ const Signup = React.memo(() => {
                   </div>
                 </div>
               </div>
-              
+
               <div className="col-md-6">
                 <div className="form-group">
                   <label htmlFor="lastName">Last Name</label>
                   <div className="input-with-icon">
-                  
+                    <FaUser className="input-icon" aria-hidden="true" />
                     <input
                       type="text"
                       id="lastName"
@@ -125,7 +117,7 @@ const Signup = React.memo(() => {
             <div className="form-group">
               <label htmlFor="email">Email</label>
               <div className="input-with-icon">
-                
+                <FaEnvelope className="input-icon" aria-hidden="true" />
                 <input
                   type="email"
                   id="email"
@@ -142,7 +134,7 @@ const Signup = React.memo(() => {
             <div className="form-group">
               <label htmlFor="password">Password</label>
               <div className="input-with-icon">
-                <FaLock className="input-icon" aria-hidden="true" />
+                <FaLock className="input-icons" aria-hidden="true" />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   id="password"
@@ -154,7 +146,6 @@ const Signup = React.memo(() => {
                   autoComplete="new-password"
                   required
                 />
-                
                 <button
                   type="button"
                   className="password-toggle"
@@ -168,15 +159,15 @@ const Signup = React.memo(() => {
                 Minimum 8 characters with at least one number and special character
               </small>
             </div>
-            
+
             {error && (
               <div className="alert alert-danger mt-3" role="alert">
                 {error}
               </div>
             )}
 
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               className="btn btn-primary btn-block"
               disabled={loading || !formData.email || !formData.password}
               aria-busy={loading}

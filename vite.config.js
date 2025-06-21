@@ -6,28 +6,33 @@ export default defineConfig({
     react()
   ],
   build: {
-    minify: 'terser', // Use Terser for stronger minification
+    minify: 'terser',
     terserOptions: {
       compress: {
-        drop_console: true, // Optionally remove console statements
+        drop_console: true,
       },
       mangle: {
-        toplevel: true, // Mangle top-level variable and function names
+        toplevel: true,
       }
     },
-    sourcemap: false, // Disable source maps to make reverse engineering harder
+    sourcemap: false,
   },
   server: {
     host: '0.0.0.0', 
-    port: 5173, 
+    port: 80, 
     proxy: {
       '/bhadhara': {
         target: 'http://localhost:3080',
         changeOrigin: true,
         secure: false,
-      }
+      }, // <--- COMMA ADDED HERE
+      '/api': {
+        target: 'http://localhost:3000', // Your backend server
+        changeOrigin: true,
+      },
     }
   },
+    
   // --- Add this entire 'preview' section ---
   preview: {
     host: true,

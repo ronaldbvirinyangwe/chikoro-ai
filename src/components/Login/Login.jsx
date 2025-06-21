@@ -124,7 +124,7 @@ const Login = React.memo(() => {
             <div className="form-group">
               <label htmlFor="password">Password</label>
               <div className="input-with-icon">
-                <FaLock className="input-icon" aria-hidden="true" />
+                <FaLock className="input-icons" aria-hidden="true" />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   id="password"

@@ -17,6 +17,15 @@ import MainWindow from './components/MainWindow/mainwindow.jsx';
 import LandingPage from './components/LandingPage/LandingPage.jsx';
 import PaperSelector from './components/PaperSelector/PaperSelector.jsx'
 import Profile from './components/Profile/profile.jsx';
+import TeacherDashboard from './components/TeacherDashboard/TeacherDash.jsx'
+import QuizGenerator from './components/TeacherDashboard/QuizGenerator.jsx';
+import StudentQuiz from './components/TeacherDashboard/StudentQuiz.jsx'
+import LessonPlanner from './components/TeacherDashboard/LessonPlanner.jsx';
+import ResourceFinder from './components/TeacherDashboard/ResourceFinder.jsx';
+import ReportCommentHelper from './components/TeacherDashboard/ReportCommentHelper.jsx';
+import SchemeOfWorkCreator from './components/TeacherDashboard/SchemeCreator.jsx';
+import TeacherReports from './components/TeacherDashboard/TeacherReports.jsx';
+import QuizSubmissions from './components/TeacherDashboard/QuizSubmissions.jsx';
 
 const App = () => {
   return (
@@ -37,6 +46,15 @@ const App = () => {
             <Route path="/reports" element={<Reports />} />
             <Route path="/subjectselect" element={<SubjectSelect />} />
 <Route path="/papers" element={<PaperSelector />} />
+<Route path="/teacher-dashboard" element={< TeacherDashboard />} />
+          <Route path="/quiz-generator" element={< QuizGenerator/>} />
+          <Route path="/quiz/:quizId" element={<StudentQuiz />} />
+          <Route path="/lesson-planner" element={<LessonPlanner />} />
+          <Route path="/resource-finder" element={<ResourceFinder />} />
+          <Route path="/report-helper" element={<ReportCommentHelper />} />
+          <Route path="/scheme-creator" element={<SchemeOfWorkCreator />} />
+          <Route path="/teacher/quizzes" element={<TeacherReports />} />
+           <Route path="/teacher/quizzes/:quizId/submissions" element={<QuizSubmissions />} />
           </Route>
         </Routes>
       </BrowserRouter>

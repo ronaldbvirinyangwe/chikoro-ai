@@ -1,244 +1,306 @@
-import React, { useState, useEffect, useCallback } from 'react'; // Added useCallback
-import { assets } from '../../assets/assets';
-import './cards.css';
-import Greeting from '../Enrol/Greeting';
-import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect, useCallback,useContext } from 'react';
+import axios from 'axios';
+import { useNavigate, Link } from 'react-router-dom';
 import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
+import Greeting from '../Enrol/Greeting';
+import Sidebar from '../Sidebar/sidebar'; 
+import './cards.css';
+import { assets } from '../../assets/assets';
+import { Context } from '../../context/Context';
 
-
-
-const ALL_SUBJECTS_DATA = [
-    { id: 'P_ZIM_SHO', name: 'Shona', iconKey: 'shona', level: 'primary', curriculum: 'zimsec' },
-    { id: 'P_ZIM_ENG', name: 'English', iconKey: 'english', level: 'primary', curriculum: 'zimsec' },
-    { id: 'P_ZIM_NDE', name: 'Isindebele', iconKey: 'ndebele', level: 'primary', curriculum: 'zimsec' },
-    { id: 'P_ZIM_SCI', name: 'Science', iconKey: 'science', level: 'primary', curriculum: 'zimsec' },
-    { id: 'P_ZIM_MTH', name: 'Maths', iconKey: 'maths', level: 'primary', curriculum: 'zimsec' },
-    { id: 'P_ZIM_HER', name: 'Heritage', iconKey: 'heritage', level: 'primary', curriculum: 'zimsec' },
-    { id: 'P_ZIM_FRM', name: 'FAREME', iconKey: 'fareme', level: 'primary', curriculum: 'zimsec' },
-    { id: 'P_ZIM_HEC', name: 'Home Economics', iconKey: 'home_eco', level: 'primary', curriculum: 'zimsec' },
-    { id: 'P_ZIM_AGR', name: 'Agriculture', iconKey: 'agriculture', level: 'primary', curriculum: 'zimsec' },
-    { id: 'P_ZIM_ICT', name: 'Computer Science', iconKey: 'computers', level: 'primary', curriculum: 'zimsec' },
-    { id: 'P_ZIM_MUS', name: 'Music', iconKey: 'music', level: 'primary', curriculum: 'zimsec' },
-    { id: 'P_ZIM_ART', name: 'Art', iconKey: 'art', level: 'primary', curriculum: 'zimsec' },
-    { id: 'P_ZIM_PED', name: 'Physical Education(PE)', iconKey: 'pe', level: 'primary', curriculum: 'zimsec' },
-
-    // --- Primary School Subjects (Cambridge) ---
-
-    { id: 'P_CAM_ENG', name: 'English (Cambridge)', iconKey: 'english', level: 'primary', curriculum: 'cambridge' },
-    { id: 'P_CAM_SCI', name: 'Science (Cambridge)', iconKey: 'science', level: 'primary', curriculum: 'cambridge' },
-    { id: 'P_CAM_MTH', name: 'Maths (Cambridge)', iconKey: 'maths', level: 'primary', curriculum: 'cambridge' },
-
-    // --- Secondary School Subjects (Zimsec) ---
-    { id: 'S_ZIM_BIO', name: 'Biology', iconKey: 'biology', level: 'secondary', curriculum: 'zimsec' },
-      { id: 'S_ZIM_MTH', name: 'Mathematics', iconKey: 'maths', level: 'secondary', curriculum: 'zimsec' },
-    { id: 'S_ZIM_CSC', name: 'Combined Science', iconKey: 'science', level: 'secondary', curriculum: 'zimsec' },
-    { id: 'S_ZIM_CHE', name: 'Chemistry', iconKey: 'chemistry', level: 'secondary', curriculum: 'zimsec' },
-    { id: 'S_ZIM_ECO', name: 'Economics', iconKey: 'economics', level: 'secondary', curriculum: 'zimsec' },
-    { id: 'S_ZIM_BUS', name: 'Business Studies', iconKey: 'business', level: 'secondary', curriculum: 'zimsec' },
-    { id: 'S_ZIM_ACC', name: 'Accounting', iconKey: 'accounts', level: 'secondary', curriculum: 'zimsec' },
-    { id: 'S_ZIM_COM', name: 'Commerce', iconKey: 'commerce', level: 'secondary', curriculum: 'zimsec' },
-    { id: 'S_ZIM_PHY', name: 'Physics', iconKey: 'physics', level: 'secondary', curriculum: 'zimsec' },
-    { id: 'S_ZIM_GEO', name: 'Geography', iconKey: 'geography', level: 'secondary', curriculum: 'zimsec' },
-    { id: 'S_ZIM_WDW', name: 'Woodwork', iconKey: 'woodwork', level: 'secondary', curriculum: 'zimsec' },
-    { id: 'S_ZIM_MTW', name: 'Metal Work', iconKey: 'metal', level: 'secondary', curriculum: 'zimsec' },
-    { id: 'S_ZIM_HIS', name: 'History', iconKey: 'history', level: 'secondary', curriculum: 'zimsec' },
-    { id: 'S_ZIM_FNU', name: 'Food and Nutrition', iconKey: 'foods', level: 'secondary', curriculum: 'zimsec' },
-    { id: 'S_ZIM_FAF', name: 'Fashion and Fabrics', iconKey: 'fashion', level: 'secondary', curriculum: 'zimsec' },
-    { id: 'S_ZIM_TGR', name: 'Technical Graphics', iconKey: 'technical', level: 'secondary', curriculum: 'zimsec' },
-     { id: 'S_ZIM_ICT', name: 'Computer Science', iconKey: 'computers', level: 'secondary', curriculum: 'zimsec' },
-  
-
-    // --- Secondary School Subjects (Cambridge) ---
-     { id: 'S_CAM_BIO', name: 'Biology ', iconKey: 'biology', level: 'secondary', curriculum: 'cambridge' },
-    { id: 'S_CAM_CSC', name: 'Co-ordinated Sciences ', iconKey: 'science', level: 'secondary', curriculum: 'cambridge' },
-    { id: 'S_CAM_CHE', name: 'Chemistry ', iconKey: 'chemistry', level: 'secondary', curriculum: 'cambridge' },
-    { id: 'S_CAM_ECO', name: 'Economics ', iconKey: 'economics', level: 'secondary', curriculum: 'cambridge' },
-    { id: 'S_CAM_BUS', name: 'Business Studies ', iconKey: 'business', level: 'secondary', curriculum: 'cambridge' },
-     { id: 'S_CAM_MTH', name: 'Mathematics', iconKey: 'maths', level: 'secondary', curriculum: 'cambridge' },
-    { id: 'S_CAM_ACC', name: 'Accounting ', iconKey: 'accounts', level: 'secondary', curriculum: 'cambridge' },
-    { id: 'S_CAM_COM', name: 'Commerce ', iconKey: 'commerce', level: 'secondary', curriculum: 'cambridge' },
-    { id: 'S_CAM_PHY', name: 'Physics ', iconKey: 'physics', level: 'secondary', curriculum: 'cambridge' },
-    { id: 'S_CAM_GEO', name: 'Geography ', iconKey: 'geography', level: 'secondary', curriculum: 'cambridge' },
-    { id: 'S_CAM_DTW', name: 'Woodwork ', iconKey: 'woodwork', level: 'secondary', curriculum: 'cambridge' },
-    { id: 'S_CAM_DTM', name: 'Metal Work ', iconKey: 'metal', level: 'secondary', curriculum: 'cambridge' },
-    { id: 'S_CAM_HIS', name: 'History ', iconKey: 'history', level: 'secondary', curriculum: 'cambridge' },
-    { id: 'S_CAM_FNU', name: 'Food & Nutrition', iconKey: 'foods', level: 'secondary', curriculum: 'cambridge' },
-    { id: 'S_CAM_FAF', name: 'Fashion & Textiles ', iconKey: 'fashion', level: 'secondary', curriculum: 'cambridge' },
-    { id: 'S_CAM_TGR', name: 'Design & Technology', iconKey: 'technical', level: 'secondary', curriculum: 'cambridge' },
-     { id: 'S_CAM_ICT', name: 'Computer Science', iconKey: 'computers', level: 'secondary', curriculum: 'cambridge' }
-];
-
+const BASE_API_URL = '/api/v1';
+const Icon = ({ className }) => <i className={className}></i>;
 
 const CardSection = ({ handleCardClick }) => {
-  const [menuVisible, setMenuVisible] = useState(false);
-  const { darkMode, setDarkMode } = useTheme();
-  const navigate = useNavigate();
-  // const { accessToken } = useAuth(); 
-
-   const { logout: performUserLogout } = useAuth(); 
-
-  // --- State for current curriculum ---
-  // Initialize from localStorage, default to 'zimsec' if not found
-  const [currentCurriculum, setCurrentCurriculum] = useState(
-    () => localStorage.getItem('studentCurriculum') || 'zimsec'
-  );
-
-  const [displaySubjects, setDisplaySubjects] = useState([]);
-  const [isLoadingSubjects, setIsLoadingSubjects] = useState(true);
-
-  // --- Function to handle curriculum change ---
-  const handleChangeCurriculum = useCallback(() => {
-    const newCurriculum = currentCurriculum === 'zimsec' ? 'cambridge' : 'zimsec';
-    localStorage.setItem('studentCurriculum', newCurriculum);
-    setCurrentCurriculum(newCurriculum);
-    closeMenu(); // Close menu if open
-    console.log("Curriculum switched to:", newCurriculum);
-
-    // --- Optional: Save curriculum preference to backend ---
-    // const studentId = localStorage.getItem('studentId');
-    // if (studentId && accessToken) {
-    //   axios.put(
-    //     `https://chikoro-ai.com/students/${studentId}/curriculum`, // Replace with your actual API base URL
-    //     { curriculum: newCurriculum },
-    //     { headers: { Authorization: `Bearer ${accessToken}` } }
-    //   )
-    //   .then(response => console.log("Curriculum preference saved to backend.", response.data))
-    //   .catch(error => console.error("Error saving curriculum preference to backend:", error));
-    // }
-    // --- End Optional Backend Save ---
-
-  }, [currentCurriculum /*, accessToken */]);
+    const { darkMode } = useTheme();
+    const navigate = useNavigate();
+    const { user, accessToken, logout, loading: authLoading } = useAuth();
+    
+    const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(
+        () => JSON.parse(localStorage.getItem('sidebarCollapsed')) || false
+    );
+    const [student, setStudent] = useState(null);
+    const [displaySubjects, setDisplaySubjects] = useState([]);
+    const [allSubjects, setAllSubjects] = useState([]); // Added this to fix dependency array warning
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
+    const [currentCurriculum, setCurrentCurriculum] = useState(
+        () => localStorage.getItem('studentCurriculum') || 'zimsec'
+    );
+        const [testReports, setTestReports] = useState([]);
+    const [lastStudied, setLastStudied] = useState(null);
+    const { selectedSubject, setSelectedSubject } = useContext(Context);
+    
+    // --- MOVED HOOK TO THE TOP ---
+    const handleChangeCurriculum = useCallback(() => {
+        const newCurriculum = currentCurriculum === 'zimsec' ? 'cambridge' : 'zimsec';
+        setCurrentCurriculum(newCurriculum);
+        localStorage.setItem('studentCurriculum', newCurriculum);
+    
+        // Optional backend save logic can be added here
+        
+    }, [currentCurriculum]);
 
 
-  useEffect(() => {
-    const studentLevel = localStorage.getItem('studentAcademicLevel');
-    // currentCurriculum (from state) is now the source of truth for filtering
-    // It's initialized from localStorage and updated by handleChangeCurriculum
+    // --- Effect for syncing sidebar state ---
+    useEffect(() => {
+        const checkSidebarState = () => {
+            const collapsedState = JSON.parse(localStorage.getItem('sidebarCollapsed')) || false;
+            setIsSidebarCollapsed(collapsedState);
+        };
+        const interval = setInterval(checkSidebarState, 500);
+        return () => clearInterval(interval);
+    }, []);
 
-    console.log("CardSection useEffect: Student Level:", studentLevel, "Current Curriculum (from state):", currentCurriculum);
+    // --- Effect for fetching initial data ---
+     useEffect(() => {
+        const fetchInitialData = async () => {
+            if (authLoading || !accessToken || !user?.email) return;
 
-    if (studentLevel && currentCurriculum) {
-      const filtered = ALL_SUBJECTS_DATA.filter(subject =>
-        subject.level === studentLevel &&
-        subject.curriculum === currentCurriculum // Use state variable here
-      );
-      setDisplaySubjects(filtered);
-      console.log("CardSection useEffect: Filtered Subjects:", filtered.length, filtered);
-    } else {
-      console.warn("CardSection: Student academic level or current curriculum not available. Cannot filter subjects.");
-      setDisplaySubjects([]);
-    }
-    setIsLoadingSubjects(false);
-  }, [currentCurriculum]); // Re-run this effect when currentCurriculum changes
+            setLoading(true);
+            setError('');
 
-  const toggleMenu = () => setMenuVisible(prevState => !prevState);
-  const closeMenu = () => setMenuVisible(false);
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-    closeMenu();
-  };
+            try {
+                // Use Promise.all to fetch student, subjects, and reports concurrently
+                const [studentRes, subjectsRes] = await Promise.all([
+                    axios.get(`${BASE_API_URL}/students/by-email/${user.email}`, { headers: { Authorization: `Bearer ${accessToken}` } }),
+                    axios.get(`${BASE_API_URL}/subjects`, { headers: { Authorization: `Bearer ${accessToken}` } }),
+                ]);
 
-  const handleLogout = () => {
-    if (performUserLogout) {
-      performUserLogout(); // Call the actual logout function from context
-      // Optionally, navigate to login page or home after logout
-      // navigate('/login');
-      console.log("User logged out.");
-    } else {
-      console.error("Logout function not available from AuthContext");
-    }
-    closeMenu(); // Also close menu if it's open
-  };
+                const studentData = studentRes.data;
+                setStudent(studentData);
+                setAllSubjects(subjectsRes.data);
+                setTestReports(subjectsRes.data.testResults || []); // Store test results
 
-  return (
-    <div className={`home ${darkMode ? 'dark-theme-variables' : ''}`}>
-      <header className="l-header">
-        <nav className="nav bd-grid">
-          <Link to="/subjectselect" className="nav__logo">
-            <Greeting />
-          </Link>
-          <div className={`nav__menu ${menuVisible ? 'show' : ''}`} id="nav-menu">
-            <ul className="nav__list">
-              {/* <li className="nav__item">
-                <a className="nav__link" onClick={() => { navigate('/discover'); closeMenu(); }}>Discover</a>
-              </li> */}
-              <li className="nav__item">
-                <a className="nav__link" onClick={() => { navigate('/test'); closeMenu(); }}>Test</a>
-              </li>
-              <li className="nav__item">
-                <a className="nav__link" onClick={() => { navigate('/papers'); closeMenu(); }}>Exam Papers</a>
-              </li>
-              <li className="nav__item">
-                <a className="nav__link" onClick={() => { navigate('/reports'); closeMenu(); }}>Reports</a>
-              </li>
-              {/* --- Curriculum Switcher Button --- */}
-              <li className="nav__item">
-                <button
-                  className=" curriculum-toggle" // Add a class for styling
-                  onClick={handleChangeCurriculum}
-                  aria-label={`Switch to ${currentCurriculum === 'zimsec' ? 'Cambridge' : 'Zimsec'} curriculum`}
-                >
-                  Switch to {currentCurriculum === 'zimsec' ? 'Cambridge' : 'Zimsec'}
-                </button>
-              </li>
-              {/* --- End Curriculum Switcher Button --- */}
-              <li className="nav__item">
-                <button
-                  id="dark-light-mode"
-                  className={`nav__link theme-toggle ${darkMode ? 'dark' : 'light'}`}
-                  onClick={toggleDarkMode}
-                  aria-label={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-                >
-                  <span className="theme-toggle__icon">
-                    {darkMode ? <i className="fas fa-sun"></i> : <i className="fas fa-moon"></i>}
-                  </span>
-                  <span className="theme-toggle__text">
-                    {darkMode ? 'Light Mode' : 'Dark Mode'}
-                  </span>
-                </button>
-              </li>
-            </ul>
-          </div>
-          <link href='https://cdn.jsdelivr.net/npm/boxicons@2.0.5/css/boxicons.min.css' rel='stylesheet' />
-          <div className="nav__toggle" id="nav-toggle" onClick={toggleMenu}>
-            <i className='bx bx-menu'></i>
-          </div>
-        </nav>
-      </header>
+                const effectiveCurriculum = studentData.curriculum || 'zimsec';
+                setCurrentCurriculum(effectiveCurriculum);
+                localStorage.setItem('studentCurriculum', effectiveCurriculum);
 
-      <div className="cards">
-        {isLoadingSubjects ? (
-          <p className="info-message">Loading subjects...</p>
-        ) : displaySubjects.length > 0 ? (
-          displaySubjects.map((subject) => (
-            <div
-              key={subject.id}
-              className="card"
-              onClick={() => handleCardClick(subject.name)}
-            >
-              <p>{subject.name}</p>
-              {assets[subject.iconKey] ? (
-                <img
-                  src={assets[subject.iconKey]}
-                  alt={`${subject.name} icon`}
-                />
-              ) : (
-                <div className="icon-placeholder">Icon not found</div>
-              )}
+                const lastStudiedSubjectName = subjectsRes.data.SubjectSelect;
+                setSelectedSubject(selectedSubject);
+
+
+            } catch (err) {
+                console.error("CardSection.jsx: Error fetching initial data:", err);
+                setError("An error occurred while loading your dashboard.");
+                // Add more specific error handling as before if needed
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchInitialData();
+    }, [user, accessToken, authLoading]);
+
+     const calculateTestPerformance = useCallback(() => {
+        if (!testReports || testReports.length === 0) return {};
+
+        const performanceBySubject = testReports.reduce((acc, report) => {
+            if (!acc[report.subject]) {
+                acc[report.subject] = { totalScore: 0, count: 0 };
+            }
+            acc[report.subject].totalScore += report.score;
+            acc[report.subject].count += 1;
+            return acc;
+        }, {});
+
+        const averages = {};
+        for (const subject in performanceBySubject) {
+            averages[subject] = performanceBySubject[subject].totalScore / performanceBySubject[subject].count;
+        }
+        return averages;
+    }, [testReports]);
+
+    useEffect(() => {
+        if (selectedSubject) {
+            localStorage.setItem('selectedSubject', selectedSubject);
+        }
+    }, [selectedSubject]);
+    
+    // --- Effect to Update lastStudied and Filtered Subjects ---
+    useEffect(() => {
+        if (!student || allSubjects.length === 0) return;
+        
+        // Filter subjects for display
+        const filtered = allSubjects.filter(subject =>
+            subject.level === student.academicLevel &&
+            subject.curriculum === currentCurriculum
+        );
+        setDisplaySubjects(filtered);
+
+        // Determine the last studied subject and set its data
+        const lastStudiedSubjectName = localStorage.getItem('selectedSubject') || (filtered.length > 0 ? filtered[0].name : null);
+        
+               if (lastStudiedSubjectName) {
+                   const subjectDetails = allSubjects.find(s => s.name === lastStudiedSubjectName);
+                   const performance = calculateTestPerformance();
+                   const progress = performance[lastStudiedSubjectName] || 0;
+       
+                   setLastStudied({
+                       name: subjectDetails?.name || lastStudiedSubjectName,
+                       icon: subjectDetails?.iconKey ? assets[subjectDetails.iconKey] : null,
+                       progress: Math.round(progress)
+                   });
+               }
+           // Dependency array now includes selectedSubject
+           }, [currentCurriculum, allSubjects, student, calculateTestPerformance, selectedSubject]);
+
+    
+    // --- Effect for filtering subjects when data changes ---
+    useEffect(() => {
+        if (!student || allSubjects.length === 0) {
+            setDisplaySubjects([]); // Clear subjects if no student or subject data
+            return;
+        };
+
+        const filtered = allSubjects.filter(subject =>
+            subject.level === student.academicLevel &&
+            subject.curriculum === currentCurriculum
+        );
+        setDisplaySubjects(filtered);
+    }, [currentCurriculum, allSubjects, student]); // This runs when student, allSubjects, or curriculum changes
+
+
+    // --- Conditional return is now AFTER all hook calls ---
+    if (loading || authLoading) {
+        return (
+            <div className={`dashboard-wrapper ${darkMode ? 'dark-theme' : ''}`}>
+                <div className="loading-container full-page">
+                    <div className="loading-spinner"></div>
+                    <p className="loading-text">Loading your subjects...</p>
+                </div>
             </div>
-          ))
-        ) : (
-          <p className="info-message">
-            No subjects available for your enrolled level and selected curriculum ({currentCurriculum}).
-            {/* Use the handleLogout function for this button as well */}
-            Please <button onClick={handleLogout} className="inline-link-button">logout</button> and check your enrollment details or try switching the curriculum.
-          </p>
-        )}
-      </div>
-    </div>
-  );
+        );
+    }
+
+    return (
+        <div className={`dashboard-wrapper ${darkMode ? 'dark-theme' : ''}`}>
+            {/* Your Sidebar is rendered here */}
+            <Sidebar />
+
+            {/* The main content dynamically adjusts its margin based on the sidebar's state */}
+            <main className={`main-content ${isSidebarCollapsed ? 'collapsed' : ''}`}>
+                <header className="main-header">
+                    <div className="greeting-container">
+                        <h1><Greeting /></h1>
+                        <p>Ready to learn something new today? Let's get started.</p>
+                    </div>
+                     <div className="curriculum-switcher" onClick={handleChangeCurriculum}>
+                           <Icon className="fas fa-exchange-alt" />
+                            <span>Switch to {currentCurriculum === 'zimsec' ? 'Cambridge' : 'ZIMSEC'}</span>
+                        </div>
+                </header>
+                
+                {error && <div className="error-banner">{error}</div>}
+
+            {/* <section className="launchpad-grid">
+                    {lastStudied && (
+                         <div className="card large-card">
+                            <h3>Jump Back In</h3>
+                            <div className="jump-back-in-content">
+                                {lastStudied.icon ? 
+                                    <img src={lastStudied.icon} alt={lastStudied.name} className="subject-icon-large-img" /> : 
+                                    <Icon className="fas fa-book subject-icon-large" />
+                                }
+                                <div className="subject-info">
+                                    <h2>{lastStudied.name}</h2>
+                                    <p>Your average test score</p>
+                                </div>
+                            </div>
+                            <div className="progress-bar-container">
+                                <div className="progress-bar" style={{ width: `${lastStudied.progress}%` }}></div>
+                            </div>
+                            <span className="progress-label">{lastStudied.progress}% Mastery</span>
+                        </div>
+                    )}
+
+                    <div className="card large-card">
+                        <h4>Test Performance Summary</h4>
+                        <div className="performance-bars">
+                            {Object.keys(calculateTestPerformance()).length > 0 ? (
+                                Object.entries(calculateTestPerformance()).map(([subject, average]) => (
+                                    <div key={subject} className="performance-bar">
+                                        <span className="subject-name">{subject}</span>
+                                        <div className="bar-container">
+                                            <div
+                                                className="bar-fill"
+                                                style={{ width: `${average}%` }}
+                                            ></div>
+                                            <span className="bar-text">{Math.round(average)}%</span>
+                                        </div>
+                                    </div>
+                                ))
+                            ) : (
+                                <p className="no-data-message">No test results yet. Take a test to see your performance!</p>
+                            )}
+                        </div>
+                    </div>
+                </section> */}
+
+                
+                <section className="tools-section">
+                     <div className="section-header">
+                        <h2>Quick Tools</h2>
+                    </div>
+                    <div className="tools-grid">
+                        <div className="card tool-card"onClick={() => navigate('/test')}><Icon className="fas fa-pencil-ruler"/><span>Start a Test</span></div>
+                        <div className="card tool-card"onClick={() => navigate('/reports')}><Icon className="far fa-lightbulb"/><span>Review Your Progress</span></div>
+                        <div className="card tool-card" onClick={() => navigate('/papers')}><Icon className="fas fa-book-open"/><span>Find Exam Papers</span></div>
+                        {/* <div className="card tool-card"><Icon className="fas fa-question-circle"/><span>Ask a Question</span></div> */}
+                    </div>
+                </section>
+
+                <section className="subjects-section">
+                    <div className="section-header">
+                        <h2>Your Enrolled Subjects</h2>
+                         <p>Select a subject to dive into lessons, practice exercises, and more.</p>
+                    </div>
+                    <div className="cards-grid">
+                        {displaySubjects.length > 0 ? (
+                           displaySubjects.map((subject) => (
+        // The main card now uses the '.subject-card' class in addition to '.card'
+        <div
+            key={subject.id}
+            className="card subject-card"
+            onClick={() => handleCardClick(subject.name)}
+            
+        >
+            {/* 1. Content Wrapper for Text */}
+            <div className="subject-card-content"onClick={() => setSelectedSubject(subject.name)}>
+                <h3 className="subject-card-name">{subject.name}</h3>
+                <p className="subject-card-subtitle">{subject.level} {subject.curriculum.toUpperCase()}</p>
+            </div>
+
+            {/* 2. Image Wrapper for better control */}
+            <div className="subject-card-image-wrapper"onClick={() => setSelectedSubject(subject.name)}>
+                {assets[subject.iconKey] ? (
+                    <img
+                        className="subject-card-image"
+                        src={assets[subject.iconKey]}
+                        alt={`${subject.name} icon`}
+                    />
+                ) : (
+                    // A placeholder for when the image isn't available
+                    <div className="icon-placeholder">
+                        <i className="fas fa-book"></i>
+                    </div>
+                )}
+            </div>
+        </div>
+    ))
+                        ) : (
+                             <div className="card info-card">
+                                 <Icon className="fas fa-folder-open info-icon" />
+                                <h4>No Subjects Found for {currentCurriculum.toUpperCase()}</h4>
+                                <p>Please switch your curriculum or <Link to="/profile" className="inline-link">update your profile</Link> to see your subjects here.</p>
+                            </div>
+                        )}
+                    </div>
+                </section>
+            </main>
+        </div>
+    );
 };
 
 export default CardSection;

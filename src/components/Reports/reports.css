@@ -19,8 +19,8 @@
 
 /* Dark Mode Variables */
 .dark {
-  --background: #1a1a1a;
-  --card-bg: #2d2d2d;
+  --background: #111827;
+  --card-bg:  #1f2937;
   --text: #ffffff;
   --text-light: #95a5a6;
   --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -131,7 +131,7 @@
 .dark tr:nth-child(even){
   background-color: rgba(255, 255, 255, 0.05); /* Subtle even row background */
 }
-.home {
+.reports-home {
   min-height: 100vh;
   background: var(--background);
   margin-bottom: -10px;
@@ -139,10 +139,7 @@
 
 /* Reports Container - Using CSS Grid */
 .reports-container {
-  min-height: 100vh;
-  width: 100%;
-  padding: 2rem;
-  margin: 0;
+    width: 100%;
   display: grid;
   grid-template-columns: repeat(12, 1fr); /* 12 column grid */
   gap: 2rem; /* Gap between grid items */
@@ -150,6 +147,12 @@
   box-sizing: border-box; /* Include padding in width */
 }
 
+.dark .reports-container{
+  background :#111827;
+}
+.dark .reports-home{
+   background :#111827;
+}
 /* --- Section Styling --- */
 
 /* Learning Overview Metrics */
@@ -1302,4 +1305,30 @@
      .report-section li {
          font-size: 0.85rem;
      }
+}
+.home {
+  position: relative;
+  background: var(--background);
+}
+
+.main-content {
+  /* This is the margin for the EXPANDED sidebar (width: 260px) */
+  margin-left: 260px; 
+  /* Smooth transition for the margin change */
+  transition: margin-left 0.3s ease-in-out;
+}
+
+.main-content.collapsed {
+  /* This is the margin for the COLLAPSED sidebar (width: 70px) */
+  margin-left: 70px;
+}
+
+/* On mobile, the sidebar is hidden, so we remove the margin */
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 0;
+  }
+  .main-content.collapsed {
+    margin-left: 0; /* Ensure it stays at 0 on mobile regardless of state */
+  }
 }
