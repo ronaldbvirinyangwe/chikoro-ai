@@ -1,0 +1,20 @@
+
+# Core TTS libraries
+TTS==0.22.0  # Coqui TTS
+pyttsx3==2.90  # Fallback TTS
+
+# Web framework
+Flask==3.0.0
+flask-cors==4.0.0
+
+# Audio processing
+librosa==0.10.1
+soundfile==0.12.1
+
+# ML dependencies (if not already installed)
+torch>=2.0.0
+torchaudio>=2.0.0
+numpy<2.0.0
+
+# Optional but recommended
+python-dotenv==1.0.0

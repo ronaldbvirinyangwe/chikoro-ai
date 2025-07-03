@@ -1,0 +1,201 @@
+.tool-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 2rem;
+    font-family: 'Inter', sans-serif;
+    background-color: #fff;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(44, 62, 80, 0.1);
+}
+
+.tool-nav {
+    margin-bottom: 2rem;
+}
+
+.tool-nav a {
+    color: var(--teacher-accent, #3498db);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.tool-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.tool-header h1 {
+    font-size: 2.5rem;
+    color: var(--teacher-text-primary, #2c3e50);
+}
+
+.tool-header p {
+    font-size: 1.1rem;
+    color: var(--teacher-text-secondary, #576c7f);
+    max-width: 600px;
+    margin: 0.5rem auto 0;
+}
+
+/* Specific layout for the resource finder */
+.resource-finder-content {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 3rem;
+}
+
+.finder-form-section {
+    border-right: 1px solid #eef2f7;
+    padding-right: 3rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--teacher-text-primary, #2c3e50);
+}
+
+.form-group input[type="text"] {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group input[type="text"]:focus {
+    outline: none;
+    border-color: var(--teacher-accent, #3498db);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.generate-btn {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #fff;
+    background-color: var(--teacher-accent, #3498db);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.generate-btn:hover:not(:disabled) {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+}
+
+.generate-btn:disabled {
+    background-color: #95a5a6;
+    cursor: not-allowed;
+}
+
+
+/* Output section styles */
+.finder-output-section {
+    position: relative;
+    background-color: #f7f9fc;
+    border-radius: 8px;
+    min-height: 400px;
+    padding: 1rem;
+}
+
+.loading-overlay {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(247, 249, 252, 0.8);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    z-index: 10;
+}
+
+.loading-overlay .spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--teacher-accent-light);
+    border-top-color: var(--teacher-accent);
+    border-radius: 50%;
+    animation: spin 1s ease-in-out infinite;
+}
+
+.placeholder-text {
+    text-align: center;
+    color: var(--teacher-text-secondary, #576c7f);
+    padding-top: 4rem;
+}
+
+.resources-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.resource-card {
+    background-color: #fff;
+    border: 1px solid #eef2f7;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: box-shadow 0.2s;
+}
+
+.resource-card:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+}
+
+.resource-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+}
+
+.resource-description {
+    font-size: 1rem;
+    color: #576c7f;
+    margin: 0 0 1rem 0;
+    line-height: 1.6;
+}
+
+.resource-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: var(--teacher-accent, #3498db);
+    font-weight: 600;
+}
+
+.resource-link:hover {
+    text-decoration: underline;
+}
+
+
+.error-message {
+    color: #c0392b;
+    background-color: #fbeae5;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid #e74c3c;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .resource-finder-content {
+        grid-template-columns: 1fr;
+    }
+    .finder-form-section {
+        border-right: none;
+        padding-right: 0;
+        border-bottom: 1px solid #eef2f7;
+        padding-bottom: 2rem;
+    }
+}

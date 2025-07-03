@@ -1,0 +1,190 @@
+/* Import a modern font for a better look and feel */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+
+/* Modern CSS with a clean, professional theme.
+  Using CSS variables makes theming (like dark mode) and maintenance much easier.
+*/
+:root {
+    --bg-color: #f8f9fa;
+    --card-bg: #ffffff;
+    --primary-text: #212529;
+    --secondary-text: #6c757d;
+    --teacher-dash--accent-color: #007bff; /* A more vibrant blue accent */
+    --accent-light: #e7f5ff;
+    --border-color: #dee2e6;
+    --shadow-color: rgba(0, 123, 255, 0.1); /* Softer shadow tied to accent */
+    --card-radius: 12px;
+    --font-family: 'Inter', sans-serif;
+}
+
+/* --- Base Layout & Container --- */
+.teacher-dashboard {
+    background-color: var(--bg-color);
+    min-height: 100vh;
+    font-family: var(--font-family);
+    color: var(--primary-text);
+}
+
+.dashboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* --- Header --- */
+.dashboard-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.dashboard-header h1 {
+    font-size: 2.75rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.dashboard-header p {
+    font-size: 1.15rem;
+    color: var(--secondary-text);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* --- Tools Grid Layout --- */
+.tools-grid {
+    display: grid;
+    /* Responsive grid:
+       - Fills available space with cards.
+       - Each card is at least 320px wide.
+       - The `1fr` makes columns flexible.
+    */
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem; /* Consistent spacing between cards */
+}
+
+/* --- Tool Card Styling --- */
+.tool-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--card-radius);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+    cursor: pointer;
+}
+
+.tool-card:hover,
+.tool-card:focus-within {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px var(--shadow-color);
+}
+
+.tool-icon-wrapper {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: var(--accent-light);
+    color: var(--teacher-dash--accent-color);
+    font-size: 1.75rem; /* Larger icon */
+    margin-bottom: 1.5rem;
+}
+
+.tool-card-content {
+    flex-grow: 1; /* Pushes the footer to the bottom */
+}
+
+.tool-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+    color: var(--primary-text);
+}
+
+.tool-description {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--secondary-text);
+    margin: 0;
+}
+
+.tool-card-footer {
+    margin-top: 1.5rem;
+    font-weight: 500;
+    color: var(--teacher-dash--accent-color);
+    opacity: 0; /* Hidden by default */
+    transition: opacity 0.2s ease-out;
+}
+
+.tool-card:hover .tool-card-footer,
+.tool-card:focus-within .tool-card-footer {
+    opacity: 1; /* Revealed on hover */
+}
+
+/* --- Loading and Error States --- */
+.dashboard-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 80vh;
+    color: var(--secondary-text);
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid var(--accent-light);
+    border-top-color: var(--teacher-dash--accent-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.dashboard-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    border-radius: var(--card-radius);
+    padding: 1rem 1.5rem;
+    margin: 0 auto 2rem auto;
+    max-width: 800px;
+    text-align: center;
+}
+
+/* --- Responsive Design --- */
+
+/* For Tablets */
+@media (max-width: 992px) {
+    .dashboard-header h1 {
+        font-size: 2.25rem;
+    }
+    .tools-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+}
+
+/* For Mobile Phones */
+@media (max-width: 576px) {
+    .dashboard-container {
+        padding: 1.5rem;
+    }
+    .dashboard-header h1 {
+        font-size: 2rem;
+    }
+    .dashboard-header p {
+        font-size: 1rem;
+    }
+    .tools-grid {
+        /* On small screens, stack the cards in a single column */
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+}

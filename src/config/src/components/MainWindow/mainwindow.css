@@ -1,0 +1,848 @@
+:root {
+    --primary: #45dc0e;
+    --primary-dark: #2a7a0a;
+    --background: #f8fafc;
+    --card-bg: #ffffff;
+    --text-primary: #1a1a1a;
+    --text-secondary: #64748b;
+    --radius: 12px;
+    --shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.dark {
+    --background: #111827;
+    --card-bg-dark:  #1f2937;
+    --text-primary: #ffffff;
+    --text-secondary: #95a5a6;
+    --shadow: 0 4px 6px rgba(0,0,0,0.2);
+    --primary: #3cc210;
+    --primary-dark: #1f5a08;
+}
+
+.dark .user-message {
+    background: var(--primary-dark);
+}
+
+.nav__list{
+cursor:pointer;
+}
+
+.dark .loader hr {
+    background: linear-gradient(to right, #3cc210, #2d2d2d, #3cc210);
+}
+
+.dark .ai-response{
+   color: var(--text-primary);
+}
+
+.dark .card p{
+    color: var(--text-primary);
+}
+
+.dark .cards-grid{
+    background-color: var(--background);
+}
+
+
+.profile-menu-item:hover {
+    background: var(--primary);
+    color: white;
+    cursor: pointer;
+}
+
+
+.mainwindow {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background: var(--background);
+    margin: 0;
+    max-width: 100%;
+    width: 100vw;
+}
+
+.chat-container {
+    /* For Firefox */
+    scrollbar-width: thin; /* Or 'thin' - 'auto' is usually wider and more visible */
+    scrollbar-color: #a0a0a0 var(--background); /* thumb_color track_color */
+}
+
+.chat-container::-webkit-scrollbar {
+    width: 8px; /* You can adjust this width - 10px to 12px is common */
+    background-color: transparent; /* Make sure it doesn't have an odd base color */
+}
+.chat-container::-webkit-scrollbar-track {
+    background: var(--background); /* Use your background color for contrast */
+    border-radius: 6px;
+    /* You could add a subtle border if you like: */
+    /* border: 1px solid #e0e0e0; */
+}
+
+/* 3. Style the thumb (the part you drag) */
+.chat-container::-webkit-scrollbar-thumb {
+    background-color: #a0a0a0; /* A visible grey - change as desired */
+    border-radius: 4px;
+    /* Add a border to create a "padding" effect */
+    border: 1px solid var(--background);
+    transition: background-color 0.2s ease;
+}
+
+/* 4. Optional: Style the thumb on hover */
+.chat-container::-webkit-scrollbar-thumb:hover {
+    background-color: #707070; /* Make it darker on hover */
+}
+
+/* --- Dark Mode Adjustments (if needed) --- */
+/* If the grey doesn't look good in dark mode, add specific dark rules */
+.dark .mains-container {
+    scrollbar-color: #555 var(--background); /* Darker thumb for dark mode */
+}
+
+.dark .chat-container::-webkit-scrollbar-thumb {
+    background-color: #555; /* Darker grey */
+    border-color: var(--background);
+}
+
+.dark .chat-container::-webkit-scrollbar-thumb:hover {
+    background-color: #777;
+}
+
+
+.mainwindow .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--card-bg);
+    box-shadow: var(--shadow);
+    width: 100%;
+    position: relative;
+    z-index: 1000;
+}
+
+
+.mainwindow .nav > * {
+    flex: 0 0 auto;
+   padding: 0;
+}
+
+.mainwindow .logo {
+    font-size: 1.8rem;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-weight: 700;
+    display: block;
+    margin: 0;
+    line-height: 1;
+}
+
+
+.profile-container  {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-shrink: 0;
+}
+.profile-container button{
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+}
+
+.profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--primary-color);
+    flex-shrink: 0;
+    cursor: pointer;
+}
+.mainwindow .main-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 150px;
+    overflow-y: auto;
+}
+
+.greet {
+    text-align: center;
+    padding: 2rem 1rem;
+}
+
+.greet h1 {
+    font-size: 2.5rem;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+}
+
+.mainwindow .cards-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 1rem;
+    overflow-y: auto;
+    padding-bottom: 120px;
+}
+
+/* .mainwindow .card {
+    background: var(--card-bg);
+    padding: 1.5rem;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    transition: all 0.3s ease;
+} */
+
+.mainwindow .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+}
+
+.mainwindow .input-section {
+    position: fixed;
+    bottom: -20px;
+    left: 50%;
+    width: 100%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    background: var(--background);
+    z-index: 100;
+    box-shadow: 0 -4px 6px rgba(0,0,0,0.05);
+}
+
+.mainwindow .search-container {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 5px;
+}
+
+.dark{
+    .mainwindow .search-container {
+    background: var( --card-bg-dark);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 5px;
+}
+}
+
+  .mainwindow .chat-input {
+    width: 100%;
+    border: none;
+    background: none;
+    font-size: 1rem;
+    padding: 1rem;
+    min-height: 50px;
+    max-height: 150px;
+    resize: none;
+    color: var(--text-primary);
+  }
+
+  .mainwindow .input-controls {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-top: 1rem;
+  }
+
+  .mainwindow .icon-button {
+    background: var(--background);
+    border: none;
+    padding: 0.8rem;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    transition: all 0.3s ease;
+    color: #000;
+  }
+
+  .mainwindow .icon-button:hover {
+    background: var(--primary);
+    color: white;
+  }
+
+  .dark .icon-button{
+    color: #fff;
+  }
+  .dark .icon-button:hover{
+    background: var(--primary-dark);
+  }
+
+  .mainwindow .file-preview {
+     padding: 8px;
+    background-color: #fff; /* Or your theme's light background */
+    border-radius: 8px;
+    margin-bottom: 8px;
+  }
+
+  .mainwindow .file-preview img {
+    border-radius: var(--radius);
+    max-width: 100px;
+    box-shadow: var(--shadow);
+  }
+
+  .mainwindow .file-preview button {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: white;
+    border: none;
+    border-radius: 50%;
+    padding: 4px;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+  }
+
+  .mainwindow .disclaimer {
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-top: 0px;
+  }
+
+.mainwindow .result {
+   padding: 0; /* Padding is now on the chat-container and mains-container */
+    max-width: 1000px;
+    margin: 0 auto;
+    width: 100%;
+    display: flex; /* Helps contain the chat container properly */
+    flex-direction: column;
+    flex: 1; 
+}
+.chat-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    overflow-y: auto; /* <-- ADD THIS */
+    flex: 1; /* <-- ADD THIS if .result is a flex container */
+
+}
+
+.message {
+    max-width: 70%;
+    padding: 1rem;
+    border-radius: var(--radius);
+    display: flex;
+    gap: 1rem;
+    animation: fadeIn 0.3s ease;
+}
+
+.user-message {
+    margin-left: auto;
+    background: #25D366;
+    color: white;
+    border-radius: 15px 15px 0 15px;
+}
+.bot-message {
+    width: 100%;
+    max-width: none;
+    margin: 1rem 0;
+    border-radius: var(--radius);
+}
+
+.bot-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: contain;
+    box-shadow: none;
+    margin: 1.2rem 0;
+}
+
+.message-content {
+    flex: 1;
+}
+
+
+.loader {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Space between the text and the dots */
+}
+
+.loader .loading-text {
+    font-style: italic;
+    color: var(--text-secondary);
+}
+
+.typing-dots {
+    display: flex;
+    gap: 4px;
+}
+
+.typing-dots span {
+    width: 8px;
+    height: 8px;
+    background-color: var(--primary);
+    border-radius: 50%;
+    animation: bounce 1.4s infinite ease-in-out both;
+}
+
+.typing-dots span:nth-of-type(1) {
+    animation-delay: -0.32s;
+}
+
+.typing-dots span:nth-of-type(2) {
+    animation-delay: -0.16s;
+}
+
+@keyframes bounce {
+    0%, 80%, 100% {
+        transform: scale(0);
+    }
+    40% {
+        transform: scale(1.0);
+    }
+}
+
+
+.response-content {
+    line-height: 1.6;
+
+}
+
+.response-content p {
+    margin-bottom: 1rem;
+}
+
+
+
+.send-button{
+    margin: 0 740px;
+    background:transparent;
+    border:none;
+    padding:0.8rem;
+    border-radius:50%;
+    cursor:pointer;
+    display:flex;
+    transition: all 0.3s ease;
+    }
+    .send-button:hover{
+    background:#45dc0e;
+    }
+
+.dark .send-button{
+    background:transparent;
+    color:var(--text-primary);
+    }
+.dark .send-button:hover{
+    background:var(--primary-dark);
+    }
+    
+    .whiteboard-indicator {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: rgba(0, 0, 0, 0.6);
+        color: white;
+        padding: 4px 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.8rem;
+      }
+      
+      .whiteboard-indicator .remove-icon {
+        cursor: pointer;
+      }
+      
+      /* Style for whiteboard drawing inside message history */
+      .whiteboard-in-message {
+        max-width: 100%;
+        max-height: 300px;
+        border-radius: 8px;
+        margin-bottom: 8px;
+        border: 1px solid #e0e0e0;
+      }
+      
+      /* Modify chat input to indicate whiteboard mode */
+      .input-wrapper.has-whiteboard-drawing .chat-input {
+        border-color: #3f51b5;
+      }
+      
+      /* Add a special background to the user message when it contains a drawing */
+      .message.user-message.with-drawing {
+        background-color: rgba(63, 81, 181, 0.05);
+      }
+      
+      /* Make the send button more prominent when a whiteboard drawing is present */
+      .whiteboard-drawing-present .send-button {
+        background-color: #3f51b5;
+        color: white;
+      }
+
+      .user-message .file-attachment-preview .pdf-icon-container{
+        width: 100px;
+        height: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #f0f4f9;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+
+      /* Layout for cards */
+.mainwindow .cards {
+    display: grid;
+    grid-template-columns: 1fr; /* Default: 1 column for mobile */
+    gap: 30px;
+    padding: 25px;
+    position: relative;
+    z-index: 0;
+    margin-top: 20px; /* Add some margin from the header */
+}
+
+.dark .mainwindow .card{
+    background-color: #fff; /* Dark background for cards */
+    box-shadow: var(--card-shadow); /* Dark shadow for cards */
+    color: var(--text-primary); /* Light text color for better contrast */
+}
+.mainwindow .card {
+    min-height: 80px; /* Increased height for better spacing */
+    padding: 15px; /* Increased padding */
+    background-color: #ffffff; /* Clean white background */
+    border-radius: 16px; /* Smoother, larger radius */
+    display: flex; /* Use flexbox for alignment */
+    flex-direction: column; /* Stack elements vertically */
+    justify-content: space-between; /* Push icon to bottom */
+    align-items: flex-start; /* Align text to the start */
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08); /* Softer, modern shadow */
+    overflow: hidden; /* Prevent content overflow */
+}
+
+.mainwindow .card::before { /* Optional: Add a subtle border or gradient effect */
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--first-color), var(--second-color));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.mainwindow .card:hover::before {
+    opacity: 1;
+}
+
+.mainwindow .card img {
+    width: 65px; /* Slightly adjusted icon size */
+    padding: 12px; /* Padding within the circle */
+    position: absolute;
+    background-color: #e9ecef; /* Light gray background for icon */
+    border-radius: 50%; /* Make it circular */
+    bottom: 25px; /* Position from bottom */
+    right: 25px; /* Position from right */
+    transition: transform 0.3s ease;
+}
+
+.mainwindow .card:hover img {
+    transform: scale(1.1); /* Slightly scale icon on hover */
+}
+
+.mainwindow .card p {
+    color: #343a40;
+    font-size: 15px;
+    font-weight: 500;
+    margin: 0;
+    line-height: 1.4;
+    text-align: left;
+    transition: color 0.3s ease;
+
+    /* --- ADD/ENSURE THESE --- */
+    width: 100%; /* Explicitly tell it to take full width */
+    max-width: none; /* Explicitly remove any max-width */
+    padding-right: 0; /* Explicitly remove padding */
+    box-sizing: border-box; /* Ensures padding/border are included in width */
+}
+.mainwindow .card:hover {
+    transform: translateY(-8px); /* Lift effect on hover */
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12); /* Enhanced shadow on hover */
+}
+  /* Mobile Improvements */
+  @media (max-width: 1024px) {
+    .pomodoro-container-fixed{
+        visibility: hidden;
+    }
+    .mainwindow .cards-grid {
+        flex: 1;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        max-width: 1000px;
+        margin: 0 130px;
+        padding: 1rem;
+        overflow-y: auto;
+        padding-bottom: 120px;
+    }
+    .mainwindow .input-section{
+        width: 520px;
+    }
+    .send-button{
+        margin: 0 350px ;
+    }
+
+  }
+@media (max-width: 768px) {
+    /* Improved Message Layout */
+    .message {
+        max-width: 100%;
+        width: 100%;
+        padding: 0.75rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .mainwindow .input-section{
+        width: 100%;
+    }
+    
+   
+    .bot-message {
+        max-width: 100% !important;
+        margin: 0.75rem 0;
+    }
+    
+    .bot-avatar {
+        width: 32px;
+        height: 32px;
+        margin: 0.5rem 0.5rem 0 0;
+    }
+    
+    /* Better Container Spacing */
+    .chat-container {
+        max-width: 100%;
+        margin: 0;
+        padding: 0.75rem;
+        padding-bottom: 6rem;
+    }
+    
+    /* Improved Navigation */
+    .mainwindow .nav {
+        padding: 0.75rem;
+    }
+    
+    /* Better Greet Section */
+    .mainwindow .greet {
+        padding: 1rem 0.5rem;
+    }
+    
+    .mainwindow .greet h1 {
+        font-size: 1.75rem;
+    }
+    
+    .subtitle {
+        font-size: 1rem;
+        margin-top: 0.5rem;
+    }
+    
+    /* Improved Cards Grid */
+    .mainwindow .cards-grid {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 1rem;
+        padding: 0.75rem;
+        padding-bottom: 7rem;
+    }
+    
+    .mainwindow .card {
+        padding: 1rem;
+    }
+    
+    /* Optimized Input Section */
+    .mainwindow .input-section {
+        bottom: 0;
+        padding: 0.75rem;
+        background: var(--background);
+    }
+    
+    .mainwindow .search-container {
+        padding: 0.5rem;
+         flex-direction: column;
+    }
+    
+    .mainwindow .chat-input {
+        padding: 0.75rem;
+        min-height: 40px;
+        font-size: 16px; 
+    }
+    
+    .mainwindow .input-controls {
+        margin-top: 0.5rem;
+        gap: 0.5rem;
+    }
+    
+    .mainwindow .icon-button {
+        padding: 0.6rem;
+    }
+    
+    .mainwindow .disclaimer {
+        text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-top: 10px; /* Adjust as needed */
+    margin-bottom: 0;
+    padding-bottom: 10px;
+    }
+    
+    /* Fix file preview */
+    .mainwindow .file-preview img {
+        width: 60px;
+    }
+    
+    /* Better response content */
+    .response-content {
+        font-size: 0.95rem;
+    }
+    .send-button{
+        margin: 0 0px ;
+    }
+    .pomodoro-container-fixed{
+        visibility: hidden;
+    }
+}
+
+@media (max-width: 600px) {
+    .send-button {
+        margin: 0 370px;
+    }
+}
+
+/* Smaller Devices */
+@media (max-width: 480px) {
+    .pomodoro-container-fixed{
+        visibility: hidden;
+    }
+    .mainwindow .logo {
+        font-size: 18px;
+    }
+    .send-button{
+        margin: 0 230px ;
+    }
+    .mainwindow .cards-grid {
+        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+        padding-bottom: 6rem;
+        margin: 0 auto;
+    }
+    
+    .profile-pic {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .message {
+        padding: 0.6rem;
+    }
+    
+    .bot-avatar {
+        width: 28px;
+        height: 28px;
+    }
+    
+    .mainwindow .icon-button,
+    .send-button {
+        padding: 0.5rem;
+    }
+    
+    /* Better tap targets */
+    .mainwindow .card,
+    .profile-menu-item,
+    .input-controls button {
+        min-height: 44px; /* Minimum Apple recommended touch target size */
+    }
+    
+    /* Fix bottom positioning */
+    .mainwindow .input-section {
+      position: fixed;
+    bottom: 0; /* Changed from -20px to 0 for better alignment */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 900px;
+    padding: 1rem; /* Added padding for better spacing */
+    background: var(--background);
+    z-index: 100;
+    box-shadow: 0 -4px 6px rgba(0,0,0,0.05);
+    }
+    
+    /* Fix text sizing */
+    .mainwindow .chat-input {
+        font-size: 16px;
+    }
+}
+/* Improve dark mode contrast */
+.dark .user-message {
+    background: #2a9908;
+}
+
+/* Better loading animation */
+.loader hr {
+    height: 16px;
+}
+
+/* Improve input focus */
+.mainwindow .chat-input:focus {
+    outline: none;
+    background: rgba(69, 220, 14, 0.05);
+}
+
+.pomodoro-container-fixed {
+    visibility: hidden;
+    position: fixed; 
+    bottom: 20px; 
+    right: 0px; /* Distance from the right */
+    z-index: 1000; /* Ensure it's above most other content */
+    background-color: var(--background-color); /* Use a background that matches your theme */
+    padding: 10px; /* Add some padding around the timer */
+    border-radius: 8px; /* Optional: rounded corners */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Optional: shadow for depth */
+    width: 235px; /* Set a fixed width */
+    /* Ensure it doesn't block clicks on elements behind it if it's not opaque */
+    /* pointer-events: auto; */
+    
+}
+.pomodoro-timer-enhanced{
+    background: var(--background);
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1000;
+    width: 100%;
+    max-width: 400px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    
+}

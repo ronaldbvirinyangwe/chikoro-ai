@@ -1,0 +1,256 @@
+/* DeviceManagement.css */
+.device-management-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  .device-management-container h2 {
+    color: #3a3a3a;
+    margin-bottom: 10px;
+    font-size: 1.8rem;
+  }
+  
+  .device-management-container p {
+    color: #666;
+    margin-bottom: 20px;
+  }
+  
+  .devices-list {
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 30px;
+  }
+  
+  .devices-list h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #3a3a3a;
+    font-size: 1.3rem;
+  }
+  
+  .device-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background-color: white;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  }
+  
+  .device-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .device-info svg {
+    font-size: 24px;
+    color: #4a6fa5;
+  }
+  
+  .device-name {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+  
+  .device-date {
+    display: block;
+    font-size: 0.85rem;
+    color: #888;
+  }
+  
+  .primary-badge {
+    background-color: #4caf50;
+    color: white;
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: 12px;
+    margin-left: 8px;
+  }
+  
+  .remove-button {
+    background: none;
+    border: none;
+    color: #dc3545;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+  }
+  
+  .remove-button:hover {
+    background-color: rgba(220, 53, 69, 0.1);
+  }
+  
+  .qr-section {
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .qr-section h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #3a3a3a;
+    font-size: 1.3rem;
+  }
+  
+  .qr-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  .qr-container svg {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .expiry-note {
+    margin-top: 15px;
+    font-size: 0.85rem;
+    color: #dc3545;
+  }
+  
+  .generate-button {
+    background-color: #4a6fa5;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 12px 25px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: 10px;
+  }
+  
+  .generate-button:hover {
+    background-color: #3a5a84;
+  }
+  
+  .generate-button:disabled {
+    background-color: #a0a0a0;
+    cursor: not-allowed;
+  }
+  
+  .error-message {
+    background-color: #ffebee;
+    color: #c62828;
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+  }
+  
+  .max-devices-message {
+    background-color: #fff3e0;
+    padding: 15px;
+    border-radius: 6px;
+    margin-top: 20px;
+    text-align: center;
+  }
+  
+  .max-devices-message p {
+    margin: 0;
+    color: #e65100;
+  }
+  
+  /* LinkDevice.css */
+  .link-device-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 30px;
+    text-align: center;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .link-device-container h1 {
+    margin-bottom: 20px;
+    color: #3a3a3a;
+  }
+  
+  .loading-spinner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 40px 0;
+  }
+  
+  .spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    border-left-color: #4a6fa5;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+  }
+  
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  
+  .error-box {
+    background-color: #ffebee;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 30px 0;
+  }
+  
+  .error-box h3 {
+    color: #c62828;
+    margin-top: 0;
+    margin-bottom: 10px;
+  }
+  
+  .back-button {
+    background-color: #3a3a3a;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: background-color 0.2s;
+  }
+  
+  .back-button:hover {
+    background-color: #2a2a2a;
+  }
+  
+  .success-box {
+    background-color: #e8f5e9;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 30px 0;
+  }
+  
+  .success-box h3 {
+    color: #2e7d32;
+    margin-top: 0;
+    margin-bottom: 10px;
+  }
+  
+  .success-box p {
+    color: #3a3a3a;
+  }

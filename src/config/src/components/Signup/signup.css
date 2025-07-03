@@ -1,0 +1,186 @@
+/* Add these new and modified styles to your signup.css file */
+
+body {
+    min-height: 100vh;
+}
+
+/* --- Wrapper and Form Styling --- */
+.signup-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 2rem;
+}
+
+.auth-wrapper {
+    width: 100%;
+    max-width: 900px; /* Max width for the entire component */
+    display: flex;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    overflow: hidden; /* Important for keeping child elements within the rounded corners */
+    animation: fadeIn 0.6s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.auth-form {
+    flex: 1;
+    padding: 40px;
+}
+
+.form-header h2 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #2c3e50;
+}
+
+.form-header p {
+    color: #7f8c8d;
+    margin-bottom: 30px;
+}
+
+/* --- Input Field Styling --- */
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.input-with-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-icon {
+    position: absolute;
+    left: 89%;
+    color: #95a5a6;
+    font-size: 1rem;
+}
+.input-icons{
+  visibility: hidden;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px 15px 12px 45px; /* Added left padding for the icon */
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #27ae60;
+    box-shadow: 0 0 8px rgba(46, 204, 113, 0.2);
+    outline: none;
+}
+
+/* --- Password Toggle Button --- */
+.password-toggle {
+    position: absolute;
+    right: 5px; /* Position inside the input field */
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    color: #95a5a6;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.password-toggle:hover {
+    color: #2c3e50;
+}
+
+
+/* --- Button and Link Styling --- */
+
+.btn-primary {
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3);
+}
+
+.btn-icon {
+    margin-right: 8px;
+}
+
+.text-link {
+    color: #27ae60;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.text-link:hover {
+    color: #2c3e50;
+}
+
+/* --- Graphics Section --- */
+.auth-graphics {
+    flex: 1;
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    color: #fff;
+    padding: 40px;
+    text-align: center;
+}
+
+.graphics-content h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.btn-outline-light {
+    border-color: #fff;
+    color: #fff;
+}
+
+.btn-outline-light:hover {
+    background: #fff;
+    color: #27ae60;
+}
+
+
+/* --- Responsive Design --- */
+@media (max-width: 768px) {
+    .auth-wrapper {
+        flex-direction: column;
+    }
+    .auth-graphics {
+        display: none; /* Hide graphics on smaller screens */
+    }
+    .auth-form {
+        padding: 30px;
+    }
+}

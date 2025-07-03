@@ -1,0 +1,306 @@
+/* --- Global & Theme --- */
+:root {
+  --primary: #4f46e5;
+  --primary-light: #818cf8;
+  --primary-dark: #4338ca;
+  --success: #10b981;
+  --success-dark: #059669;
+  --error: #e53e3e;
+  --error-light: #fef2f2;
+  --text-dark: #1f2937;
+  --text-medium: #4b5563;
+  --text-light: #6b7280;
+  --background: #ffffff;
+  --background-alt: #f9fafb;
+  --border-light: #e5e7eb;
+  --border-medium: #d1d5db;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --transition: all 0.2s ease-in-out;
+}
+
+.dark {
+  --primary: #818cf8;
+  --primary-light: #a5b4fc;
+  --primary-dark: #6366f1;
+  --success: #34d399;
+  --success-dark: #10b981;
+  --text-dark: #f9fafb;
+  --text-medium: #e5e7eb;
+  --text-light: #d1d5db;
+  --background: #111827;
+  --background-alt: #1f2937;
+  --border-light: #374151;
+  --border-medium: #4b5563;
+}
+
+/* --- Layout & Container --- */
+.content {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Align to top for better feel */
+  min-height: 100vh;
+  background-color: var(--background-alt);
+}
+
+.payment-page-container {
+  background-color: var(--background);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: 2rem 2.5rem 3rem;
+  width: 100%;
+  max-width: 900px; /* Adjusted for better layout */
+  position: relative;
+  border-top: 4px solid var(--primary);
+}
+
+.payment-status-container {
+  text-align: center;
+  padding: 2rem;
+}
+
+/* --- Typography --- */
+h2 {
+  color: var(--text-dark);
+  font-size: 1.75rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.payment-container > p, .payment-status-container > p {
+  text-align: center;
+  color: var(--text-light);
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* --- Plan Cards --- */
+.plan-options {
+  display: grid; /* Use grid for more robust layout */
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.plan-card {
+  background: var(--background);
+  border: 2px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  transition: var(--transition);
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+}
+
+.plan-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.plan-card.selected {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px var(--primary), var(--shadow-lg);
+  transform: translateY(-4px);
+  position: relative;
+}
+
+/* Green tick for selected plan */
+.plan-card.selected::before {
+  content: '✓';
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  width: 1.75rem;
+  height: 1.75rem;
+  background: var(--success); /* MODIFIED: Green color for tick */
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.plan-card h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.price {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin: 0.5rem 0;
+}
+
+.duration {
+  color: var(--text-light);
+  font-size: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+/* --- Feature Lists (Improved) --- */
+.features {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-light);
+  list-style: none; /* REMOVED: list dots */
+  padding-left: 0;   /* REMOVED: default list indentation */
+}
+
+.feature-item, .feature-none {
+  margin-bottom: 0.75rem;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  line-height: 1.4;
+}
+
+/* This pseudo-element adds the icon automatically */
+.feature-item::before, .feature-none::before {
+  margin-right: 0.75rem;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.feature-item {
+  color: var(--text-medium);
+}
+.feature-item::before {
+  content: '✓';
+  color: var(--success); /* Green checkmark */
+}
+
+.feature-none {
+  color: var(--text-light);
+  text-decoration: line-through; /* Optional: strike through unavailable features */
+}
+.feature-none::before {
+  content: '✗';
+  color: var(--error); /* Red X */
+}
+
+/* --- Form & Button Styles --- */
+.payment-form {
+  max-width: 400px;
+  margin: 2rem auto 0;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--text-dark);
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  transition: var(--transition);
+  background-color: var(--background);
+  color: var(--text-dark);
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 20%, transparent);
+}
+
+.submit-btn {
+  background: var(--primary);
+  color: white;
+  width: 100%;
+  padding: 1rem;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.submit-btn:hover {
+  background: var(--primary-dark);
+  box-shadow: var(--shadow-md);
+}
+
+.submit-btn:disabled {
+  background-color: var(--text-light);
+  cursor: not-allowed;
+}
+
+/* New loading state for the button */
+.submit-btn.loading {
+  cursor: wait;
+}
+.submit-btn .spinner {
+  display: none;
+}
+.submit-btn.loading .spinner {
+  display: inline-block;
+}
+.submit-btn.loading .btn-text {
+  display: none;
+}
+
+/* --- Status, Error & Spinner --- */
+.error-message {
+  color: var(--error);
+  background: var(--error-light);
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+  border-left: 4px solid var(--error);
+}
+
+.spinner {
+  display: inline-block;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 3px solid color-mix(in srgb, var(--primary) 25%, transparent);
+  border-radius: 50%;
+  border-top-color: var(--primary);
+  animation: spin 1s ease-in-out infinite;
+}
+.submit-btn .spinner {
+  width: 1.25rem;
+  height: 1.25rem;
+  border-top-color: white;
+  border-width: 2px;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* --- Responsive Design --- */
+@media (max-width: 768px) {
+  .content {
+    padding: 1rem 0.5rem;
+  }
+  .payment-page-container {
+    padding: 1.5rem;
+  }
+  .plan-options {
+    grid-template-columns: 1fr; /* Stack cards on mobile */
+  }
+}
